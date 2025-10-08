@@ -22,7 +22,7 @@ We will use Discord as our primary communication channel.
 
 Team members will respond to messages within 24 hours on weekdays.
 
-All communication will remain respectful, professional, and constructive.
+All communication will remain respectful, professional, and constructive (with the exception of memes of GIFs).
 
 ### c) Attendance & Participation
 Members will attend all scheduled classes and team meetings unless illness or emergencies occur.
