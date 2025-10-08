@@ -14,7 +14,7 @@ This contract sets out shared expectations and commitments for how our team will
 
 
 ## 2. Team Norms and Expectations
-a) Preparation
+### a) Preparation
 Each team member commits to reading assigned materials and completing individual readiness work before class.
 
 ### b) Communication
