@@ -22,7 +22,7 @@ public class Movie {
         this.posterURL = posterURL;
     }
 
-    public String getMovieIDId() {
+    public String getMovieID() {
         return movieID;
     }
     public String getTitle() {
