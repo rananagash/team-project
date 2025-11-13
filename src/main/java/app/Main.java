@@ -1,8 +1,7 @@
 package app;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import data_access.TMDbMovieDataAccessObject;
+import entity.Movie;
+import java.util.Optional;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -18,24 +17,30 @@ public class Main {
         builder.buildViewWatchHistoryController();
         builder.buildReviewMovieController();
 
-        // We are going to use the token directly (for now)
-        String token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ODA5YTFjMmQzNDhjNjI3MDk1ZDllNzY3Y2Y0NWQ2MSIsIm5iZiI6MTc2MjgwODI3Mi4xNDQsInN1YiI6IjY5MTI1MWQwODA0Nzc2ZGJlMmQyNWU2MiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qx1FvwXuldaEQZeXupCmT9FyBjoU3nrGcSSM_hVHFP8";
 
-        // Whenever we end up using an environment variable later, we'll use this
-        // String token = System.getenv("TMDB_API_READ_ACCESS");
 
-        // Calling for the most popular movies
-        String url = "https://api.themoviedb.org/3/movie/popular?language=en-US";
+        // This is just testing out the data access object.
+        // the id of Avengers Endgame is 299534
+        // it prints out
+        TMDbMovieDataAccessObject dao = new TMDbMovieDataAccessObject();
+        Optional<Movie> result = dao.findById("299534"); // Avengers Endgame
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .header("Authorization", "Bearer " + token)
-                .header("Accept", "application/json")
-                .build();
+        if (result.isPresent()) {
+            Movie m = result.get();
+            System.out.println("Movie fetched successfully:");
+            System.out.println("ID: " + m.getMovieId());
+            System.out.println("Title: " + m.getTitle());
+            System.out.println("Plot: " + m.getPlot());
+            System.out.println("Genres: " + m.getGenreIds());
+            System.out.println("Rating: " + m.getRating());
+        } else {
+            System.out.println("Movie not found or error occurred.");
+        }
 
-        HttpClient client = HttpClient.newHttpClient();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        System.out.println(response.body());
+
+
+
+
     }
 }
