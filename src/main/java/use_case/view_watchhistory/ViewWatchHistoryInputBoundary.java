@@ -1,4 +1,6 @@
 package use_case.view_watchhistory;
 
-public class ViewWatchHistoryInputBoundary {
+public interface ViewWatchHistoryInputBoundary {
+
+    void execute(ViewWatchHistoryRequestModel requestModel);
 }

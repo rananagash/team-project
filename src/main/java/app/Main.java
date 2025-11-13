@@ -6,6 +6,18 @@ import java.net.http.HttpResponse;
 
 public class Main {
     public static void main(String[] args) throws Exception {
+        AppBuilder builder = new AppBuilder();
+
+        /*
+         * TODO(team): Build the main window here and inject controllers into the UI.
+         */
+        builder.buildSearchMovieController();
+        builder.buildFilterMoviesController();
+        builder.buildAddWatchListController();
+        builder.buildCompareWatchListController();
+        builder.buildViewWatchHistoryController();
+        builder.buildReviewMovieController();
+
         // We are going to use the token directly (for now)
         String token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ODA5YTFjMmQzNDhjNjI3MDk1ZDllNzY3Y2Y0NWQ2MSIsIm5iZiI6MTc2MjgwODI3Mi4xNDQsInN1YiI6IjY5MTI1MWQwODA0Nzc2ZGJlMmQyNWU2MiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qx1FvwXuldaEQZeXupCmT9FyBjoU3nrGcSSM_hVHFP8";
 
