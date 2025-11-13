@@ -1,18 +1,17 @@
-package interface_adapter.search_movie;
+package interface_adapter.review_movie;
 
-import use_case.search_movie.SearchMovieInputBoundary;
-import use_case.search_movie.SearchMovieRequestModel;
+import use_case.review_movie.ReviewMovieOutputBoundary;
+import use_case.review_movie.ReviewMovieResponseModel;
 
-public class SearchMovieController {
+public class ReviewMoviePresenter implements ReviewMovieOutputBoundary {
 
-    private final SearchMovieInputBoundary interactor;
-
-    public SearchMovieController(SearchMovieInputBoundary interactor) {
-        this.interactor = interactor;
+    @Override
+    public void prepareSuccessView(ReviewMovieResponseModel responseModel) {
+        // TODO: push success info to the UI
     }
 
-    public void search(String query) {
-        SearchMovieRequestModel requestModel = new SearchMovieRequestModel(query);
-        interactor.execute(requestModel);
+    @Override
+    public void prepareFailView(String errorMessage) {
+        // TODO: show error info
     }
 }
