@@ -1,14 +1,50 @@
 package entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class WatchList {
 
-    private String watchListID;
-    private User user;
-    private String name;
-    private List<Movie> movies;
-    private LocalDateTime dateCreated;
+    private final String watchListId;
+    private final User user;
+    private final String name;
+    private final LocalDateTime dateCreated;
+    private final List<Movie> movies = new ArrayList<>();
 
-    // TODO: constructors, getters/setters
+    public WatchList(String watchListId, User user, String name, LocalDateTime dateCreated) {
+        this.watchListId = Objects.requireNonNull(watchListId, "watchListId");
+        this.user = Objects.requireNonNull(user, "user");
+        this.name = Objects.requireNonNull(name, "name");
+        this.dateCreated = dateCreated == null ? LocalDateTime.now() : dateCreated;
+    }
+
+    public String getWatchListId() {
+        return watchListId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public LocalDateTime getDateCreated() {
+        return dateCreated;
+    }
+
+    public List<Movie> getMovies() {
+        return List.copyOf(movies);
+    }
+
+    public void addMovie(Movie movie) {
+        movies.add(Objects.requireNonNull(movie));
+    }
+
+    public void removeMovie(Movie movie) {
+        movies.remove(movie);
+    }
 }
