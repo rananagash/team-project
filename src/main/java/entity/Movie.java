@@ -1,12 +1,9 @@
 package entity;
 
+import java.util.List;
+
 public class Movie {
 
-    /*
-     * TODO: These variables might need to be adjusted based on the API responses
-        * It looks like the response gives a list of genre IDs as ints, and that can
-        * be matched with a string genre description
-     */
     private String movieID;
     private String title;
     private String plot;
@@ -15,5 +12,35 @@ public class Movie {
     private double rating;
     private String posterURL;
 
-    // TODO: constructors, getters/setters
+    public Movie(String movieID, String title, String plot, List<Integer> genres, String releaseDate, double rating, String posterURL) {
+        this.movieID = movieID;
+        this.title = title;
+        this.plot = plot;
+        this.genres = genres;
+        this.rating = rating;
+        this.releaseDate = releaseDate;
+        this.posterURL = posterURL;
+    }
+
+    public String getMovieIDId() {
+        return movieID;
+    }
+    public String getTitle() {
+        return title;
+    }
+    public String getPlot() {
+        return plot;
+    }
+    public String getGenre() {
+        return genres;
+    }
+    public double getRating() {
+        return rating;
+    }
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+    public String getPosterURL() {
+        return posterURL;
+    }
 }
