@@ -1,27 +1,31 @@
 package use_case.add_to_watchlist;
 
+import entity.Movie;
+import entity.User;
+import entity.WatchList;
+
 public class AddWatchListRequestModel {
 
-    private final String userName;
-    private final String watchListName;
-    private final String movieId;
+    private final User user;
+    private final Movie movie;
+    private final WatchList watchList;
 
-    public AddWatchListRequestModel(String userName, String watchListName, String movieId) {
-        this.userName = userName;
-        this.watchListName = watchListName;
-        this.movieId = movieId;
+    public AddWatchListRequestModel(User user,  Movie movie, WatchList watchList) {
+        this.user = user;
+        this.movie = movie;
+        this.watchList = watchList;
     }
 
-    public String getUserName() {
-        return userName;
+    public User getUser() {
+        return user;
     }
 
-    public String getWatchListName() {
-        return watchListName;
+    public Movie getMovie() {
+        return movie;
     }
 
-    public String getMovieId() {
-        return movieId;
+    public WatchList getWatchList() {
+        return watchList;
     }
 }
 

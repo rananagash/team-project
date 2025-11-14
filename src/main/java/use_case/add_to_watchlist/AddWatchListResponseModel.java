@@ -1,25 +1,16 @@
 package use_case.add_to_watchlist;
 
-import entity.Movie;
-
-import java.util.List;
-
 public class AddWatchListResponseModel {
 
-    private final String watchListName;
-    private final List<Movie> movies;
+    private final boolean success;
+    private final String message;
 
-    public AddWatchListResponseModel(String watchListName, List<Movie> movies) {
-        this.watchListName = watchListName;
-        this.movies = movies;
+    public AddWatchListResponseModel(boolean success, String message) {
+        this.success = success;
+        this.message = message;
     }
 
-    public String getWatchListName() {
-        return watchListName;
-    }
-
-    public List<Movie> getMovies() {
-        return movies;
-    }
+    public String getMessage() {return message;}
+    public boolean isSuccess() {return success;}
 }
 

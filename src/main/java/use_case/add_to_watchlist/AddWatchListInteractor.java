@@ -3,53 +3,45 @@ package use_case.add_to_watchlist;
 import entity.Movie;
 import entity.User;
 import entity.WatchList;
-import use_case.common.MovieGateway;
 import use_case.common.UserGateway;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 public class AddWatchListInteractor implements AddWatchListInputBoundary {
 
-    private final UserGateway userGateway;
-    private final MovieGateway movieGateway;
     private final AddWatchListOutputBoundary presenter;
+    private final UserGateway userGateway;
 
-    public AddWatchListInteractor(UserGateway userGateway,
-                                  MovieGateway movieGateway,
-                                  AddWatchListOutputBoundary presenter) {
-        this.userGateway = userGateway;
-        this.movieGateway = movieGateway;
+    public AddWatchListInteractor(AddWatchListOutputBoundary presenter,
+                                  UserGateway userGateway) {
         this.presenter = presenter;
+        this.userGateway = userGateway;
     }
 
     @Override
     public void execute(AddWatchListRequestModel requestModel) {
-        userGateway.findByUserName(requestModel.getUserName()).ifPresentOrElse(user -> handleUser(user, requestModel),
-                () -> presenter.prepareFailView("User not found: " + requestModel.getUserName()));
-    }
+        User user = requestModel.getUser();
+        Movie movie = requestModel.getMovie();
+        WatchList watchList = requestModel.getWatchList();
 
-    private void handleUser(User user, AddWatchListRequestModel requestModel) {
-        WatchList watchList = user.getWatchListByName(requestModel.getWatchListName())
-                .orElseGet(() -> createWatchList(user, requestModel.getWatchListName()));
+        boolean success;
+        String message;
 
-        /*
-         * TODO(Alana Watson): Handle duplicate movies, empty inputs, and update feedback messages per team decision.
-         */
-        movieGateway.findById(requestModel.getMovieId()).ifPresentOrElse(movie -> addMovie(user, watchList, movie),
-                () -> presenter.prepareFailView("Movie not found: " + requestModel.getMovieId()));
-    }
+        if (!watchList.getMovies().contains(movie)) {
+            success = false;
+            message = "\"" + movie.getTitle() + "\" is already in " + watchList.getName() + "\"";
+        } else {
+            watchList.addMovie(movie);
+            userGateway.save(user);
+            success = true;
+            message = "\"" + movie.getTitle() + "\" successfully added to " + watchList.getName() + "\"";
+        }
 
-    private WatchList createWatchList(User user, String watchListName) {
-        WatchList watchList = new WatchList(UUID.randomUUID().toString(), user, watchListName, LocalDateTime.now());
-        user.addWatchList(watchList);
-        return watchList;
-    }
-
-    private void addMovie(User user, WatchList watchList, Movie movie) {
-        watchList.addMovie(movie);
-        userGateway.save(user);
-        presenter.prepareSuccessView(new AddWatchListResponseModel(watchList.getName(), watchList.getMovies()));
+        AddWatchListResponseModel responseModel = new AddWatchListResponseModel(success, message);
+        if (success) {
+            presenter.prepareSuccessView(responseModel);
+        } else {
+            presenter.prepareFailView(message);
+        }
     }
 }
 
