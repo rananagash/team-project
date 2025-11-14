@@ -1,5 +1,7 @@
 package entity;
 
+import entity.factories.WatchListFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +13,7 @@ public class User {
 
     private final String userName;
     private final String password;
-    private final List<WatchList> watchLists = new ArrayList<>();
+    private List<WatchList> watchLists = new ArrayList<>();
     private WatchHistory watchHistory;
     private final Map<String, Review> reviewsByMovieId = new HashMap<>();
 
@@ -27,6 +29,11 @@ public class User {
         }
         this.userName = userName;
         this.password = password;
+
+        // initialize default watchlist
+        this.watchLists = new ArrayList<>();
+        WatchList defaultWL = WatchListFactory.createDefaultWatchList(this);
+        this.watchLists.add(defaultWL);
     }
 
     public String getUserName() {
@@ -38,11 +45,18 @@ public class User {
     }
 
     public List<WatchList> getWatchLists() {
-        return List.copyOf(watchLists);
+        return watchLists;
     }
 
     public void addWatchList(WatchList watchList) {
-        watchLists.add(Objects.requireNonNull(watchList));
+        Objects.requireNonNull(watchList, "WatchList cannot be null");
+
+        // check it is correct user
+        if (!watchList.getUser().equals(this)) {
+            throw new IllegalArgumentException("WatchList must be the same user");
+        }
+
+        this.watchLists.add(watchList);
     }
 
     public Optional<WatchList> getWatchListByName(String name) {

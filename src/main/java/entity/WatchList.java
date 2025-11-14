@@ -13,11 +13,14 @@ public class WatchList {
     private final LocalDateTime dateCreated;
     private final List<Movie> movies = new ArrayList<>();
 
-    public WatchList(String watchListId, User user, String name, LocalDateTime dateCreated) {
+    public WatchList(String watchListId,
+                     User user,
+                     String name,
+                     LocalDateTime dateCreated) {
         this.watchListId = Objects.requireNonNull(watchListId, "watchListId");
         this.user = Objects.requireNonNull(user, "user");
         this.name = Objects.requireNonNull(name, "name");
-        this.dateCreated = dateCreated == null ? LocalDateTime.now() : dateCreated;
+        this.dateCreated = Objects.requireNonNull(dateCreated, "dateCreated");
     }
 
     public String getWatchListId() {
@@ -41,7 +44,9 @@ public class WatchList {
     }
 
     public void addMovie(Movie movie) {
-        movies.add(Objects.requireNonNull(movie));
+        if (!movies.contains(movie)) {
+            movies.add(Objects.requireNonNull(movie));
+        }
     }
 
     public void removeMovie(Movie movie) {
