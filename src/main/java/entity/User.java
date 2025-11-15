@@ -27,6 +27,10 @@ public class User {
         }
         this.userName = userName;
         this.password = password;
+
+        // initialize default watchlist
+        WatchList defaultWL = new WatchList(this);
+        this.watchLists.add(defaultWL);
     }
 
     public String getUserName() {
@@ -38,11 +42,18 @@ public class User {
     }
 
     public List<WatchList> getWatchLists() {
-        return List.copyOf(watchLists);
+        return watchLists;
     }
 
     public void addWatchList(WatchList watchList) {
-        watchLists.add(Objects.requireNonNull(watchList));
+        Objects.requireNonNull(watchList, "WatchList cannot be null");
+
+        // check it is correct user
+        if (!watchList.getUser().equals(this)) {
+            throw new IllegalArgumentException("WatchList must be the same user");
+        }
+
+        this.watchLists.add(watchList);
     }
 
     public Optional<WatchList> getWatchListByName(String name) {

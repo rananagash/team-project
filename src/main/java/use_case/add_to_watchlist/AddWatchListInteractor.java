@@ -3,53 +3,75 @@ package use_case.add_to_watchlist;
 import entity.Movie;
 import entity.User;
 import entity.WatchList;
-import use_case.common.MovieGateway;
 import use_case.common.UserGateway;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
+/**
+ * Interactor for the Add to Watch List use case.
+ *
+ * This class implements the use case application logic:
+ * <ul>
+ *     <li>Attempts to add a movie to a Watch List</li>
+ *     <li>Detect if movie was already on Watch List</li>
+ *     <li>Create a response model describing the result</li>
+ *     <li>Persists state changes via {@link UserGateway}</li>
+ *     <li>Call the appropriate presenter method</li>
+ * </ul>
+ */
 public class AddWatchListInteractor implements AddWatchListInputBoundary {
 
-    private final UserGateway userGateway;
-    private final MovieGateway movieGateway;
     private final AddWatchListOutputBoundary presenter;
+    private final UserGateway userGateway;
 
-    public AddWatchListInteractor(UserGateway userGateway,
-                                  MovieGateway movieGateway,
-                                  AddWatchListOutputBoundary presenter) {
-        this.userGateway = userGateway;
-        this.movieGateway = movieGateway;
+    /**
+     * Constructs an interactor with a presenter that will translate the results
+     * @param presenter the ouput boundary used to display outcomes
+     * @param userGateway persistence gateway used to save changes
+     */
+    public AddWatchListInteractor(AddWatchListOutputBoundary presenter,
+                                  UserGateway userGateway) {
         this.presenter = presenter;
+        this.userGateway = userGateway;
     }
 
+    /**
+     * Executes the Add to Watch logic.
+     *
+     * <p>This method:
+     * <ul>
+     *     <li>Retrieves the entities from the request model</li>
+     *     <li>Attempts to add the movie to the watch list</li>
+     *     <li>Saves the user if the addition succeeded</li>
+     *     <li>Builds a response model</li>
+     *     <li>Routes the response through the presenter</li>
+     * </ul>
+     * @param requestModel contains the user, watch list, and movie to be added
+     */
     @Override
     public void execute(AddWatchListRequestModel requestModel) {
-        userGateway.findByUserName(requestModel.getUserName()).ifPresentOrElse(user -> handleUser(user, requestModel),
-                () -> presenter.prepareFailView("User not found: " + requestModel.getUserName()));
-    }
+        User user = requestModel.getUser();
+        Movie movie = requestModel.getMovie();
+        WatchList watchList = requestModel.getWatchList();
 
-    private void handleUser(User user, AddWatchListRequestModel requestModel) {
-        WatchList watchList = user.getWatchListByName(requestModel.getWatchListName())
-                .orElseGet(() -> createWatchList(user, requestModel.getWatchListName()));
+        boolean success;
+        String message;
 
-        /*
-         * TODO(Alana Watson): Handle duplicate movies, empty inputs, and update feedback messages per team decision.
-         */
-        movieGateway.findById(requestModel.getMovieId()).ifPresentOrElse(movie -> addMovie(user, watchList, movie),
-                () -> presenter.prepareFailView("Movie not found: " + requestModel.getMovieId()));
-    }
+        boolean added = watchList.addMovie(movie);
 
-    private WatchList createWatchList(User user, String watchListName) {
-        WatchList watchList = new WatchList(UUID.randomUUID().toString(), user, watchListName, LocalDateTime.now());
-        user.addWatchList(watchList);
-        return watchList;
-    }
+        if (added) {
+            userGateway.save(user);
+            success = true;
+            message = movie.getTitle() + " successfully added to " + watchList.getName() + "!";
+        } else {
+            success = false;
+            message = movie.getTitle() + " is already in " + watchList.getName() + ".";
+        }
 
-    private void addMovie(User user, WatchList watchList, Movie movie) {
-        watchList.addMovie(movie);
-        userGateway.save(user);
-        presenter.prepareSuccessView(new AddWatchListResponseModel(watchList.getName(), watchList.getMovies()));
+        AddWatchListResponseModel responseModel = new AddWatchListResponseModel(success, message);
+        if (success) {
+            presenter.prepareSuccessView(responseModel);
+        } else {
+            presenter.prepareFailView(message);
+        }
     }
 }
 
