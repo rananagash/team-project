@@ -26,7 +26,7 @@ public class AddWatchListInteractor implements AddWatchListInputBoundary {
         boolean success;
         String message;
 
-        if (!watchList.getMovies().contains(movie)) {
+        if (watchList.getMovies().contains(movie)) {
             success = false;
             message = "\"" + movie.getTitle() + "\" is already in " + watchList.getName() + "\"";
         } else {

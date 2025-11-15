@@ -17,19 +17,20 @@ public class AddToWatchListPopup extends JDialog {
 
     private final User user;
     private final Movie movie;
-    private AddWatchListController controller;
+    private AddWatchListController controller; // if setController method not necessary, this might be okay to be final
 
     public AddToWatchListPopup(JFrame parent,
                                User user,
                                Movie movie,
                                AddWatchListController controller) {
-        super(parent, "Add Watch List", true);
+        super(parent, "Add to Watch List", true);
         this.user = user;
         this.movie = movie;
         this.controller = controller;
 
         initialState();
 
+        //TODO(Alana): some appearance finessing, centering content in the popup, etc
         setPreferredSize(new Dimension(400, 200));
         pack();
         setLocationRelativeTo(parent);
@@ -76,7 +77,7 @@ public class AddToWatchListPopup extends JDialog {
         // don't close popup; presenter will call showResult to update
     }
 
-    // called by presenter
+    // called by presenter to refresh with outcome message and close button
     public void showResult(String message) {
         messageLabel.setText(message);
 
@@ -91,6 +92,8 @@ public class AddToWatchListPopup extends JDialog {
         pack();
     }
 
+    // this method is to enable a test I wrote, to get around the loop of dependencies.
+    // Might not be necessary in the final version
     public void setController(AddWatchListController controller) {
         this.controller = controller;
     }

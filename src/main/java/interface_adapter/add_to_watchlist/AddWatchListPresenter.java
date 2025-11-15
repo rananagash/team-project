@@ -10,6 +10,9 @@ public class AddWatchListPresenter implements AddWatchListOutputBoundary {
 
     private final AddToWatchListPopup popup;
 
+    //TODO(Alana): This currently is set to take in a popup parameter, but it might be more correct to have it
+    // take the viewManagerModel and a viewModel? I'm not sure if it's different because it is a popup model,
+    // not a refresh of a full view? Will need to validate this before final product
     public AddWatchListPresenter(AddToWatchListPopup popup) {
         this.popup = popup;
     }
