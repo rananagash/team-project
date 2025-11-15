@@ -4,12 +4,26 @@ import entity.Movie;
 import entity.User;
 import entity.WatchList;
 import interface_adapter.add_to_watchlist.AddWatchListController;
+import interface_adapter.add_to_watchlist.AddWatchListView;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public class AddToWatchListPopup extends JDialog {
+/**
+ * Swing-based popup dialog for adding a movie to a user's watch list.
+ *
+ * <p>Implements {@link AddWatchListView}, enabling the presenter to update the UI
+ *
+ * <p>The popup:
+ * <ul>
+ *     <li>Confirms if the user wants to add the selected movie</li>
+ *     <li>Allows selection of a target watch list (or auto-selects if the user has only one)</li>
+ *     <li>Delegates add operations to the controller</li>
+ *     <li>Updates its display when the presenter calls {@link #showResult(String)}</li>
+ * </ul>
+ */
+public class AddToWatchListPopup extends JDialog implements AddWatchListView {
 
     private JLabel messageLabel;
     private JPanel buttonPanel;
@@ -17,8 +31,17 @@ public class AddToWatchListPopup extends JDialog {
 
     private final User user;
     private final Movie movie;
-    private AddWatchListController controller; // if setController method not necessary, this might be okay to be final
+    private AddWatchListController controller;
+    // TODO(Alana): if setController method not necessary, the controller variable might be okay to be final
 
+    /**
+     * Constructs the popup UI and displays it immediately.
+     *
+     * @param parent the parent Swing frame
+     * @param user the user who is adding the movie
+     * @param movie the movie to be added
+     * @param controller the controller handling the add operations
+     */
     public AddToWatchListPopup(JFrame parent,
                                User user,
                                Movie movie,
@@ -44,10 +67,10 @@ public class AddToWatchListPopup extends JDialog {
         buttonPanel = new JPanel();
 
         if (watchLists.size() == 1) {
-            messageLabel = new JLabel("Add \"" + movie.getTitle() + "\" to \""
-                    + watchLists.get(0).getName() + "\"?");
+            messageLabel = new JLabel("Add " + movie.getTitle() + " to "
+                    + watchLists.get(0).getName() + "?");
         } else {
-            messageLabel = new JLabel("Add \"" + movie.getTitle() + "\" to:");
+            messageLabel = new JLabel("Add " + movie.getTitle() + " to:");
             dropdown = new JComboBox<>(watchLists.toArray(new WatchList[0]));
         }
 
@@ -77,7 +100,13 @@ public class AddToWatchListPopup extends JDialog {
         // don't close popup; presenter will call showResult to update
     }
 
-    // called by presenter to refresh with outcome message and close button
+    /**
+     * Updates the popup with the result message from the presenter, replaces
+     * the action buttons with a Close button, and repacks the dialog.
+     *
+     * @param message the message to display to the user
+     */
+    @Override
     public void showResult(String message) {
         messageLabel.setText(message);
 
@@ -92,8 +121,12 @@ public class AddToWatchListPopup extends JDialog {
         pack();
     }
 
-    // this method is to enable a test I wrote, to get around the loop of dependencies.
-    // Might not be necessary in the final version
+    // TODO(Alana): this method is to make testing possible. May not be necessary in the final version.
+    /**
+     * Setter used only for testing to inject a mock controller.
+     *
+     * @param controller controller to replace the initial null
+     */
     public void setController(AddWatchListController controller) {
         this.controller = controller;
     }

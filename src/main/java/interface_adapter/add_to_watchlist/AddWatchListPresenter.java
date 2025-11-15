@@ -2,29 +2,32 @@ package interface_adapter.add_to_watchlist;
 
 import use_case.add_to_watchlist.AddWatchListOutputBoundary;
 import use_case.add_to_watchlist.AddWatchListResponseModel;
-import view.AddToWatchListPopup;
 
-import javax.swing.*;
-
+/**
+ * Presenter for the Add to Watch List use case.
+ *
+ * This class receives data from the interactor and delegates UI updates to a {@link AddWatchListView}.
+ */
 public class AddWatchListPresenter implements AddWatchListOutputBoundary {
 
-    private final AddToWatchListPopup popup;
+    private final AddWatchListView view;
 
-    //TODO(Alana): This currently is set to take in a popup parameter, but it might be more correct to have it
-    // take the viewManagerModel and a viewModel? I'm not sure if it's different because it is a popup model,
-    // not a refresh of a full view? Will need to validate this before final product
-    public AddWatchListPresenter(AddToWatchListPopup popup) {
-        this.popup = popup;
+    /**
+     * Construct a presenter given a view interface that can display the results of the Add to Watch List operation.
+     * @param view view the UI interface used to display the results
+     */
+    public AddWatchListPresenter(AddWatchListView view) {
+        this.view = view;
     }
 
     @Override
     public void prepareSuccessView(AddWatchListResponseModel responseModel) {
-        popup.showResult(responseModel.getMessage());
+        view.showResult(responseModel.getMessage());
     }
 
     @Override
     public void prepareFailView(String errorMessage) {
-        popup.showResult(errorMessage);
+        view.showResult(errorMessage);
     }
 }
 

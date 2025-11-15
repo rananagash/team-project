@@ -1,7 +1,5 @@
 package entity;
 
-import entity.factories.WatchListFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +11,7 @@ public class User {
 
     private final String userName;
     private final String password;
-    private List<WatchList> watchLists = new ArrayList<>();
+    private final List<WatchList> watchLists = new ArrayList<>();
     private WatchHistory watchHistory;
     private final Map<String, Review> reviewsByMovieId = new HashMap<>();
 
@@ -31,8 +29,7 @@ public class User {
         this.password = password;
 
         // initialize default watchlist
-        this.watchLists = new ArrayList<>();
-        WatchList defaultWL = WatchListFactory.createDefaultWatchList(this);
+        WatchList defaultWL = new WatchList(this);
         this.watchLists.add(defaultWL);
     }
 
