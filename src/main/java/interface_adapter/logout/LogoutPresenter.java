@@ -1,6 +1,6 @@
 package interface_adapter.logout;
 
-import interface_adapter.ViewManagerModel;
+import interface_adapter.view_login_signup.ViewManagerModel;
 import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.login.LoginState;

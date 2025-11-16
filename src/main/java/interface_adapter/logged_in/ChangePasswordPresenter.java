@@ -1,6 +1,6 @@
 package interface_adapter.logged_in;
 
-import interface_adapter.ViewManagerModel;
+import interface_adapter.view_login_signup.ViewManagerModel;
 import use_case.change_password.ChangePasswordOutputBoundary;
 import use_case.change_password.ChangePasswordOutputData;
 
