@@ -125,4 +125,14 @@ public class WatchList {
     public void removeMovie(Movie movie) {
         movies.remove(movie);
     }
+
+    /**
+     * Return the name of this Watch List
+     *
+     * @return the name of this Watch List
+     */
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }
