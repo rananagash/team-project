@@ -1,12 +1,9 @@
 package interface_adapter.filter_movies;
 
-import use_case.filter_movies.FilterMoviesInteractor;
 import use_case.filter_movies.FilterMoviesOutputBoundary;
 import use_case.filter_movies.FilterMoviesResponseModel;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class FilterMoviesPresenter implements FilterMoviesOutputBoundary {
 
@@ -24,7 +21,7 @@ public class FilterMoviesPresenter implements FilterMoviesOutputBoundary {
         // Set the filtered movies
         viewModel.setFilteredMovies(responseModel.getMovies());
 
-        // Set the genre names (already resolved by the interactor)
+        // Set the genre names (already converted by the use case layer)
         viewModel.setSelectedGenreNames(responseModel.getRequestedGenreNames());
 
         // If no movies found, set an informational message

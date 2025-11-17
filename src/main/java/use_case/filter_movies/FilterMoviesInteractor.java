@@ -52,20 +52,32 @@ public class FilterMoviesInteractor implements FilterMoviesInputBoundary {
 
         // Map TMDb genre IDs to names and support richer filtering (sorting, multiple criteria, etc.).
         List<Movie> movies = movieGateway.filterByGenres(requestModel.getGenreIds());
-        presenter.prepareSuccessView(new FilterMoviesResponseModel(requestModel.getGenreIds(), movies));
+
+        // Convert genre IDs to genre names for the response model
+        List<String> genreNames = requestModel.getGenreIds().stream()
+                .map(genreId -> {
+                    String genreName = GENRE_ID_TO_NAME.get(genreId);
+                    return genreName != null ? genreName : "Unknown Genre (" + genreId + ")";
+                })
+                .toList();
+
+        presenter.prepareSuccessView(new FilterMoviesResponseModel(
+                requestModel.getGenreIds(),
+                genreNames,
+                movies));
     }
 
 
-     // Get the genre name for a given genre ID.
-     // Return the genre name, or null if the ID is not found
+    // Get the genre name for a given genre ID.
+    // Return the genre name, or null if the ID is not found
 
     public static String getGenreName(Integer genreId) {
         return GENRE_ID_TO_NAME.get(genreId);
     }
 
 
-     // Get all available genre IDs and their names.
-     // Return A map of genre IDs to genre names
+    // Get all available genre IDs and their names.
+    // Return A map of genre IDs to genre names
 
     public static Map<Integer, String> getAllGenres() {
         return new HashMap<>(GENRE_ID_TO_NAME);
