@@ -24,18 +24,12 @@ public class FilterMoviesPresenter implements FilterMoviesOutputBoundary {
         // Set the filtered movies
         viewModel.setFilteredMovies(responseModel.getMovies());
 
-        // Convert genre IDs to genre names for display
-        List<String> genreNames = responseModel.getRequestedGenres().stream()
-                .map(genreId -> {
-                    String genreName = FilterMoviesInteractor.getGenreName(genreId);
-                    return genreName != null ? genreName : "Unknown Genre (" + genreId + ")";
-                })
-                .collect(Collectors.toList());
-        viewModel.setSelectedGenreNames(genreNames);
+        // Set the genre names (already resolved by the interactor)
+        viewModel.setSelectedGenreNames(responseModel.getRequestedGenreNames());
 
         // If no movies found, set an informational message
         if (responseModel.getMovies().isEmpty()) {
-            String genreList = String.join(", ", genreNames);
+            String genreList = String.join(", ", responseModel.getRequestedGenreNames());
             viewModel.setErrorMessage("No movies found for the selected genres: " + genreList);
         }
     }
