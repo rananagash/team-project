@@ -7,6 +7,7 @@ import interface_adapter.add_to_watchlist.AddWatchListPresenter;
 import interface_adapter.compare_watchlists.CompareWatchListController;
 import interface_adapter.compare_watchlists.CompareWatchListPresenter;
 import interface_adapter.filter_movies.FilterMoviesController;
+import interface_adapter.filter_movies.FilterMoviesViewModel;
 import interface_adapter.filter_movies.FilterMoviesPresenter;
 import interface_adapter.review_movie.ReviewMovieController;
 import interface_adapter.review_movie.ReviewMoviePresenter;
@@ -36,7 +37,8 @@ public class AppBuilder {
     }
 
     public FilterMoviesController buildFilterMoviesController() {
-        FilterMoviesPresenter presenter = new FilterMoviesPresenter();
+        FilterMoviesViewModel viewModel = new FilterMoviesViewModel();
+        FilterMoviesPresenter presenter = new FilterMoviesPresenter(viewModel);
         FilterMoviesInteractor interactor = new FilterMoviesInteractor(movieGateway, presenter);
         return new FilterMoviesController(interactor);
     }
