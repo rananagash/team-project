@@ -1,25 +1,36 @@
 package interface_adapter.signup;
 
+import interface_adapter.ViewManagerModel;
+import interface_adapter.login.LoginViewModel;
+import interface_adapter.login.LoginState;
 import use_case.signup.SignupOutputBoundary;
 import use_case.signup.SignupOutputData;
 
 public class SignupPresenter implements SignupOutputBoundary {
 
     private final SignupViewModel signupViewModel;
+    private final LoginViewModel loginViewModel;
+    private final ViewManagerModel viewManagerModel;
 
-    public SignupPresenter(SignupViewModel signupViewModel) {
+    public SignupPresenter(ViewManagerModel viewManagerModel,
+                           SignupViewModel signupViewModel,
+                           LoginViewModel loginViewModel) {
+        this.viewManagerModel = viewManagerModel;
         this.signupViewModel = signupViewModel;
+        this.loginViewModel = loginViewModel;
     }
 
     @Override
     public void prepareSuccessView(SignupOutputData response) {
-        // On success, just show success message in signup view
-        final SignupState signupState = signupViewModel.getState();
-        signupState.setUsername(""); // Clear form
-        signupState.setPassword("");
-        signupState.setRepeatPassword("");
-        signupState.setSuccessMessage("Signup successful! You can now login.");
-        signupViewModel.firePropertyChange();
+        // On success, switch to login view with username pre-filled
+        final LoginState loginState = loginViewModel.getState();
+        loginState.setUsername(response.getUsername()); // Pre-fill the login form
+        loginViewModel.setState(loginState);
+        loginViewModel.firePropertyChange();
+
+        // Switch to login view
+        viewManagerModel.setState(loginViewModel.getViewName());
+        viewManagerModel.firePropertyChange();
     }
 
     @Override
@@ -31,7 +42,8 @@ public class SignupPresenter implements SignupOutputBoundary {
 
     @Override
     public void switchToLoginView() {
-        // Temporarily do nothing - will implement when login is added
-        System.out.println("Login view switch would happen here");
+        // Switch to login view when user clicks "Go to Login"
+        viewManagerModel.setState(loginViewModel.getViewName());
+        viewManagerModel.firePropertyChange();
     }
 }

@@ -13,11 +13,14 @@ import interface_adapter.review_movie.ReviewMovieController;
 import interface_adapter.review_movie.ReviewMoviePresenter;
 import interface_adapter.search_movie.SearchMovieController;
 import interface_adapter.search_movie.SearchMoviePresenter;
+import interface_adapter.record_watchhistory.RecordWatchHistoryController;
+import interface_adapter.record_watchhistory.RecordWatchHistoryPresenter;
 import interface_adapter.view_watchhistory.ViewWatchHistoryController;
 import interface_adapter.view_watchhistory.ViewWatchHistoryPresenter;
 import use_case.add_to_watchlist.AddWatchListInteractor;
 import use_case.compare_watchlists.CompareWatchListInteractor;
 import use_case.filter_movies.FilterMoviesInteractor;
+import use_case.record_watchhistory.RecordWatchHistoryInteractor;
 import use_case.review_movie.ReviewMovieInteractor;
 import use_case.search_movie.SearchMovieInteractor;
 import use_case.view_watchhistory.ViewWatchHistoryInteractor;
@@ -56,6 +59,12 @@ public class AppBuilder {
         ViewWatchHistoryPresenter presenter = new ViewWatchHistoryPresenter();
         ViewWatchHistoryInteractor interactor = new ViewWatchHistoryInteractor(userGateway, presenter);
         return new ViewWatchHistoryController(interactor);
+    }
+
+    public RecordWatchHistoryController buildRecordWatchHistoryController() {
+        RecordWatchHistoryPresenter presenter = new RecordWatchHistoryPresenter();
+        RecordWatchHistoryInteractor interactor = new RecordWatchHistoryInteractor(userGateway, movieGateway, presenter);
+        return new RecordWatchHistoryController(interactor);
     }
 
     public ReviewMovieController buildReviewMovieController() {

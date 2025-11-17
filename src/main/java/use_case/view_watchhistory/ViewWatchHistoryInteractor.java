@@ -1,6 +1,5 @@
 package use_case.view_watchhistory;
 
-import entity.User;
 import use_case.common.UserGateway;
 
 public class ViewWatchHistoryInteractor implements ViewWatchHistoryInputBoundary {
@@ -25,10 +24,6 @@ public class ViewWatchHistoryInteractor implements ViewWatchHistoryInputBoundary
                     user.getUserName(),
                     user.getWatchHistory().getMovies()));
         }, () -> presenter.prepareFailView("User not found: " + requestModel.getUserName()));
-
-        /*
-         * TODO(Jiaqi Zhao): Add entry points for writing watch history (e.g., after playback completes); the interactor currently supports read-only flow.
-         */
     }
 }
 
