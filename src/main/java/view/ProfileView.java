@@ -1,7 +1,36 @@
 package view;
 
-public class ProfileView {
-}
+import interface_adapter.view_profile.ViewProfileController;
+import interface_adapter.view_profile.ViewProfileState;
+import interface_adapter.view_profile.ViewProfileViewModel;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+/**
+ * View for displaying user profiles.
+ */
+public class ProfileView extends JPanel implements ActionListener, PropertyChangeListener {
+    private final ViewProfileViewModel viewProfileViewModel;
+    private ViewProfileController viewProfileController;
+
+    private final JLabel titleLabel = new JLabel(ViewProfileViewModel.TITLE_LABEL);
+    private final JLabel usernameLabel = new JLabel();
+    private final JLabel watchlistCountLabel = new JLabel();
+    private final JLabel reviewCountLabel = new JLabel();
+    private final JLabel watchedMoviesLabel = new JLabel();
+    private final JLabel errorLabel = new JLabel();
+
+    public ProfileView(ViewProfileViewModel viewProfileViewModel) {
+        this.viewProfileViewModel = viewProfileViewModel;
+        viewProfileViewModel.addPropertyChangeListener(this);
+
+        initializeUI();
+    }
 
     private void initializeUI() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
