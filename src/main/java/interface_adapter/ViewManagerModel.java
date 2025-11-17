@@ -1,4 +1,5 @@
-package interface_adapter.view_login_signup;
+package interface_adapter;
+import interface_adapter.ViewModel;
 
 /**
  * Model for the View Manager. Its state is the name of the View which
