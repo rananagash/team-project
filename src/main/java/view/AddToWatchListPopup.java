@@ -53,8 +53,7 @@ public class AddToWatchListPopup extends JDialog implements AddWatchListView {
 
         initialState();
 
-        //TODO(Alana): some appearance finessing, centering content in the popup, etc
-        setPreferredSize(new Dimension(400, 200));
+        setPreferredSize(new Dimension(400, 150));
         pack();
         setLocationRelativeTo(parent);
         setVisible(true);
@@ -73,6 +72,7 @@ public class AddToWatchListPopup extends JDialog implements AddWatchListView {
             messageLabel = new JLabel("Add " + movie.getTitle() + " to:");
             dropdown = new JComboBox<>(watchLists.toArray(new WatchList[0]));
         }
+        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton addButton = new JButton("Add");
         JButton cancelButton = new JButton("Cancel");
@@ -84,13 +84,13 @@ public class AddToWatchListPopup extends JDialog implements AddWatchListView {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(Box.createVerticalGlue()); // vertical spacing to center
         panel.add(messageLabel);
-        if (dropdown != null) {
-            panel.add(dropdown);
-        }
-        panel.add(buttonPanel);
+        if (dropdown != null) { panel.add(dropdown); }
+        panel.add(Box.createVerticalGlue()); // vertical spacing to center
 
         getContentPane().add(panel);
+        getContentPane().add(buttonPanel, BorderLayout.SOUTH);
     }
 
     private void handleAdd() {
@@ -108,16 +108,28 @@ public class AddToWatchListPopup extends JDialog implements AddWatchListView {
      */
     @Override
     public void showResult(String message) {
+        Container parent = messageLabel.getParent();
         messageLabel.setText(message);
 
-        buttonPanel.removeAll();
+        // remove dropdown if it exists
+        if (dropdown != null) {
+            parent.remove(dropdown);
+            dropdown = null;
+        }
 
+        // replace button panel contents
+        buttonPanel.removeAll();
         JButton closeButton = new JButton("Close");
         closeButton.addActionListener(e -> dispose());
         buttonPanel.add(closeButton);
 
+        // refresh UI
+        messageLabel.revalidate();
+        messageLabel.repaint();
         buttonPanel.revalidate();
         buttonPanel.repaint();
+        parent.revalidate();
+        parent.repaint();
         pack();
     }
 
