@@ -3,8 +3,11 @@ package data_access;
 import entity.User;
 import entity.factories.UserFactory;
 import use_case.signup.SignupUserDataAccessInterface;
+import use_case.view_profile.ViewProfileUserDataAccessInterface;
+import use_case.view_profile.ProfileStats; // Add this import
 
 import java.io.*;
+import java.time.LocalDateTime; // Add this import
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -93,4 +96,23 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
         return accounts.containsKey(identifier);
     }
 
+    @Override
+    public User getUser(String username) {
+        return accounts.get(username);
+    }
+
+    @Override
+    public ProfileStats getUserStats(String username) {
+        User user = accounts.get(username);
+        if (user == null) {
+            return null;
+        }
+
+        // Calculate stats - TODO need to adjust based on User class methods
+        int watchlistCount = user.getWatchLists() != null ? user.getWatchLists().size() : 0;
+        int reviewCount = 0; // TODO need to implement getReviews() in User class
+        int watchedMoviesCount = 0; // TODO need to implement getWatchHistory() in User class
+
+        return new ProfileStats(watchlistCount, reviewCount, watchedMoviesCount);
+    }
 }
