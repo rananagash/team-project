@@ -67,7 +67,8 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
             String num = parts[i].split(",")[0].trim();
             try {
                 ids.add(Integer.parseInt(num));
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
 
         return ids;
@@ -109,7 +110,8 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
         if (ratingStr != null) {
             try {
                 rating = Double.parseDouble(ratingStr);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
 
         // Extract genres (list of ints)
@@ -130,10 +132,6 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
     }
 
 
-
-
-
-
     @Override
     public Optional<Movie> findById(String movieId) {
         try {
@@ -141,7 +139,7 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
             String json = makeRequest(url);
             Movie movie = parseMovie(json);
             return Optional.of(movie);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return Optional.empty();
         }
@@ -154,12 +152,133 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
          */
         return Collections.emptyList();
     }
+    private String extractMovieIdFromResult(String json) {
+        int idIndex = json.indexOf("\"id\":");
+        if (idIndex == -1) return null;
+
+        idIndex += "\"id\":".length();
+        int end = json.indexOf(",", idIndex);
+        if (end == -1) {
+            end = json.indexOf("}", idIndex);
+        }
+        if (end == -1) return null;
+
+        return json.substring(idIndex, end).trim();
+    }
+
+    // Parse a movie from the discover/search results array
+    // The structure is slightly different from the single movie endpoint
+    private Movie parseMovieFromResult(String json) {
+        // Extract simple fields
+        String id = extractMovieIdFromResult(json);
+        String title = extractString(json, "\"title\":\"");
+        String plot = extractString(json, "\"overview\":\"");
+        String releaseDate = extractString(json, "\"release_date\":\"");
+        String ratingStr = extractNumber(json, "\"vote_average\":");
+        String posterPath = extractString(json, "\"poster_path\":\"");
+
+        // Convert rating to double
+        double rating = 0.0;
+        if (ratingStr != null) {
+            try {
+                rating = Double.parseDouble(ratingStr);
+            } catch (Exception ignored) {}
+        }
+
+        // Extract genres (list of ints)
+        List<Integer> genreIds = extractGenreIds(json);
+
+        String posterUrl;
+        if (posterPath == null || posterPath.equals("null")) {
+            posterUrl = "";
+        } else {
+            posterUrl = "https://image.tmdb.org/t/p/w500" + posterPath;
+        }
+
+        // Build and return the Movie object
+        return new Movie(id, title, plot, genreIds, releaseDate, rating, posterUrl);
+    }
+
+    // Extract all movie objects from the results array in discover/search response
+    private List<Movie> parseMoviesFromResults(String json) {
+        List<Movie> movies = new ArrayList<>();
+
+        // Find the results array
+        int resultsStart = json.indexOf("\"results\":[");
+        if (resultsStart == -1) return movies;
+
+        resultsStart += "\"results\":[".length();
+        int resultsEnd = json.lastIndexOf("]");
+        if (resultsEnd == -1 || resultsEnd <= resultsStart) return movies;
+
+        String resultsArray = json.substring(resultsStart, resultsEnd);
+
+        // Split by movie objects (each starts with {)
+        // We'll find each complete movie object by matching braces
+        int currentPos = 0;
+        while (currentPos < resultsArray.length()) {
+            int movieStart = resultsArray.indexOf("{", currentPos);
+            if (movieStart == -1) break;
+
+            // Find the matching closing brace
+            int braceCount = 0;
+            int movieEnd = movieStart;
+            for (int i = movieStart; i < resultsArray.length(); i++) {
+                char c = resultsArray.charAt(i);
+                if (c == '{') braceCount++;
+                if (c == '}') {
+                    braceCount--;
+                    if (braceCount == 0) {
+                        movieEnd = i + 1;
+                        break;
+                    }
+                }
+            }
+
+            if (movieEnd > movieStart) {
+                String movieJson = resultsArray.substring(movieStart, movieEnd);
+                try {
+                    Movie movie = parseMovieFromResult(movieJson);
+                    if (movie.getMovieId() != null && movie.getTitle() != null) {
+                        movies.add(movie);
+                    }
+                } catch (Exception e) {
+                    // Skip invalid movie entries
+                }
+            }
+
+            currentPos = movieEnd;
+        }
+
+        return movies;
+    }
 
     @Override
     public List<Movie> filterByGenres(List<Integer> genreIds) {
-        /*
-         * TODO(Inba Thiyagarajan): Combine popular/discover endpoints to implement genre filtering.
-         */
-        return Collections.emptyList();
+        try {
+            // Build URL with comma-separated genre IDs
+            // TMDb discover endpoint: https://api.themoviedb.org/3/discover/movie?with_genres=28,12
+            StringBuilder urlBuilder = new StringBuilder("https://api.themoviedb.org/3/discover/movie?with_genres=");
+
+            for (int i = 0; i < genreIds.size(); i++) {
+                if (i > 0) {
+                    urlBuilder.append(",");
+                }
+                urlBuilder.append(genreIds.get(i));
+            }
+
+            // Add sort_by parameter to get popular movies first
+            urlBuilder.append("&sort_by=popularity.desc");
+
+            String url = urlBuilder.toString();
+            String json = makeRequest(url);
+
+            // Parse the results array and convert to Movie objects
+
+            return parseMoviesFromResults(json);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
     }
 }
