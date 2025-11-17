@@ -4,6 +4,7 @@ import interface_adapter.logged_in.ChangePasswordController;
 import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.logout.LogoutController;
+import interface_adapter.view_watchhistory.ViewWatchHistoryController;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -24,6 +25,7 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
     private final JLabel passwordErrorField = new JLabel();
     private ChangePasswordController changePasswordController = null;
     private LogoutController logoutController;
+    private ViewWatchHistoryController viewWatchHistoryController;
 
     private final JLabel username;
 
@@ -31,6 +33,7 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
 
     private final JTextField passwordInputField = new JTextField(15);
     private final JButton changePassword;
+    private final JButton viewWatchHistory;
 
     public LoggedInView(LoggedInViewModel loggedInViewModel) {
         this.loggedInViewModel = loggedInViewModel;
@@ -52,7 +55,17 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
         changePassword = new JButton("Change Password");
         buttons.add(changePassword);
 
+        viewWatchHistory = new JButton("View Watch History");
+        buttons.add(viewWatchHistory);
+
         logOut.addActionListener(this);
+
+        viewWatchHistory.addActionListener(e -> {
+            if (viewWatchHistoryController != null) {
+                final LoggedInState currentState = loggedInViewModel.getState();
+                viewWatchHistoryController.loadHistory(currentState.getUsername());
+            }
+        });
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -143,5 +156,9 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
 
     public void setLogoutController(LogoutController logoutController) {
         this.logoutController = logoutController;
+    }
+
+    public void setViewWatchHistoryController(ViewWatchHistoryController viewWatchHistoryController) {
+        this.viewWatchHistoryController = viewWatchHistoryController;
     }
 }
