@@ -16,6 +16,7 @@ import interface_adapter.record_watchhistory.RecordWatchHistoryController;
 import interface_adapter.record_watchhistory.RecordWatchHistoryPresenter;
 import interface_adapter.view_watchhistory.ViewWatchHistoryController;
 import interface_adapter.view_watchhistory.ViewWatchHistoryPresenter;
+import view.ViewWatchHistoryPopup;
 import use_case.add_to_watchlist.AddWatchListInteractor;
 import use_case.compare_watchlists.CompareWatchListInteractor;
 import use_case.filter_movies.FilterMoviesInteractor;
@@ -53,8 +54,19 @@ public class AppBuilder {
         return new CompareWatchListController(interactor);
     }
 
+    public ViewWatchHistoryController buildViewWatchHistoryController(javax.swing.JFrame parentFrame) {
+        ViewWatchHistoryPopup view = new ViewWatchHistoryPopup(parentFrame);
+        ViewWatchHistoryPresenter presenter = new ViewWatchHistoryPresenter(view);
+        ViewWatchHistoryInteractor interactor = new ViewWatchHistoryInteractor(userGateway, presenter);
+        return new ViewWatchHistoryController(interactor);
+    }
+
+    /**
+     * Builds ViewWatchHistoryController without a parent frame (for testing or console mode).
+     * The presenter will fall back to console output if view is not set.
+     */
     public ViewWatchHistoryController buildViewWatchHistoryController() {
-        ViewWatchHistoryPresenter presenter = new ViewWatchHistoryPresenter();
+        ViewWatchHistoryPresenter presenter = new ViewWatchHistoryPresenter(null);
         ViewWatchHistoryInteractor interactor = new ViewWatchHistoryInteractor(userGateway, presenter);
         return new ViewWatchHistoryController(interactor);
     }

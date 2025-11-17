@@ -15,7 +15,7 @@ public class ProfileStats {
         this.watchlistCount = watchlistCount;
         this.reviewCount = reviewCount;
         this.watchedMoviesCount = watchedMoviesCount;
-        this.accountCreationDate = accountCreationDate;
+        this.accountCreationDate = null; // TODO: Add account creation date support when User class is updated
     }
 
     public int getWatchlistCount() { return watchlistCount; }
