@@ -1,6 +1,6 @@
 package interface_adapter.view_profile;
 
-import interface_adapter.view_login_signup.ViewModel;
+import interface_adapter.ViewModel;
 
 /**
  * View Model for the View Profile View.
