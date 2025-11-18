@@ -5,13 +5,25 @@ import use_case.review_movie.ReviewMovieResponseModel;
 
 public class ReviewMoviePresenter implements ReviewMovieOutputBoundary {
 
+    private final ReviewMovieViewModel viewModel;
+
+    public ReviewMoviePresenter(ReviewMovieViewModel viewModel) {
+        this.viewModel = viewModel;
+    }
+
     @Override
     public void prepareSuccessView(ReviewMovieResponseModel responseModel) {
-        // TODO: push success info to the UI
+        String msg = "Review added for movie " + responseModel.getMovieId() +
+                " by user " + responseModel.getUserName() +
+                " with rating " + responseModel.getRating();
+
+        viewModel.setMessage(msg);
+        viewModel.firePropertyChange();
     }
 
     @Override
     public void prepareFailView(String errorMessage) {
-        // TODO: show error info
+        viewModel.setError(errorMessage);
+        viewModel.firePropertyChange();
     }
 }

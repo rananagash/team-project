@@ -26,6 +26,8 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
     private ChangePasswordController changePasswordController = null;
     private LogoutController logoutController;
     private ViewWatchHistoryController viewWatchHistoryController;
+    private interface_adapter.review_movie.ReviewMovieController reviewMovieController;
+    private interface_adapter.review_movie.ReviewMovieViewModel reviewMovieViewModel;
 
     private final JLabel username;
 
@@ -57,6 +59,32 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
 
         viewWatchHistory = new JButton("View Watch History");
         buttons.add(viewWatchHistory);
+
+        JButton reviewButton = new JButton("Review a movie (prefilled for testing");
+        buttons.add(reviewButton);
+
+        //Review button action listener
+        reviewButton.addActionListener(e -> {
+            if (reviewMovieController != null && reviewMovieViewModel != null) {
+                final LoggedInState state = loggedInViewModel.getState();
+                String username = state.getUsername();   // currently logged-in user
+
+                JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+                AddReviewPopup popup = new AddReviewPopup(
+                        parent,  // parent frame
+                        reviewMovieController,
+                        reviewMovieViewModel,
+                        username,               // "Oliver" dynamically
+                        "299534",               // Endgame TMDB ID
+                        "Avengers Endgame"      // temporary hard-coded title
+                );
+
+                popup.setVisible(true);
+            }
+        });
+
+
+
 
         logOut.addActionListener(this);
 
@@ -161,4 +189,13 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
     public void setViewWatchHistoryController(ViewWatchHistoryController viewWatchHistoryController) {
         this.viewWatchHistoryController = viewWatchHistoryController;
     }
+
+    public void setReviewMovieController(interface_adapter.review_movie.ReviewMovieController controller) {
+        this.reviewMovieController = controller;
+    }
+
+    public void setReviewMovieViewModel(interface_adapter.review_movie.ReviewMovieViewModel viewModel) {
+        this.reviewMovieViewModel = viewModel;
+    }
+
 }

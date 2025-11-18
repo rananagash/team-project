@@ -39,5 +39,7 @@ public class ReviewMovieResponseModel {
     public String getComment() {
         return comment;
     }
+
+    //public String getMessage() {return message;}
 }
 
