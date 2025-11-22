@@ -11,8 +11,8 @@ public class SearchMovieController {
         this.interactor = interactor;
     }
 
-    public void search(String query) {
-        SearchMovieRequestModel requestModel = new SearchMovieRequestModel(query);
-        interactor.execute(requestModel);
+    public void search(String query, int page) {
+        SearchMovieRequestModel request = new SearchMovieRequestModel(query, page);
+        interactor.execute(request);
     }
 }
