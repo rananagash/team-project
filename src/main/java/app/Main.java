@@ -5,6 +5,8 @@ import entity.Movie;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.view_watchhistory.ViewWatchHistoryController;
+import interface_adapter.review_movie.ReviewMovieController;
+import interface_adapter.review_movie.ReviewMovieViewModel;
 import view.LoggedInView;
 
 import javax.swing.*;
@@ -21,7 +23,9 @@ public class Main {
         builder.buildFilterMoviesController();
         builder.buildAddWatchListController();
         builder.buildCompareWatchListController();
-        builder.buildReviewMovieController();
+        ReviewMovieController reviewController = builder.buildReviewMovieController();
+        ReviewMovieViewModel reviewViewModel = builder.getReviewMovieViewModel();
+
 
         // 创建主窗口
         JFrame application = new JFrame("Movie App");
@@ -35,6 +39,11 @@ public class Main {
         // 创建 LoggedInView 和 ViewModel
         LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
         LoggedInView loggedInView = new LoggedInView(loggedInViewModel);
+
+        // For the review functionality
+        loggedInView.setReviewMovieController(reviewController);
+        loggedInView.setReviewMovieViewModel(reviewViewModel);
+
 
         // 连接 ViewWatchHistoryController 到 LoggedInView
         loggedInView.setViewWatchHistoryController(viewHistoryController);

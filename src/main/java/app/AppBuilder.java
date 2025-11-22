@@ -11,6 +11,7 @@ import interface_adapter.filter_movies.FilterMoviesViewModel;
 import interface_adapter.filter_movies.FilterMoviesPresenter;
 import interface_adapter.review_movie.ReviewMovieController;
 import interface_adapter.review_movie.ReviewMoviePresenter;
+import interface_adapter.review_movie.ReviewMovieViewModel;
 import interface_adapter.search_movie.SearchMovieController;
 import interface_adapter.search_movie.SearchMoviePresenter;
 import interface_adapter.record_watchhistory.RecordWatchHistoryController;
@@ -25,11 +26,18 @@ import use_case.record_watchhistory.RecordWatchHistoryInteractor;
 import use_case.review_movie.ReviewMovieInteractor;
 import use_case.search_movie.SearchMovieInteractor;
 import use_case.view_watchhistory.ViewWatchHistoryInteractor;
+import view.LoggedInView;
 
 public class AppBuilder {
 
     private final InMemoryUserDataAccessObject userGateway = new InMemoryUserDataAccessObject();
     private final TMDbMovieDataAccessObject movieGateway = new TMDbMovieDataAccessObject();
+    private ReviewMovieViewModel reviewMovieViewModel;
+
+    public ReviewMovieViewModel getReviewMovieViewModel() {
+        return reviewMovieViewModel;
+    }
+
 
     public SearchMovieController buildSearchMovieController() {
         SearchMoviePresenter presenter = new SearchMoviePresenter();
@@ -80,10 +88,15 @@ public class AppBuilder {
     }
 
     public ReviewMovieController buildReviewMovieController() {
-        ReviewMoviePresenter presenter = new ReviewMoviePresenter();
-        ReviewMovieInteractor interactor = new ReviewMovieInteractor(userGateway, movieGateway, presenter);
+        reviewMovieViewModel = new ReviewMovieViewModel();
+        ReviewMoviePresenter presenter = new ReviewMoviePresenter(reviewMovieViewModel);
+        ReviewMovieInteractor interactor =
+                new ReviewMovieInteractor(userGateway, movieGateway, presenter);
         return new ReviewMovieController(interactor);
     }
+
+
+
 
     /*
      * TODO(team): Wire controllers into Swing views here.
