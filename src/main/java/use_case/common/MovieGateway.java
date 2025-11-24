@@ -11,9 +11,6 @@ public interface MovieGateway {
 
     List<Movie> searchByTitle(String query);
 
-    PagedMovieResult searchByTitle(String query, int page)
-            throws MovieDataAccessException;
-
     List<Movie> filterByGenres(List<Integer> genreIds);
 }
 

@@ -16,7 +16,6 @@ public class Movie {
     private final String releaseDate;
     private double rating;
     private final String posterUrl;
-    private final double popularity;
 
     public Movie(String movieId,
                  String title,
@@ -24,7 +23,6 @@ public class Movie {
                  List<Integer> genreIds,
                  String releaseDate,
                  double rating,
-                 double popularity,
                  String posterUrl) {
         this.movieId = Objects.requireNonNull(movieId, "movieId");
         this.title = Objects.requireNonNull(title, "title");
@@ -33,7 +31,6 @@ public class Movie {
         this.releaseDate = releaseDate;
         this.rating = rating;
         this.posterUrl = posterUrl;
-        this.popularity = 0.0;
     }
 
     public String getMovieId() {
@@ -52,23 +49,12 @@ public class Movie {
         return Collections.unmodifiableList(genreIds);
     }
 
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
     public double getRating() {
         return rating;
-    }
-
-    public double getPopularity() {
-        return popularity;
-    }
-
-    public Integer getReleaseYear(){
-        if (releaseDate == null || releaseDate.length() < 4) {
-            return null;
-        }
-        try {
-            return Integer.parseInt(releaseDate.substring(0, 4));
-        } catch (NumberFormatException e) {
-            return null;
-        }
     }
 
     public void updateRating(double rating) {
