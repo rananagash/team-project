@@ -94,4 +94,12 @@ class WatchListTest {
         assertFalse(wl.getMovies().contains(movie));
         assertEquals(0, wl.getMovies().size());
     }
+
+    @Test
+    void stringToStringWorks() {
+        User user = new User("test", "1234");
+        WatchList wl = user.getWatchLists().get(0);
+
+        assertEquals(user.getUserName() + "'s Watch List", wl.toString());
+    }
 }

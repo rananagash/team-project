@@ -1,14 +1,25 @@
 package view;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.util.List;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import entity.Movie;
 import entity.User;
 import entity.WatchList;
 import interface_adapter.add_to_watchlist.AddWatchListController;
 import interface_adapter.add_to_watchlist.AddWatchListView;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.List;
 
 /**
  * Swing-based popup dialog for adding a movie to a user's watch list.
@@ -32,7 +43,6 @@ public class AddToWatchListPopup extends JDialog implements AddWatchListView {
     private final User user;
     private final Movie movie;
     private AddWatchListController controller;
-    // TODO(Alana): if setController method not necessary, the controller variable might be okay to be final
 
     /**
      * Constructs the popup UI and displays it immediately.
@@ -51,6 +61,8 @@ public class AddToWatchListPopup extends JDialog implements AddWatchListView {
         this.movie = movie;
         this.controller = controller;
 
+        controller.getPresenter().setView(this);
+
         initialState();
 
         setPreferredSize(new Dimension(400, 150));
@@ -60,7 +72,7 @@ public class AddToWatchListPopup extends JDialog implements AddWatchListView {
     }
 
     private void initialState() {
-        List<WatchList> watchLists = user.getWatchLists();
+        final List<WatchList> watchLists = user.getWatchLists();
 
         messageLabel = new JLabel();
         buttonPanel = new JPanel();
@@ -68,34 +80,42 @@ public class AddToWatchListPopup extends JDialog implements AddWatchListView {
         if (watchLists.size() == 1) {
             messageLabel = new JLabel("Add " + movie.getTitle() + " to "
                     + watchLists.get(0).getName() + "?");
-        } else {
+        }
+        else {
             messageLabel = new JLabel("Add " + movie.getTitle() + " to:");
             dropdown = new JComboBox<>(watchLists.toArray(new WatchList[0]));
         }
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JButton addButton = new JButton("Add");
-        JButton cancelButton = new JButton("Cancel");
+        final JButton addButton = new JButton("Add");
+        final JButton cancelButton = new JButton("Cancel");
         buttonPanel.add(addButton);
         buttonPanel.add(cancelButton);
 
         addButton.addActionListener(e -> handleAdd());
         cancelButton.addActionListener(e -> dispose());
 
-        JPanel panel = new JPanel();
+        final JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(Box.createVerticalGlue()); // vertical spacing to center
+        panel.add(Box.createVerticalGlue());
         panel.add(messageLabel);
-        if (dropdown != null) { panel.add(dropdown); }
-        panel.add(Box.createVerticalGlue()); // vertical spacing to center
+        if (dropdown != null) {
+            panel.add(dropdown);
+        }
+        panel.add(Box.createVerticalGlue());
 
         getContentPane().add(panel);
         getContentPane().add(buttonPanel, BorderLayout.SOUTH);
     }
 
     private void handleAdd() {
-        WatchList selected = (dropdown == null) ? user.getWatchLists().get(0)
-                : (WatchList) dropdown.getSelectedItem();
+        final WatchList selected;
+        if (dropdown == null) {
+            selected = user.getWatchLists().get(0);
+        }
+        else {
+            selected = (WatchList) dropdown.getSelectedItem();
+        }
         controller.addMovieToWatchList(user, movie, selected);
         // don't close popup; presenter will call showResult to update
     }
@@ -108,7 +128,7 @@ public class AddToWatchListPopup extends JDialog implements AddWatchListView {
      */
     @Override
     public void showResult(String message) {
-        Container parent = messageLabel.getParent();
+        final Container parent = messageLabel.getParent();
         messageLabel.setText(message);
 
         // remove dropdown if it exists
@@ -119,7 +139,7 @@ public class AddToWatchListPopup extends JDialog implements AddWatchListView {
 
         // replace button panel contents
         buttonPanel.removeAll();
-        JButton closeButton = new JButton("Close");
+        final JButton closeButton = new JButton("Close");
         closeButton.addActionListener(e -> dispose());
         buttonPanel.add(closeButton);
 
@@ -133,7 +153,6 @@ public class AddToWatchListPopup extends JDialog implements AddWatchListView {
         pack();
     }
 
-    // TODO(Alana): this method is to make testing possible. May not be necessary in the final version.
     /**
      * Setter used only for testing to inject a mock controller.
      *
@@ -141,5 +160,6 @@ public class AddToWatchListPopup extends JDialog implements AddWatchListView {
      */
     public void setController(AddWatchListController controller) {
         this.controller = controller;
+        controller.getPresenter().setView(this);
     }
 }

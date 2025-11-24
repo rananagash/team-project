@@ -53,9 +53,9 @@ public class AppBuilder {
     }
 
     public AddWatchListController buildAddWatchListController() {
-        AddWatchListPresenter presenter = new AddWatchListPresenter(null);
-        AddWatchListInteractor interactor = new AddWatchListInteractor(presenter, userGateway);
-        return new AddWatchListController(interactor);
+        final AddWatchListPresenter presenter = new AddWatchListPresenter(null);
+        final AddWatchListInteractor interactor = new AddWatchListInteractor(presenter, userGateway);
+        return new AddWatchListController(interactor, presenter);
     }
 
     public CompareWatchListController buildCompareWatchListController() {

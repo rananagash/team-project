@@ -24,7 +24,12 @@ public class AddWatchListResponseModel {
         this.message = message;
     }
 
-    public String getMessage() {return message;}
-    public boolean isSuccess() {return success;}
+    public String getMessage() {
+        return message;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
 }
 
