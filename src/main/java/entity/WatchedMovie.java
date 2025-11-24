@@ -14,6 +14,7 @@ public class WatchedMovie extends Movie {
                 movie.getGenreIds(),
                 movie.getReleaseDate(),
                 movie.getRating(),
+                movie.getPopularity(),
                 movie.getPosterUrl());
         this.watchedDate = watchedDate == null ? LocalDateTime.now() : watchedDate;
     }
@@ -24,9 +25,10 @@ public class WatchedMovie extends Movie {
                         List<Integer> genreIds,
                         String releaseDate,
                         double rating,
+                        double popularity,
                         String posterUrl,
                         LocalDateTime watchedDate) {
-        super(movieId, title, plot, genreIds, releaseDate, rating, posterUrl);
+        super(movieId, title, plot, genreIds, releaseDate, rating, popularity, posterUrl);
         this.watchedDate = watchedDate == null ? LocalDateTime.now() : watchedDate;
     }
 

@@ -2,6 +2,8 @@ package data_access;
 
 import entity.Movie;
 import use_case.common.MovieGateway;
+import use_case.common.PagedMovieResult;
+import use_case.common.MovieDataAccessException;
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
@@ -127,8 +129,18 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
             posterUrl = "https://image.tmdb.org/t/p/w500" + posterPath;
         }
 
+        // Extract popularity if available, otherwise use 0.0
+        String popularityStr = extractNumber(json, "\"popularity\":");
+        double popularity = 0.0;
+        if (popularityStr != null) {
+            try {
+                popularity = Double.parseDouble(popularityStr);
+            } catch (Exception ignored) {
+            }
+        }
+
         // Build and return the Movie object
-        return new Movie(id, title, plot, genreIds, releaseDate, rating, posterUrl);
+        return new Movie(id, title, plot, genreIds, releaseDate, rating, popularity, posterUrl);
     }
 
 
@@ -151,6 +163,43 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
          * TODO(Chester Zhao): Hit TMDb search endpoint and return a list of matching movies.
          */
         return Collections.emptyList();
+    }
+
+    @Override
+    public PagedMovieResult searchByTitle(String query, int page) throws MovieDataAccessException {
+        try {
+            // TMDb search endpoint: https://api.themoviedb.org/3/search/movie?query=avengers&page=1
+            String encodedQuery = query.replace(" ", "%20");
+            String url = "https://api.themoviedb.org/3/search/movie?query=" + encodedQuery + "&page=" + page;
+            String json = makeRequest(url);
+
+            // Parse movies from results
+            List<Movie> movies = parseMoviesFromResults(json);
+
+            // Extract pagination info
+            int currentPage = extractPageNumber(json, "\"page\":");
+            int totalPages = extractPageNumber(json, "\"total_pages\":");
+
+            return new PagedMovieResult(movies, currentPage, totalPages);
+        } catch (Exception e) {
+            throw new MovieDataAccessException(
+                    MovieDataAccessException.Type.NETWORK,
+                    "Failed to search movies: " + e.getMessage(),
+                    e
+            );
+        }
+    }
+
+    // Helper method to extract page number from JSON
+    private int extractPageNumber(String json, String key) {
+        try {
+            String numberStr = extractNumber(json, key);
+            if (numberStr != null) {
+                return Integer.parseInt(numberStr);
+            }
+        } catch (Exception ignored) {
+        }
+        return 1; // Default to page 1 if extraction fails
     }
     private String extractMovieIdFromResult(String json) {
         int idIndex = json.indexOf("\"id\":");
@@ -195,8 +244,18 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
             posterUrl = "https://image.tmdb.org/t/p/w500" + posterPath;
         }
 
+        // Extract popularity if available, otherwise use 0.0
+        String popularityStr = extractNumber(json, "\"popularity\":");
+        double popularity = 0.0;
+        if (popularityStr != null) {
+            try {
+                popularity = Double.parseDouble(popularityStr);
+            } catch (Exception ignored) {
+            }
+        }
+
         // Build and return the Movie object
-        return new Movie(id, title, plot, genreIds, releaseDate, rating, posterUrl);
+        return new Movie(id, title, plot, genreIds, releaseDate, rating, popularity, posterUrl);
     }
 
     // Extract all movie objects from the results array in discover/search response

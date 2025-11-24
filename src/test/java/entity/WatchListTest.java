@@ -43,6 +43,7 @@ class WatchListTest {
                 List.of(1, 2),
                 "2025-01-01",
                 7.5,
+                0.0,
                 "poster-url"
         );
 
@@ -64,6 +65,7 @@ class WatchListTest {
                 List.of(1, 2),
                 "2025-01-01",
                 7.5,
+                0.0,
                 "poster-url"
         );
 
@@ -85,6 +87,7 @@ class WatchListTest {
                 List.of(1, 2),
                 "2025-01-01",
                 7.5,
+                0.0,
                 "poster-url"
         );
 
