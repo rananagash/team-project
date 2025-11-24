@@ -8,7 +8,7 @@ import use_case.common.UserGateway;
 /**
  * Interactor for the Add to Watch List use case.
  *
- * This class implements the use case application logic:
+ * <p>This class implements the use case application logic:
  * <ul>
  *     <li>Attempts to add a movie to a Watch List</li>
  *     <li>Detect if movie was already on Watch List</li>
@@ -23,8 +23,8 @@ public class AddWatchListInteractor implements AddWatchListInputBoundary {
     private final UserGateway userGateway;
 
     /**
-     * Constructs an interactor with a presenter that will translate the results
-     * @param presenter the ouput boundary used to display outcomes
+     * Constructs an interactor with a presenter that will translate the results.
+     * @param presenter the output boundary used to display outcomes
      * @param userGateway persistence gateway used to save changes
      */
     public AddWatchListInteractor(AddWatchListOutputBoundary presenter,
@@ -48,28 +48,30 @@ public class AddWatchListInteractor implements AddWatchListInputBoundary {
      */
     @Override
     public void execute(AddWatchListRequestModel requestModel) {
-        User user = requestModel.getUser();
-        Movie movie = requestModel.getMovie();
-        WatchList watchList = requestModel.getWatchList();
+        final User user = requestModel.getUser();
+        final Movie movie = requestModel.getMovie();
+        final WatchList watchList = requestModel.getWatchList();
 
-        boolean success;
-        String message;
+        final boolean success;
+        final String message;
 
-        boolean added = watchList.addMovie(movie);
+        final boolean added = watchList.addMovie(movie);
 
         if (added) {
             userGateway.save(user);
             success = true;
             message = movie.getTitle() + " successfully added to " + watchList.getName() + "!";
-        } else {
+        }
+        else {
             success = false;
             message = movie.getTitle() + " is already in " + watchList.getName() + ".";
         }
 
-        AddWatchListResponseModel responseModel = new AddWatchListResponseModel(success, message);
+        final AddWatchListResponseModel responseModel = new AddWatchListResponseModel(success, message);
         if (success) {
             presenter.prepareSuccessView(responseModel);
-        } else {
+        }
+        else {
             presenter.prepareFailView(message);
         }
     }

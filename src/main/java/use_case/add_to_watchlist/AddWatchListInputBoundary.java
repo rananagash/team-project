@@ -7,5 +7,9 @@ package use_case.add_to_watchlist;
  */
 public interface AddWatchListInputBoundary {
 
+    /**
+     * Executes the Add to Watch List use case with the given request model.
+     * @param requestModel the request model with the data to be added.
+     */
     void execute(AddWatchListRequestModel requestModel);
 }
