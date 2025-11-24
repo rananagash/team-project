@@ -15,14 +15,18 @@ import use_case.add_to_watchlist.AddWatchListRequestModel;
 public class AddWatchListController {
 
     private final AddWatchListInputBoundary interactor;
+    private final AddWatchListPresenter presenter;
 
     /**
      * Creates a controller for the Add to Watch List use case.
      *
      * @param interactor the input boundary
+     * @param presenter the presenter used for output
      */
-    public AddWatchListController(AddWatchListInputBoundary interactor) {
+    public AddWatchListController(AddWatchListInputBoundary interactor,
+                                  AddWatchListPresenter presenter) {
         this.interactor = interactor;
+        this.presenter = presenter;
     }
 
     /**
@@ -33,7 +37,15 @@ public class AddWatchListController {
      * @param watchList the target watch list
      */
     public void addMovieToWatchList(User user, Movie movie, WatchList watchList) {
-        AddWatchListRequestModel requestModel = new AddWatchListRequestModel(user, movie, watchList);
+        final AddWatchListRequestModel requestModel = new AddWatchListRequestModel(user, movie, watchList);
         interactor.execute(requestModel);
+    }
+
+    /**
+     * Exposes the presenter so a view can register itself.
+     * @return presenter
+     */
+    public AddWatchListPresenter getPresenter() {
+        return presenter;
     }
 }

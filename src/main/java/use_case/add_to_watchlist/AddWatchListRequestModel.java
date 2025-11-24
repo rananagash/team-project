@@ -21,13 +21,13 @@ public class AddWatchListRequestModel {
     private final WatchList watchList;
 
     /**
-     * constructs a request model with required entities
+     * Constructs a request model with required entities.
      *
      * @param user the user performing the operation
      * @param movie the movie to add
      * @param watchList the target watch list
      */
-    public AddWatchListRequestModel(User user,  Movie movie, WatchList watchList) {
+    public AddWatchListRequestModel(User user, Movie movie, WatchList watchList) {
         this.user = user;
         this.movie = movie;
         this.watchList = watchList;

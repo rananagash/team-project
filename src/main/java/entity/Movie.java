@@ -60,6 +60,10 @@ public class Movie {
         return popularity;
     }
 
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
     public Integer getReleaseYear(){
         if (releaseDate == null || releaseDate.length() < 4) {
             return null;

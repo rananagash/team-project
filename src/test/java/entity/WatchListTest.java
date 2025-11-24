@@ -43,6 +43,7 @@ class WatchListTest {
                 List.of(1, 2),
                 "2025-01-01",
                 7.5,
+                0.0,
                 "poster-url"
         );
 
@@ -64,6 +65,7 @@ class WatchListTest {
                 List.of(1, 2),
                 "2025-01-01",
                 7.5,
+                0.0,
                 "poster-url"
         );
 
@@ -85,6 +87,7 @@ class WatchListTest {
                 List.of(1, 2),
                 "2025-01-01",
                 7.5,
+                0.0,
                 "poster-url"
         );
 
@@ -93,5 +96,13 @@ class WatchListTest {
 
         assertFalse(wl.getMovies().contains(movie));
         assertEquals(0, wl.getMovies().size());
+    }
+
+    @Test
+    void stringToStringWorks() {
+        User user = new User("test", "1234");
+        WatchList wl = user.getWatchLists().get(0);
+
+        assertEquals(user.getUserName() + "'s Watch List", wl.toString());
     }
 }
