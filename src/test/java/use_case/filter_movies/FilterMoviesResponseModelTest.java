@@ -1,8 +1,7 @@
-package use_case_filter_movies;
+package use_case.filter_movies;
 
 import entity.Movie;
 import org.junit.jupiter.api.Test;
-import use_case.filter_movies.FilterMoviesResponseModel;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,9 +17,9 @@ class FilterMoviesResponseModelTest {
         List<Integer> requestedGenres = Arrays.asList(28, 12);
         List<String> requestedGenreNames = Arrays.asList("Action", "Adventure");
         Movie movie1 = new Movie("1", "Movie 1", "Plot 1",
-                Arrays.asList(28), "2023-01-01", 8.5, "poster1.jpg");
+                Arrays.asList(28), "2023-01-01", 8.5, 0.0, "poster1.jpg");
         Movie movie2 = new Movie("2", "Movie 2", "Plot 2",
-                Arrays.asList(12), "2023-02-01", 7.5, "poster2.jpg");
+                Arrays.asList(12), "2023-02-01", 7.5, 0.0, "poster2.jpg");
         List<Movie> movies = Arrays.asList(movie1, movie2);
 
         // Act
@@ -103,7 +102,7 @@ class FilterMoviesResponseModelTest {
     void testGetMovies() {
         // Arrange
         Movie movie = new Movie("1", "Test Movie", "Test Plot",
-                Collections.singletonList(28), "2023-01-01", 8.0, "poster.jpg");
+                Collections.singletonList(28), "2023-01-01", 8.0, 0.0, "poster.jpg");
         List<Movie> movies = Collections.singletonList(movie);
         List<Integer> requestedGenres = Collections.singletonList(28);
         List<String> requestedGenreNames = Collections.singletonList("Action");
@@ -139,11 +138,11 @@ class FilterMoviesResponseModelTest {
         List<Integer> requestedGenres = Collections.singletonList(35);
         List<String> requestedGenreNames = Collections.singletonList("Comedy");
         Movie movie1 = new Movie("1", "Comedy 1", "Plot 1",
-                Collections.singletonList(35), "2023-01-01", 8.0, "poster1.jpg");
+                Collections.singletonList(35), "2023-01-01", 8.0, 0.0, "poster1.jpg");
         Movie movie2 = new Movie("2", "Comedy 2", "Plot 2",
-                Collections.singletonList(35), "2023-02-01", 7.5, "poster2.jpg");
+                Collections.singletonList(35), "2023-02-01", 7.5, 0.0, "poster2.jpg");
         Movie movie3 = new Movie("3", "Comedy 3", "Plot 3",
-                Collections.singletonList(35), "2023-03-01", 9.0, "poster3.jpg");
+                Collections.singletonList(35), "2023-03-01", 9.0, 0.0, "poster3.jpg");
         List<Movie> movies = Arrays.asList(movie1, movie2, movie3);
 
         // Act
