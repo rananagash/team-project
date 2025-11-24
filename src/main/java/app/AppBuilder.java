@@ -16,6 +16,7 @@ import interface_adapter.search_movie.SearchMovieController;
 import interface_adapter.search_movie.SearchMoviePresenter;
 import interface_adapter.record_watchhistory.RecordWatchHistoryController;
 import interface_adapter.record_watchhistory.RecordWatchHistoryPresenter;
+import view.RecordWatchHistoryPopup;
 import interface_adapter.view_watchhistory.ViewWatchHistoryController;
 import interface_adapter.view_watchhistory.ViewWatchHistoryPresenter;
 import view.ViewWatchHistoryPopup;
@@ -26,7 +27,6 @@ import use_case.record_watchhistory.RecordWatchHistoryInteractor;
 import use_case.review_movie.ReviewMovieInteractor;
 import use_case.search_movie.SearchMovieInteractor;
 import use_case.view_watchhistory.ViewWatchHistoryInteractor;
-import view.LoggedInView;
 
 public class AppBuilder {
 
@@ -81,8 +81,19 @@ public class AppBuilder {
         return new ViewWatchHistoryController(interactor);
     }
 
+    public RecordWatchHistoryController buildRecordWatchHistoryController(javax.swing.JFrame parentFrame) {
+        RecordWatchHistoryPopup view = new RecordWatchHistoryPopup(parentFrame);
+        RecordWatchHistoryPresenter presenter = new RecordWatchHistoryPresenter(view);
+        RecordWatchHistoryInteractor interactor = new RecordWatchHistoryInteractor(userGateway, movieGateway, presenter);
+        return new RecordWatchHistoryController(interactor);
+    }
+
+    /**
+     * Builds RecordWatchHistoryController without a parent frame (for testing or console mode).
+     * The presenter will fall back to console output if view is not set.
+     */
     public RecordWatchHistoryController buildRecordWatchHistoryController() {
-        RecordWatchHistoryPresenter presenter = new RecordWatchHistoryPresenter();
+        RecordWatchHistoryPresenter presenter = new RecordWatchHistoryPresenter(null);
         RecordWatchHistoryInteractor interactor = new RecordWatchHistoryInteractor(userGateway, movieGateway, presenter);
         return new RecordWatchHistoryController(interactor);
     }
