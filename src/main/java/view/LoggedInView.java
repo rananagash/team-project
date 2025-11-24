@@ -5,100 +5,164 @@ import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.view_watchhistory.ViewWatchHistoryController;
+import interface_adapter.search_movie.SearchMovieController;
+import interface_adapter.view_profile.ViewProfileController;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 
-/**
- * The View for when the user is logged into the program.
- */
-public class LoggedInView extends JPanel implements ActionListener, PropertyChangeListener {
+public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     private final String viewName = "logged in";
-    private final LoggedInViewModel loggedInViewModel;
-    private final JLabel passwordErrorField = new JLabel();
-    private ChangePasswordController changePasswordController = null;
+    private SearchMovieController searchController;
+    private LoggedInViewModel loggedInViewModel;
+    private ChangePasswordController changePasswordController;
     private LogoutController logoutController;
     private ViewWatchHistoryController viewWatchHistoryController;
     private interface_adapter.review_movie.ReviewMovieController reviewMovieController;
     private interface_adapter.review_movie.ReviewMovieViewModel reviewMovieViewModel;
 
-    private final JLabel username;
+    private JTextField queryField;
+    private JButton searchButton;
+    private JButton prevPageButton;
+    private JButton nextPageButton;
+    private JLabel pageLabel;
+    private JLabel statusLabel;
+    private JList<String> resultsList;
+    private DefaultListModel<String> listModel;
+    private JLabel username;
+    private JTextField passwordInputField;
+    private JLabel passwordErrorField;
 
-    private final JButton logOut;
+    private int currentPage = 1;
+    private int totalPages = 1;
+    private String lastQuery = "";
 
-    private final JTextField passwordInputField = new JTextField(15);
-    private final JButton changePassword;
-    private final JButton viewWatchHistory;
+    private interface_adapter.view_profile.ViewProfileController profileController;
+
 
     public LoggedInView(LoggedInViewModel loggedInViewModel) {
         this.loggedInViewModel = loggedInViewModel;
         this.loggedInViewModel.addPropertyChangeListener(this);
 
-        final JLabel title = new JLabel("Logged In Screen");
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        initComponents();
+    }
 
-        final LabelTextPanel passwordInfo = new LabelTextPanel(
-                new JLabel("Password"), passwordInputField);
+    private void initComponents() {
+        this.setLayout(new BorderLayout(8, 8));
 
-        final JLabel usernameInfo = new JLabel("Currently logged in: ");
+        // ===== Top bar with user info and account buttons =====
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
+
+        JLabel usernameLabel = new JLabel("Logged in as: ");
         username = new JLabel();
+        topPanel.add(usernameLabel);
+        topPanel.add(username);
 
-        final JPanel buttons = new JPanel();
-        logOut = new JButton("Log Out");
-        buttons.add(logOut);
+        topPanel.add(new JSeparator(SwingConstants.VERTICAL));
 
-        changePassword = new JButton("Change Password");
-        buttons.add(changePassword);
-
-        viewWatchHistory = new JButton("View Watch History");
-        buttons.add(viewWatchHistory);
-
-        JButton reviewButton = new JButton("Review a movie (prefilled for testing");
-        buttons.add(reviewButton);
-
-        //Review button action listener
-        reviewButton.addActionListener(e -> {
-            if (reviewMovieController != null && reviewMovieViewModel != null) {
-                final LoggedInState state = loggedInViewModel.getState();
-                String username = state.getUsername();   // currently logged-in user
-
-                JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
-                AddReviewPopup popup = new AddReviewPopup(
-                        parent,  // parent frame
-                        reviewMovieController,
-                        reviewMovieViewModel,
-                        username,               // "Oliver" dynamically
-                        "299534",               // Endgame TMDB ID
-                        "Avengers Endgame"      // temporary hard-coded title
-                );
-
-                popup.setVisible(true);
+        JButton logOutBtn = new JButton("Log Out");
+        logOutBtn.addActionListener(e -> {
+            if (logoutController != null) {
+                logoutController.execute();
             }
         });
+        topPanel.add(logOutBtn);
 
+        JButton profileBtn = new JButton("Profile");
+        profileBtn.addActionListener(e -> {
+            if (profileController != null) {
+                final LoggedInState currentState = loggedInViewModel.getState();
+                profileController.switchToProfile(currentState.getUsername());
+            }
+        });
+        topPanel.add(profileBtn);
 
+        JButton changePasswordBtn = new JButton("Change Password");
+        changePasswordBtn.addActionListener(e -> {
+            if (changePasswordController != null) {
+                final LoggedInState currentState = loggedInViewModel.getState();
+                changePasswordController.execute(
+                        currentState.getUsername(),
+                        currentState.getPassword()
+                );
+            }
+        });
+        topPanel.add(changePasswordBtn);
 
-
-        logOut.addActionListener(this);
-
-        viewWatchHistory.addActionListener(e -> {
+        JButton viewHistoryBtn = new JButton("View Watch History");
+        viewHistoryBtn.addActionListener(e -> {
             if (viewWatchHistoryController != null) {
                 final LoggedInState currentState = loggedInViewModel.getState();
                 viewWatchHistoryController.loadHistory(currentState.getUsername());
             }
         });
+        topPanel.add(viewHistoryBtn);
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        JButton reviewBtn = new JButton("Review a movie");
+        reviewBtn.addActionListener(e -> {
+            if (reviewMovieController != null && reviewMovieViewModel != null) {
+                final LoggedInState state = loggedInViewModel.getState();
+                String username = state.getUsername();
 
+                JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+                AddReviewPopup popup = new AddReviewPopup(
+                        parent,
+                        reviewMovieController,
+                        reviewMovieViewModel,
+                        username,
+                        "299534",
+                        "Avengers Endgame"
+                );
+
+                popup.setVisible(true);
+            }
+        });
+        topPanel.add(reviewBtn);
+
+        this.add(topPanel, BorderLayout.NORTH);
+
+        // ===== Search bar =====
+        JPanel searchPanel = new JPanel(new BorderLayout(4, 4));
+        queryField = new JTextField();
+        searchButton = new JButton("Search");
+        searchPanel.add(queryField, BorderLayout.CENTER);
+        searchPanel.add(searchButton, BorderLayout.EAST);
+        this.add(searchPanel, BorderLayout.NORTH);
+
+        // ===== Result list =====
+        listModel = new DefaultListModel<>();
+        resultsList = new JList<>(listModel);
+        JScrollPane scrollPane = new JScrollPane(resultsList);
+        this.add(scrollPane, BorderLayout.CENTER);
+
+        // ===== Pagination + status =====
+        JPanel bottomPanel = new JPanel(new BorderLayout(4, 4));
+
+        JPanel paginationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        prevPageButton = new JButton("Prev");
+        nextPageButton = new JButton("Next");
+        pageLabel = new JLabel("Page 1 / 1");
+
+        paginationPanel.add(prevPageButton);
+        paginationPanel.add(nextPageButton);
+        paginationPanel.add(pageLabel);
+
+        statusLabel = new JLabel(" ");
+        statusLabel.setForeground(Color.DARK_GRAY);
+
+        bottomPanel.add(paginationPanel, BorderLayout.WEST);
+        bottomPanel.add(statusLabel, BorderLayout.CENTER);
+        this.add(bottomPanel, BorderLayout.SOUTH);
+
+        // ===== Password field for change password =====
+        passwordInputField = new JTextField(15);
         passwordInputField.getDocument().addDocumentListener(new DocumentListener() {
-
             private void documentListenerHelper() {
                 final LoggedInState currentState = loggedInViewModel.getState();
                 currentState.setPassword(passwordInputField.getText());
@@ -121,38 +185,74 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
             }
         });
 
-        changePassword.addActionListener(
-                // This creates an anonymous subclass of ActionListener and instantiates it.
-                evt -> {
-                    if (evt.getSource().equals(changePassword)) {
-                        final LoggedInState currentState = loggedInViewModel.getState();
+        passwordErrorField = new JLabel();
 
-                        this.changePasswordController.execute(
-                                currentState.getUsername(),
-                                currentState.getPassword()
-                        );
-                    }
-                }
-        );
+        // ===== Event Bindings =====
+        searchButton.addActionListener(e -> {
+            if (searchController == null) return;
 
-        this.add(title);
-        this.add(usernameInfo);
-        this.add(username);
+            String query = queryField.getText().trim();
+            if (query.isEmpty()) {
+                showError("Search query cannot be empty.");
+                return;
+            }
 
-        this.add(passwordInfo);
-        this.add(passwordErrorField);
-        this.add(buttons);
+            lastQuery = query;
+            currentPage = 1;
+            setStatus("Searching...");
+            searchController.search(lastQuery, currentPage);
+        });
+
+        prevPageButton.addActionListener(e -> {
+            if (searchController == null || lastQuery.isEmpty()) return;
+
+            if (currentPage > 1) {
+                currentPage--;
+                setStatus("Loading page " + currentPage + "...");
+                searchController.search(lastQuery, currentPage);
+            }
+        });
+
+        nextPageButton.addActionListener(e -> {
+            if (searchController == null || lastQuery.isEmpty()) return;
+
+            if (currentPage < totalPages) {
+                currentPage++;
+                setStatus("Loading page " + currentPage + "...");
+                searchController.search(lastQuery, currentPage);
+            }
+        });
+
+        updatePaginationButtons();
     }
 
-    /**
-     * React to a button click that results in evt.
-     * @param evt the ActionEvent to react to
-     */
-    public void actionPerformed(ActionEvent evt) {
-        if (evt.getSource().equals(logOut)) {
-            logoutController.execute();
+    public void showResults(List<String> movieLines, int currentPage, int totalPages) {
+        this.currentPage = currentPage;
+        this.totalPages = Math.max(totalPages, 1);
+
+        listModel.clear();
+        for (String line : movieLines) {
+            listModel.addElement(line);
         }
-        System.out.println("Click " + evt.getActionCommand());
+
+        updatePaginationButtons();
+        setStatus("Found " + movieLines.size() + " results (page " + currentPage + ").");
+    }
+
+    public void showError(String message) {
+        statusLabel.setForeground(Color.RED);
+        statusLabel.setText(message);
+    }
+
+    public void setStatus(String message) {
+        statusLabel.setForeground(Color.DARK_GRAY);
+        statusLabel.setText(message);
+    }
+
+    private void updatePaginationButtons() {
+        prevPageButton.setEnabled(currentPage > 1);
+        nextPageButton.setEnabled(currentPage < totalPages);
+        pageLabel.setText("Page " + currentPage + " / " + totalPages);
     }
 
     @Override
@@ -160,22 +260,23 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
         if (evt.getPropertyName().equals("state")) {
             final LoggedInState state = (LoggedInState) evt.getNewValue();
             username.setText(state.getUsername());
-        }
-        else if (evt.getPropertyName().equals("password")) {
+        } else if (evt.getPropertyName().equals("password")) {
             final LoggedInState state = (LoggedInState) evt.getNewValue();
             if (state.getPasswordError() == null) {
                 JOptionPane.showMessageDialog(this, "password updated for " + state.getUsername());
                 passwordInputField.setText("");
-            }
-            else {
+            } else {
                 JOptionPane.showMessageDialog(this, state.getPasswordError());
             }
         }
-
     }
 
     public String getViewName() {
         return viewName;
+    }
+
+    public void setController(SearchMovieController controller) {
+        this.searchController = controller;
     }
 
     public void setChangePasswordController(ChangePasswordController changePasswordController) {
@@ -184,6 +285,10 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
 
     public void setLogoutController(LogoutController logoutController) {
         this.logoutController = logoutController;
+    }
+
+    public void setProfileController(interface_adapter.view_profile.ViewProfileController controller) {
+        this.profileController = controller;
     }
 
     public void setViewWatchHistoryController(ViewWatchHistoryController viewWatchHistoryController) {
@@ -198,4 +303,6 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
         this.reviewMovieViewModel = viewModel;
     }
 
+    public void setViewProfileController(ViewProfileController viewProfileController) {
+    }
 }

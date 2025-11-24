@@ -21,4 +21,9 @@ public class ViewProfileController {
         ViewProfileInputData viewProfileInputData = new ViewProfileInputData(username);
         viewProfileUseCaseInteractor.execute(viewProfileInputData);
     }
+
+    public void switchToProfile(String username) {
+        ViewProfileInputData viewProfileInputData = new ViewProfileInputData(username);
+        viewProfileUseCaseInteractor.execute(viewProfileInputData);
+    }
 }
