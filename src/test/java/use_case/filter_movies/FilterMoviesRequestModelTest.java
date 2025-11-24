@@ -1,7 +1,6 @@
-package use_case_filter_movies;
+package use_case.filter_movies;
 
 import org.junit.jupiter.api.Test;
-import use_case.filter_movies.FilterMoviesRequestModel;
 
 import java.util.Arrays;
 import java.util.Collections;

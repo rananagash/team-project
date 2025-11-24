@@ -1,13 +1,9 @@
-package use_case_filter_movies;
+package use_case.filter_movies;
 
 import entity.Movie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import use_case.common.MovieGateway;
-import use_case.filter_movies.FilterMoviesInteractor;
-import use_case.filter_movies.FilterMoviesOutputBoundary;
-import use_case.filter_movies.FilterMoviesRequestModel;
-import use_case.filter_movies.FilterMoviesResponseModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,9 +61,9 @@ class FilterMoviesInteractorTest {
         FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(genreIds);
 
         Movie movie1 = new Movie("1", "Test Movie 1", "Plot 1",
-                Arrays.asList(28, 12), "2023-01-01", 8.5, "poster1.jpg");
+                Arrays.asList(28, 12), "2023-01-01", 8.5, 0.0, "poster1.jpg");
         Movie movie2 = new Movie("2", "Test Movie 2", "Plot 2",
-                Arrays.asList(28), "2023-02-01", 7.5, "poster2.jpg");
+                Arrays.asList(28), "2023-02-01", 7.5, 0.0, "poster2.jpg");
         List<Movie> expectedMovies = Arrays.asList(movie1, movie2);
         mockMovieGateway.setMoviesToReturn(expectedMovies);
 
@@ -91,7 +87,7 @@ class FilterMoviesInteractorTest {
         FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(genreIds);
 
         Movie movie = new Movie("3", "Comedy Movie", "Funny plot",
-                Collections.singletonList(35), "2023-03-01", 9.0, "poster3.jpg");
+                Collections.singletonList(35), "2023-03-01", 9.0, 0.0, "poster3.jpg");
         mockMovieGateway.setMoviesToReturn(Collections.singletonList(movie));
 
         // Act
@@ -133,7 +129,7 @@ class FilterMoviesInteractorTest {
         FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(genreIds);
 
         Movie movie = new Movie("1", "Test Movie", "Plot",
-                Arrays.asList(28), "2023-01-01", 8.0, "poster.jpg");
+                Arrays.asList(28), "2023-01-01", 8.0, 0.0, "poster.jpg");
         mockMovieGateway.setMoviesToReturn(Collections.singletonList(movie));
 
         // Act
@@ -224,6 +220,12 @@ class FilterMoviesInteractorTest {
         @Override
         public List<Movie> searchByTitle(String query) {
             return Collections.emptyList();
+        }
+
+        @Override
+        public use_case.common.PagedMovieResult searchByTitle(String query, int page)
+                throws use_case.common.MovieDataAccessException {
+            return new use_case.common.PagedMovieResult(Collections.emptyList(), page, 1);
         }
 
         @Override
