@@ -4,6 +4,7 @@ import entity.Movie;
 import entity.User;
 import entity.WatchList;
 import use_case.add_to_watchlist.AddWatchListInputBoundary;
+import use_case.add_to_watchlist.AddWatchListOutputBoundary;
 import use_case.add_to_watchlist.AddWatchListRequestModel;
 
 /**

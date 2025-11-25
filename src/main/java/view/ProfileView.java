@@ -15,6 +15,8 @@ import java.beans.PropertyChangeListener;
  * View for displaying user profiles.
  */
 public class ProfileView extends JPanel implements ActionListener, PropertyChangeListener {
+
+    private final String viewName = "view profile";
     private final ViewProfileViewModel viewProfileViewModel;
     private ViewProfileController viewProfileController;
 
@@ -81,5 +83,9 @@ public class ProfileView extends JPanel implements ActionListener, PropertyChang
     @Override
     public void actionPerformed(ActionEvent e) {
         // Handle button actions if needed
+    }
+
+    public String getViewName() {
+        return viewName;
     }
 }

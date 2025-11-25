@@ -1,17 +1,25 @@
 package view;
 
+import entity.Movie;
+import entity.User;
+import interface_adapter.add_to_watchlist.AddWatchListController;
 import interface_adapter.logged_in.ChangePasswordController;
 import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.logout.LogoutController;
+import interface_adapter.record_watchhistory.RecordWatchHistoryController;
+import interface_adapter.record_watchhistory.RecordWatchHistoryPresenter;
 import interface_adapter.view_watchhistory.ViewWatchHistoryController;
 import interface_adapter.search_movie.SearchMovieController;
 import interface_adapter.view_profile.ViewProfileController;
+import use_case.record_watchhistory.RecordWatchHistoryInteractor;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
@@ -32,6 +40,8 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private ViewWatchHistoryController viewWatchHistoryController;
     private interface_adapter.review_movie.ReviewMovieController reviewMovieController;
     private ViewProfileController viewProfileController;
+    private AddWatchListController addWatchListController;
+    private RecordWatchHistoryController recordWatchHistoryController;
 
     // ViewModels
     private interface_adapter.review_movie.ReviewMovieViewModel reviewMovieViewModel;
@@ -43,6 +53,13 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private JButton viewHistoryBtn;
     private JButton profileBtn;
     private JButton reviewBtn;
+
+    // Middle Panel (testing only)
+    //TODO: remove before final version
+    private JPanel middlePanel;
+    private JButton addToWatchListBtn;
+    private JButton addToHistoryBtn;
+    private JButton rateReviewBtn;
 
     // UI Components - Search panel
     private JTextField queryField;
@@ -148,7 +165,103 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         });
         topPanel.add(reviewBtn);
 
-        this.add(topPanel, BorderLayout.NORTH);
+        // Middle panel buttons for testing only
+        //TODO: remove before final version
+        middlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        addToWatchListBtn = new JButton("Add to Watchlist (TEST)");
+        addToHistoryBtn = new JButton("Add to History (TEST)");
+        rateReviewBtn = new JButton("Rate & Review (TEST)");
+
+        middlePanel.add(addToWatchListBtn);
+        middlePanel.add(addToHistoryBtn);
+        middlePanel.add(rateReviewBtn);
+
+        addToWatchListBtn.addActionListener(e -> {
+            final LoggedInState currentState = loggedInViewModel.getState();
+            if (currentState == null) return;
+
+            //Dummy user - real button should get current logged in user
+            User user = new User("dummy-user", "password");
+
+            //Dummy movie
+            Movie movie = new Movie("m1",
+                    "Test Movie",
+                    "A test movie plot happens",
+                    List.of(1, 2),
+                    "2025-01-01",
+                    7.5,
+                    0.0,
+                    "poster-url");
+
+            JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+            // Create popup
+            new AddToWatchListPopup(
+                    parent,
+                    user,
+                    movie,
+                    addWatchListController
+            );
+        });
+
+        addToHistoryBtn.addActionListener(e -> {
+            final LoggedInState currentState = loggedInViewModel.getState();
+            if (currentState == null) return;
+
+            //Dummy user - real button should get current logged in user
+            User user = new User("dummy-user", "password");
+
+            //Dummy movie
+            Movie movie = new Movie("m1",
+                    "Test Movie",
+                    "A test movie plot happens",
+                    List.of(1, 2),
+                    "2025-01-01",
+                    7.5,
+                    0.0,
+                    "poster-url");
+
+            JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+            // Create popup
+            RecordWatchHistoryPopup popup = new RecordWatchHistoryPopup(parent);
+
+            //TODO:Jiaqi I couldn't quite get your implementation to work
+        });
+
+        rateReviewBtn.addActionListener(e -> {
+            final LoggedInState currentState = loggedInViewModel.getState();
+            if (currentState == null) return;
+
+            //Dummy user - real button should get current logged in user
+            User user = new User("dummy-user", "password");
+
+            //Dummy movie
+            Movie movie = new Movie("m1",
+                    "Test Movie",
+                    "A test movie plot happens",
+                    List.of(1, 2),
+                    "2025-01-01",
+                    7.5,
+                    0.0,
+                    "poster-url");
+
+            JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+            // Create popup
+            AddReviewPopup popup = new AddReviewPopup(
+                    parent,
+                    reviewMovieController,
+                    reviewMovieViewModel,
+                    user.getUserName(),
+                    movie.getMovieId(),
+                    movie.getTitle());
+
+            popup.setVisible(true);
+        });
+
+//        this.add(topPanel, BorderLayout.NORTH);
+
 
         // ===== Search bar =====
         JPanel searchPanel = new JPanel(new BorderLayout(4, 4));
@@ -170,7 +283,15 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         });
         searchPanel.add(queryField, BorderLayout.CENTER);
         searchPanel.add(searchButton, BorderLayout.EAST);
-        this.add(searchPanel, BorderLayout.NORTH);
+//        this.add(searchPanel, BorderLayout.NORTH);
+
+        // Wrap two top panels so they can both be in the "NORTH" section of BorderLayout
+        JPanel northWrapper = new JPanel();
+        northWrapper.setLayout(new BorderLayout());
+        northWrapper.add(topPanel, BorderLayout.NORTH);
+        northWrapper.add(middlePanel, BorderLayout.CENTER); //TODO: just for testing
+        northWrapper.add(searchPanel, BorderLayout.SOUTH);
+        this.add(northWrapper, BorderLayout.NORTH);
 
         // ===== Result list =====
         listModel = new DefaultListModel<>();
@@ -335,5 +456,13 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     public void setViewProfileController(ViewProfileController controller) {
         this.viewProfileController = controller;
+    }
+
+    public void setAddWatchListController(AddWatchListController controller) {
+        this.addWatchListController = controller;
+    }
+
+    public void setRecordWatchHistoryController(RecordWatchHistoryController controller) {
+        this.recordWatchHistoryController = controller;
     }
 }

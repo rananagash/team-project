@@ -24,8 +24,8 @@ public class SignupPresenter implements SignupOutputBoundary {
     public void prepareSuccessView(SignupOutputData response) {
         // On success, switch to login view with username pre-filled
         final LoginState loginState = loginViewModel.getState();
-        loginState.setUsername(response.getUsername()); // Pre-fill the login form
-        loginViewModel.setState(loginState);
+        loginState.setUsername(response.getUsername());
+//        loginViewModel.setState(loginState);
         loginViewModel.firePropertyChange();
 
         // Switch to login view

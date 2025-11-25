@@ -11,14 +11,14 @@ import java.util.UUID;
 
 public class ReviewMovieInteractor implements ReviewMovieInputBoundary {
 
-    private final UserGateway userGateway;
+    private final ReviewMovieUserDataAccessInterface userDataAccess;
     private final MovieGateway movieGateway;
     private final ReviewMovieOutputBoundary presenter;
 
-    public ReviewMovieInteractor(UserGateway userGateway,
+    public ReviewMovieInteractor(ReviewMovieUserDataAccessInterface userDataAccess,
                                  MovieGateway movieGateway,
                                  ReviewMovieOutputBoundary presenter) {
-        this.userGateway = userGateway;
+        this.userDataAccess = userDataAccess;
         this.movieGateway = movieGateway;
         this.presenter = presenter;
     }
@@ -30,7 +30,7 @@ public class ReviewMovieInteractor implements ReviewMovieInputBoundary {
             return;
         }
 
-        User user = userGateway.findByUserName(requestModel.getUserName()).orElse(null);
+        User user = userDataAccess.getUser(requestModel.getUserName());
         if (user == null) {
             presenter.prepareFailView("User not found: " + requestModel.getUserName());
             return;
@@ -48,7 +48,7 @@ public class ReviewMovieInteractor implements ReviewMovieInputBoundary {
         Review review = new Review(UUID.randomUUID().toString(), user, movie,
                 requestModel.getRating(), requestModel.getComment(), LocalDateTime.now());
         user.addReview(review);
-        userGateway.save(user);
+        userDataAccess.save(user);
         presenter.prepareSuccessView(new ReviewMovieResponseModel(
                 review.getReviewId(),
                 user.getUserName(),

@@ -13,24 +13,24 @@ import use_case.common.UserGateway;
  *     <li>Attempts to add a movie to a Watch List</li>
  *     <li>Detect if movie was already on Watch List</li>
  *     <li>Create a response model describing the result</li>
- *     <li>Persists state changes via {@link UserGateway}</li>
+ *     <li>Persists state changes via {@link data_access.FileUserDataAccessObject}</li>
  *     <li>Call the appropriate presenter method</li>
  * </ul>
  */
 public class AddWatchListInteractor implements AddWatchListInputBoundary {
 
     private final AddWatchListOutputBoundary presenter;
-    private final UserGateway userGateway;
+    private final AddWatchListUserDataAccessInterface userDataAccessObject;
 
     /**
      * Constructs an interactor with a presenter that will translate the results.
      * @param presenter the output boundary used to display outcomes
-     * @param userGateway persistence gateway used to save changes
+     * @param userDataAccessObject persistence gateway used to save changes
      */
     public AddWatchListInteractor(AddWatchListOutputBoundary presenter,
-                                  UserGateway userGateway) {
+                                  AddWatchListUserDataAccessInterface userDataAccessObject) {
         this.presenter = presenter;
-        this.userGateway = userGateway;
+        this.userDataAccessObject = userDataAccessObject;
     }
 
     /**
@@ -58,7 +58,7 @@ public class AddWatchListInteractor implements AddWatchListInputBoundary {
         final boolean added = watchList.addMovie(movie);
 
         if (added) {
-            userGateway.save(user);
+            userDataAccessObject.save(user);
             success = true;
             message = movie.getTitle() + " successfully added to " + watchList.getName() + "!";
         }

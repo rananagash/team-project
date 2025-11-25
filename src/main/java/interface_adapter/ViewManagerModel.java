@@ -1,5 +1,5 @@
 package interface_adapter;
-import interface_adapter.ViewModel;
+//import interface_adapter.ViewModel;
 
 /**
  * Model for the View Manager. Its state is the name of the View which
@@ -12,18 +12,18 @@ public class ViewManagerModel extends ViewModel<String> {
         this.setState("");
     }
 
-    public void setState(String newState) {
-        super.setState(newState);
-    }
-
-    public String getState() {
-        return super.getState();
-    }
-
-    /** Notify listeners explicitly (used by presenters) */
-    public void firePropertyChange() {
-        super.firePropertyChange();
-    }
+//    public void setState(String newState) {
+//        super.setState(newState);
+//    }
+//
+//    public String getState() {
+//        return super.getState();
+//    }
+//
+//    /** Notify listeners explicitly (used by presenters) */
+//    public void firePropertyChange() {
+//        super.firePropertyChange();
+//    }
 
 
 }

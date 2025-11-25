@@ -17,11 +17,11 @@ public class LogoutInteractor implements LogoutInputBoundary {
     public void execute() {
         String currentUsername = userDataAccessObject.getCurrentUsername();
 
-        if (currentUsername == null) {
-            // If no user is logged in, we can still consider this a "success"
-            // because the desired end state (no one logged in) is already achieved
-            currentUsername = "";
-        }
+//        if (currentUsername == null) {
+//            // If no user is logged in, we can still consider this a "success"
+//            // because the desired end state (no one logged in) is already achieved
+//            currentUsername = "";
+//        }
 
         userDataAccessObject.setCurrentUsername(null);
         LogoutOutputData logoutOutputData = new LogoutOutputData(currentUsername);
