@@ -17,6 +17,7 @@ public class Main {
                 .addSignupUseCase()
                 .addLoginUseCase()
                 .addLogoutUseCase()
+                .addSearchMoviesUseCase()
                 .addChangePasswordUseCase()
                 .addViewProfileUseCase()
                 .addViewWatchHistoryUseCase()

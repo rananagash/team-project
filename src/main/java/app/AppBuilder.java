@@ -154,6 +154,11 @@ public class AppBuilder {
         return this;
     }
 
+    public AppBuilder addSearchMoviesUseCase() {
+        //TODO:Chester
+        return this;
+    }
+
     public AppBuilder addViewProfileUseCase() {
         //TODO: Rana double check this
         final ViewProfileOutputBoundary viewProfileOutputBoundary = new ViewProfilePresenter(viewProfileViewModel);
