@@ -13,6 +13,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+// for the hiding of api
+import io.github.cdimascio.dotenv.Dotenv;
 
 
 public class TMDbMovieDataAccessObject implements MovieGateway {
@@ -23,7 +25,9 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
 
     // makeRequest actually makes the api call
     private String makeRequest(String url) throws Exception {
-        String apiToken = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ODA5YTFjMmQzNDhjNjI3MDk1ZDllNzY3Y2Y0NWQ2MSIsIm5iZiI6MTc2MjgwODI3Mi4xNDQsInN1YiI6IjY5MTI1MWQwODA0Nzc2ZGJlMmQyNWU2MiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qx1FvwXuldaEQZeXupCmT9FyBjoU3nrGcSSM_hVHFP8";
+        final String apiToken;
+        Dotenv dotenv = Dotenv.load();
+        apiToken = dotenv.get("APITOKENKEY");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
