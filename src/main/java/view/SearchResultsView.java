@@ -1,23 +1,16 @@
 package view;
 
 import interface_adapter.search_movie.SearchMovieController;
+import interface_adapter.search_movie.SearchMovieViewModel;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.DefaultListModel;
-
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Color;
-
+import java.awt.*;
 import java.util.List;
 
 public class SearchResultsView extends JPanel {
 
+    private final SearchMovieViewModel viewModel;
     private SearchMovieController controller;
 
     private JTextField queryField;
@@ -33,7 +26,9 @@ public class SearchResultsView extends JPanel {
     private int totalPages = 1;
     private String lastQuery = "";
 
-    public SearchResultsView() {
+    // ✅ Constructor now accepts the ViewModel
+    public SearchResultsView(SearchMovieViewModel viewModel) {
+        this.viewModel = viewModel;
         initComponents();
     }
 
@@ -144,5 +139,8 @@ public class SearchResultsView extends JPanel {
         nextPageButton.setEnabled(currentPage < totalPages);
         pageLabel.setText("Page " + currentPage + " / " + totalPages);
     }
-}
 
+    public String getViewName() {
+        return viewModel.getViewName();
+    }
+}

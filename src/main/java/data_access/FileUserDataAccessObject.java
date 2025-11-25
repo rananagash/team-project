@@ -16,17 +16,23 @@ import java.util.Map;
  * DAO for user data implemented using a File to persist the data.
  */
 public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
-        ViewProfileUserDataAccessInterface { // Add comma
+        ViewProfileUserDataAccessInterface,
+        use_case.login.LoginUserDataAccessInterface,
+        use_case.common.UserGateway,
+        use_case.change_password.ChangePasswordUserDataAccessInterface,
+        use_case.logout.LogoutUserDataAccessInterface {
 
     private static final String HEADER = "username,password";
 
     private final File csvFile;
     private final Map<String, Integer> headers = new LinkedHashMap<>();
     private final Map<String, User> accounts = new HashMap<>();
+    private String currentUsername;
 
     /**
      * Construct this DAO for saving to and reading from a local file.
-     * @param csvPath the path of the file to save to
+     *
+     * @param csvPath     the path of the file to save to
      * @param userFactory factory for creating user objects
      * @throws RuntimeException if there is an IOException when accessing the file
      */
@@ -38,8 +44,7 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
 
         if (csvFile.length() == 0) {
             save();
-        }
-        else {
+        } else {
 
             try (BufferedReader reader = new BufferedReader(new FileReader(csvFile))) {
                 final String header = reader.readLine();
@@ -56,8 +61,7 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
                     final User user = userFactory.create(username, password);
                     accounts.put(username, user);
                 }
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
         }
@@ -79,8 +83,7 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
 
             writer.close();
 
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -102,17 +105,41 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
     }
 
     @Override
+    public User get(String username) {
+        return getUser(username);
+    }
+
+    @Override
+    public void setCurrentUsername(String name) {
+        this.currentUsername = name;
+    }
+
+    @Override
+    public String getCurrentUsername() {
+        return this.currentUsername;
+    }
+
+    @Override
+    public java.util.Optional<User> findByUserName(String userName) {
+        return java.util.Optional.ofNullable(accounts.get(userName));
+    }
+
+    @Override
     public ProfileStats getUserStats(String username) {
         User user = accounts.get(username);
         if (user == null) {
             return null;
         }
 
-        // Calculate stats - TODO need to adjust based on User class methods
         int watchlistCount = user.getWatchLists() != null ? user.getWatchLists().size() : 0;
-        int reviewCount = 0; // TODO need to implement getReviews() in User class
-        int watchedMoviesCount = 0; // TODO need to implement getWatchHistory() in User class
+        int reviewCount = user.getReviewsByMovieId().size();
+        int watchedMoviesCount = user.getWatchHistory() != null ? user.getWatchHistory().getMovies().size() : 0;
 
         return new ProfileStats(watchlistCount, reviewCount, watchedMoviesCount);
+    }
+
+    @Override
+    public void changePassword(User user) {
+        save(user);
     }
 }

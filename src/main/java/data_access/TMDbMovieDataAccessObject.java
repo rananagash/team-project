@@ -14,10 +14,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-
 public class TMDbMovieDataAccessObject implements MovieGateway {
     private final HttpClient client = HttpClient.newHttpClient();
-
 
     // Helper methods for findById
 
@@ -30,15 +28,16 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
                 .header("Authorization", "Bearer " + apiToken)
                 .header("Accept", "application/json")
                 .build();
-        HttpResponse<String> response =
-                client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         return response.body();
     }
 
-    // extractString extracts a field for string values (i.e "title": "Avengers Endgame"
+    // extractString extracts a field for string values (i.e "title": "Avengers
+    // Endgame"
     private String extractString(String json, String key) {
         int start = json.indexOf(key);
-        if (start == -1) return null;
+        if (start == -1)
+            return null;
 
         start += key.length();
         int end = json.indexOf("\"", start);
@@ -48,7 +47,8 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
     // extractNumber extracts numerica fields like "id":299534
     private String extractNumber(String json, String key) {
         int start = json.indexOf(key);
-        if (start == -1) return null;
+        if (start == -1)
+            return null;
         start += key.length();
         int end = json.indexOf(",", start);
         return json.substring(start, end).trim();
@@ -59,7 +59,8 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
         List<Integer> ids = new ArrayList<>();
 
         int start = json.indexOf("\"genres\":[");
-        if (start == -1) return ids;
+        if (start == -1)
+            return ids;
 
         int end = json.indexOf("]", start);
         String section = json.substring(start, end);
@@ -76,19 +77,24 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
         return ids;
     }
 
-    // without this helper whenver I used extractNumber to get the movie ID it would return the wrong one
-    // we cant just use extractNumber because it would return the id of the collection, not the movie because
-    // the id of the collection appears first (imagine avengers collection is a collection of all avengers movies
+    // without this helper whenver I used extractNumber to get the movie ID it would
+    // return the wrong one
+    // we cant just use extractNumber because it would return the id of the
+    // collection, not the movie because
+    // the id of the collection appears first (imagine avengers collection is a
+    // collection of all avengers movies
     // whose id of avengers movies != id avengers endgame
     private String extractMovieId(String json) {
 
         // The correct movie ID appears after the "homepage" field.
         int homepageIndex = json.indexOf("\"homepage\":");
-        if (homepageIndex == -1) return null;
+        if (homepageIndex == -1)
+            return null;
 
         // Now find the next "id" after homepage
         int idIndex = json.indexOf("\"id\":", homepageIndex);
-        if (idIndex == -1) return null;
+        if (idIndex == -1)
+            return null;
 
         idIndex += "\"id\":".length();
         int end = json.indexOf(",", idIndex);
@@ -96,8 +102,8 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
         return json.substring(idIndex, end).trim();
     }
 
-
-    // parseMovie takes the raw JSON text you got from the TMDb API and turns it into a Movie object
+    // parseMovie takes the raw JSON text you got from the TMDb API and turns it
+    // into a Movie object
     private Movie parseMovie(String json) {
         // Extract simple fields
         String id = extractMovieId(json);
@@ -143,7 +149,6 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
         return new Movie(id, title, plot, genreIds, releaseDate, rating, popularity, posterUrl);
     }
 
-
     @Override
     public Optional<Movie> findById(String movieId) {
         try {
@@ -159,16 +164,20 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
 
     @Override
     public List<Movie> searchByTitle(String query) {
-        /*
-         * TODO(Chester Zhao): Hit TMDb search endpoint and return a list of matching movies.
-         */
-        return Collections.emptyList();
+        try {
+            PagedMovieResult result = searchByTitle(query, 1);
+            return result.getMovies();
+        } catch (MovieDataAccessException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
     }
 
     @Override
     public PagedMovieResult searchByTitle(String query, int page) throws MovieDataAccessException {
         try {
-            // TMDb search endpoint: https://api.themoviedb.org/3/search/movie?query=avengers&page=1
+            // TMDb search endpoint:
+            // https://api.themoviedb.org/3/search/movie?query=avengers&page=1
             String encodedQuery = query.replace(" ", "%20");
             String url = "https://api.themoviedb.org/3/search/movie?query=" + encodedQuery + "&page=" + page;
             String json = makeRequest(url);
@@ -185,8 +194,7 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
             throw new MovieDataAccessException(
                     MovieDataAccessException.Type.NETWORK,
                     "Failed to search movies: " + e.getMessage(),
-                    e
-            );
+                    e);
         }
     }
 
@@ -201,16 +209,19 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
         }
         return 1; // Default to page 1 if extraction fails
     }
+
     private String extractMovieIdFromResult(String json) {
         int idIndex = json.indexOf("\"id\":");
-        if (idIndex == -1) return null;
+        if (idIndex == -1)
+            return null;
 
         idIndex += "\"id\":".length();
         int end = json.indexOf(",", idIndex);
         if (end == -1) {
             end = json.indexOf("}", idIndex);
         }
-        if (end == -1) return null;
+        if (end == -1)
+            return null;
 
         return json.substring(idIndex, end).trim();
     }
@@ -231,7 +242,8 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
         if (ratingStr != null) {
             try {
                 rating = Double.parseDouble(ratingStr);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
 
         // Extract genres (list of ints)
@@ -264,11 +276,13 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
 
         // Find the results array
         int resultsStart = json.indexOf("\"results\":[");
-        if (resultsStart == -1) return movies;
+        if (resultsStart == -1)
+            return movies;
 
         resultsStart += "\"results\":[".length();
         int resultsEnd = json.lastIndexOf("]");
-        if (resultsEnd == -1 || resultsEnd <= resultsStart) return movies;
+        if (resultsEnd == -1 || resultsEnd <= resultsStart)
+            return movies;
 
         String resultsArray = json.substring(resultsStart, resultsEnd);
 
@@ -277,14 +291,16 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
         int currentPos = 0;
         while (currentPos < resultsArray.length()) {
             int movieStart = resultsArray.indexOf("{", currentPos);
-            if (movieStart == -1) break;
+            if (movieStart == -1)
+                break;
 
             // Find the matching closing brace
             int braceCount = 0;
             int movieEnd = movieStart;
             for (int i = movieStart; i < resultsArray.length(); i++) {
                 char c = resultsArray.charAt(i);
-                if (c == '{') braceCount++;
+                if (c == '{')
+                    braceCount++;
                 if (c == '}') {
                     braceCount--;
                     if (braceCount == 0) {
@@ -316,7 +332,8 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
     public List<Movie> filterByGenres(List<Integer> genreIds) {
         try {
             // Build URL with comma-separated genre IDs
-            // TMDb discover endpoint: https://api.themoviedb.org/3/discover/movie?with_genres=28,12
+            // TMDb discover endpoint:
+            // https://api.themoviedb.org/3/discover/movie?with_genres=28,12
             StringBuilder urlBuilder = new StringBuilder("https://api.themoviedb.org/3/discover/movie?with_genres=");
 
             for (int i = 0; i < genreIds.size(); i++) {

@@ -5,18 +5,28 @@ import use_case.compare_watchlists.CompareWatchListResponseModel;
 
 public class CompareWatchListPresenter implements CompareWatchListOutputBoundary {
 
+    private final CompareWatchListViewModel compareWatchListViewModel;
+
+    public CompareWatchListPresenter(CompareWatchListViewModel compareWatchListViewModel) {
+        this.compareWatchListViewModel = compareWatchListViewModel;
+    }
+
     @Override
     public void prepareSuccessView(CompareWatchListResponseModel responseModel) {
-        /*
-         * TODO(Rana Nagash): Render the comparison in the UI, e.g., show overlaps and unique movies.
-         */
+        CompareWatchListState state = compareWatchListViewModel.getState();
+        state.setCommonMovies(responseModel.getCommonMovies());
+        state.setBaseOnlyMovies(responseModel.getBaseOnlyMovies());
+        state.setTargetOnlyMovies(responseModel.getTargetOnlyMovies());
+        state.setError(null);
+        compareWatchListViewModel.setState(state);
+        compareWatchListViewModel.firePropertyChange();
     }
 
     @Override
     public void prepareFailView(String errorMessage) {
-        /*
-         * TODO(Rana Nagash): Surface the error or prompt the user to adjust input.
-         */
+        CompareWatchListState state = compareWatchListViewModel.getState();
+        state.setError(errorMessage);
+        compareWatchListViewModel.setState(state);
+        compareWatchListViewModel.firePropertyChange();
     }
 }
-

@@ -1,201 +1,63 @@
 package view;
 
-import interface_adapter.logged_in.ChangePasswordController;
-import interface_adapter.logged_in.LoggedInState;
+import interface_adapter.ViewManagerModel;
 import interface_adapter.logged_in.LoggedInViewModel;
+import interface_adapter.logged_in.LoggedInState;
+import interface_adapter.review_movie.ReviewMovieController;
+import interface_adapter.review_movie.ReviewMovieViewModel;
 import interface_adapter.logout.LogoutController;
+import interface_adapter.logged_in.ChangePasswordController;
 import interface_adapter.view_watchhistory.ViewWatchHistoryController;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
- * The View for when the user is logged into the program.
+ * Logged In View (final corrected version)
  */
-public class LoggedInView extends JPanel implements ActionListener, PropertyChangeListener {
+public class LoggedInView extends JPanel {
 
-    private final String viewName = "logged in";
-    private final LoggedInViewModel loggedInViewModel;
-    private final JLabel passwordErrorField = new JLabel();
-    private ChangePasswordController changePasswordController = null;
+    private final LoggedInViewModel viewModel;
+    private final ViewManagerModel viewManagerModel;
+
+    private ReviewMovieController reviewMovieController;
+    private ReviewMovieViewModel reviewMovieViewModel;
     private LogoutController logoutController;
+    private ChangePasswordController changePasswordController;
     private ViewWatchHistoryController viewWatchHistoryController;
-    private interface_adapter.review_movie.ReviewMovieController reviewMovieController;
-    private interface_adapter.review_movie.ReviewMovieViewModel reviewMovieViewModel;
 
-    private final JLabel username;
+    public LoggedInView(LoggedInViewModel viewModel, ViewManagerModel viewManagerModel) {
+        this.viewModel = viewModel;
+        this.viewManagerModel = viewManagerModel;
 
-    private final JButton logOut;
+        setLayout(new BorderLayout());
 
-    private final JTextField passwordInputField = new JTextField(15);
-    private final JButton changePassword;
-    private final JButton viewWatchHistory;
-
-    public LoggedInView(LoggedInViewModel loggedInViewModel) {
-        this.loggedInViewModel = loggedInViewModel;
-        this.loggedInViewModel.addPropertyChangeListener(this);
-
-        final JLabel title = new JLabel("Logged In Screen");
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        final LabelTextPanel passwordInfo = new LabelTextPanel(
-                new JLabel("Password"), passwordInputField);
-
-        final JLabel usernameInfo = new JLabel("Currently logged in: ");
-        username = new JLabel();
-
-        final JPanel buttons = new JPanel();
-        logOut = new JButton("Log Out");
-        buttons.add(logOut);
-
-        changePassword = new JButton("Change Password");
-        buttons.add(changePassword);
-
-        viewWatchHistory = new JButton("View Watch History");
-        buttons.add(viewWatchHistory);
-
-        JButton reviewButton = new JButton("Review a movie (prefilled for testing");
-        buttons.add(reviewButton);
-
-        //Review button action listener
-        reviewButton.addActionListener(e -> {
-            if (reviewMovieController != null && reviewMovieViewModel != null) {
-                final LoggedInState state = loggedInViewModel.getState();
-                String username = state.getUsername();   // currently logged-in user
-
-                JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
-                AddReviewPopup popup = new AddReviewPopup(
-                        parent,  // parent frame
-                        reviewMovieController,
-                        reviewMovieViewModel,
-                        username,               // "Oliver" dynamically
-                        "299534",               // Endgame TMDB ID
-                        "Avengers Endgame"      // temporary hard-coded title
-                );
-
-                popup.setVisible(true);
-            }
-        });
-
-
-
-
-        logOut.addActionListener(this);
-
-        viewWatchHistory.addActionListener(e -> {
-            if (viewWatchHistoryController != null) {
-                final LoggedInState currentState = loggedInViewModel.getState();
-                viewWatchHistoryController.loadHistory(currentState.getUsername());
-            }
-        });
-
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-        passwordInputField.getDocument().addDocumentListener(new DocumentListener() {
-
-            private void documentListenerHelper() {
-                final LoggedInState currentState = loggedInViewModel.getState();
-                currentState.setPassword(passwordInputField.getText());
-                loggedInViewModel.setState(currentState);
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-        });
-
-        changePassword.addActionListener(
-                // This creates an anonymous subclass of ActionListener and instantiates it.
-                evt -> {
-                    if (evt.getSource().equals(changePassword)) {
-                        final LoggedInState currentState = loggedInViewModel.getState();
-
-                        this.changePasswordController.execute(
-                                currentState.getUsername(),
-                                currentState.getPassword()
-                        );
-                    }
-                }
-        );
-
-        this.add(title);
-        this.add(usernameInfo);
-        this.add(username);
-
-        this.add(passwordInfo);
-        this.add(passwordErrorField);
-        this.add(buttons);
+        JLabel label = new JLabel("Logged In Home");
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        add(label, BorderLayout.CENTER);
     }
 
-    /**
-     * React to a button click that results in evt.
-     * @param evt the ActionEvent to react to
-     */
-    public void actionPerformed(ActionEvent evt) {
-        if (evt.getSource().equals(logOut)) {
-            logoutController.execute();
-        }
-        System.out.println("Click " + evt.getActionCommand());
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("state")) {
-            final LoggedInState state = (LoggedInState) evt.getNewValue();
-            username.setText(state.getUsername());
-        }
-        else if (evt.getPropertyName().equals("password")) {
-            final LoggedInState state = (LoggedInState) evt.getNewValue();
-            if (state.getPasswordError() == null) {
-                JOptionPane.showMessageDialog(this, "password updated for " + state.getUsername());
-                passwordInputField.setText("");
-            }
-            else {
-                JOptionPane.showMessageDialog(this, state.getPasswordError());
-            }
-        }
-
-    }
-
-    public String getViewName() {
-        return viewName;
-    }
-
-    public void setChangePasswordController(ChangePasswordController changePasswordController) {
-        this.changePasswordController = changePasswordController;
-    }
-
-    public void setLogoutController(LogoutController logoutController) {
-        this.logoutController = logoutController;
-    }
-
-    public void setViewWatchHistoryController(ViewWatchHistoryController viewWatchHistoryController) {
-        this.viewWatchHistoryController = viewWatchHistoryController;
-    }
-
-    public void setReviewMovieController(interface_adapter.review_movie.ReviewMovieController controller) {
+    public void setReviewMovieController(ReviewMovieController controller) {
         this.reviewMovieController = controller;
     }
 
-    public void setReviewMovieViewModel(interface_adapter.review_movie.ReviewMovieViewModel viewModel) {
+    public void setReviewMovieViewModel(ReviewMovieViewModel viewModel) {
         this.reviewMovieViewModel = viewModel;
     }
 
+    public void setLogoutController(LogoutController controller) {
+        this.logoutController = controller;
+    }
+
+    public void setChangePasswordController(ChangePasswordController controller) {
+        this.changePasswordController = controller;
+    }
+
+    public void setViewWatchHistoryController(ViewWatchHistoryController controller) {
+        this.viewWatchHistoryController = controller;
+    }
+
+    public String getViewName() {
+        return viewModel.getViewName();
+    }
 }

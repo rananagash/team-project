@@ -5,18 +5,29 @@ import use_case.search_movie.SearchMovieResponseModel;
 
 public class SearchMoviePresenter implements SearchMovieOutputBoundary {
 
+    private final SearchMovieViewModel searchMovieViewModel;
+
+    public SearchMoviePresenter(SearchMovieViewModel searchMovieViewModel) {
+        this.searchMovieViewModel = searchMovieViewModel;
+    }
+
     @Override
     public void prepareSuccessView(SearchMovieResponseModel responseModel) {
-        /*
-         * TODO(Chester Zhao): Push the search results to the UI and design pagination or lazy loading.
-         */
+        SearchMovieState state = searchMovieViewModel.getState();
+        state.setMovies(responseModel.getMovies());
+        state.setCurrentPage(responseModel.getCurrentPage());
+        state.setTotalPages(responseModel.getTotalPages());
+        state.setQuery(responseModel.getQuery());
+        state.setError(null);
+        searchMovieViewModel.setState(state);
+        searchMovieViewModel.firePropertyChange();
     }
 
     @Override
     public void prepareFailView(String errorMessage) {
-        /*
-         * TODO(Chester Zhao): Show error or empty-state messaging in the UI.
-         */
+        SearchMovieState state = searchMovieViewModel.getState();
+        state.setError(errorMessage);
+        searchMovieViewModel.setState(state);
+        searchMovieViewModel.firePropertyChange();
     }
 }
-
