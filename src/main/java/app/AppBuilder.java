@@ -1,5 +1,6 @@
 package app;
 
+import data_access.CachedUserDataAccessObject;
 import data_access.FileUserDataAccessObject;
 import data_access.TMDbMovieDataAccessObject;
 import entity.factories.UserFactory;
@@ -23,6 +24,7 @@ import interface_adapter.signup.SignupViewModel;
 import use_case.add_to_watchlist.AddWatchListInputBoundary;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.common.UserDataAccessInterface;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
@@ -54,7 +56,8 @@ public class AppBuilder {
     ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
     //TODO: Alana - replace with wrapper DAO class once implemented
-    private final FileUserDataAccessObject userDataAccessObject = new FileUserDataAccessObject("data/users.json", userFactory);
+    private final UserDataAccessInterface persistent = new FileUserDataAccessObject("data/users.json", userFactory);
+    private final CachedUserDataAccessObject userDataAccessObject = new CachedUserDataAccessObject(persistent);
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;

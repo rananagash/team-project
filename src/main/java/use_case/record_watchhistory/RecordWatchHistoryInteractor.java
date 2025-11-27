@@ -4,21 +4,21 @@ import entity.Movie;
 import entity.User;
 import entity.WatchHistory;
 import use_case.common.MovieGateway;
-import use_case.common.UserGateway;
+import use_case.common.UserDataAccessInterface;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class RecordWatchHistoryInteractor implements RecordWatchHistoryInputBoundary {
 
-    private final UserGateway userGateway;
+    private final UserDataAccessInterface userDataAccessInterface;
     private final MovieGateway movieGateway;
     private final RecordWatchHistoryOutputBoundary presenter;
 
-    public RecordWatchHistoryInteractor(UserGateway userGateway,
+    public RecordWatchHistoryInteractor(UserDataAccessInterface userDataAccessInterface,
                                         MovieGateway movieGateway,
                                         RecordWatchHistoryOutputBoundary presenter) {
-        this.userGateway = userGateway;
+        this.userDataAccessInterface = userDataAccessInterface;
         this.movieGateway = movieGateway;
         this.presenter = presenter;
     }
@@ -36,10 +36,9 @@ public class RecordWatchHistoryInteractor implements RecordWatchHistoryInputBoun
             return;
         }
 
-        userGateway.findByUserName(requestModel.getUserName()).ifPresentOrElse(
-                user -> handleUser(user, requestModel),
-                () -> presenter.prepareFailView("User not found: " + requestModel.getUserName())
-        );
+        if (userDataAccessInterface.getUser(requestModel.getUserName()) == null) {
+            presenter.prepareFailView("User not found: " + requestModel.getUserName());
+        }
     }
 
     private void handleUser(User user, RecordWatchHistoryRequestModel requestModel) {
@@ -76,7 +75,7 @@ public class RecordWatchHistoryInteractor implements RecordWatchHistoryInputBoun
 
         // Record the movie in watch history
         watchHistory.recordMovie(movie, watchedAt);
-        userGateway.save(user);
+        userDataAccessInterface.save(user);
 
         presenter.prepareSuccessView(new RecordWatchHistoryResponseModel(
                 user.getUserName(),

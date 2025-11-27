@@ -1,5 +1,6 @@
 package use_case.change_password;
 
+import data_access.CachedUserDataAccessObject;
 import entity.User;
 import entity.factories.UserFactory;
 
@@ -7,11 +8,11 @@ import entity.factories.UserFactory;
  * The Change Password Interactor.
  */
 public class ChangePasswordInteractor implements ChangePasswordInputBoundary {
-    private final ChangePasswordUserDataAccessInterface userDataAccessObject;
+    private final CachedUserDataAccessObject userDataAccessObject;
     private final ChangePasswordOutputBoundary userPresenter;
     private final UserFactory userFactory;
 
-    public ChangePasswordInteractor(ChangePasswordUserDataAccessInterface changePasswordDataAccessInterface,
+    public ChangePasswordInteractor(CachedUserDataAccessObject changePasswordDataAccessInterface,
                                     ChangePasswordOutputBoundary changePasswordOutputBoundary,
                                     UserFactory userFactory) {
         this.userDataAccessObject = changePasswordDataAccessInterface;

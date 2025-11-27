@@ -3,7 +3,7 @@ package use_case.add_to_watchlist;
 import entity.Movie;
 import entity.User;
 import entity.WatchList;
-import use_case.common.UserGateway;
+import use_case.common.UserDataAccessInterface;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -30,15 +30,30 @@ class AddWatchListInteractorTest {
                 "poster-url"
         );
 
-        UserGateway userGateway = new UserGateway() {
+        UserDataAccessInterface userDataAccessInterface = new UserDataAccessInterface() {
             @Override
-            public Optional<User> findByUserName(String userName) {
-                return Optional.of(testUser) ;
+            public User getUser(String userName) {
+                return testUser ;
             }
 
             @Override
             public void save(User user) {
                 System.out.println("User saved: " + user.getUserName());
+            }
+
+            @Override
+            public boolean existsByName(String username) {
+                return false;
+            }
+
+            @Override
+            public void setCurrentUsername(String username) {
+
+            }
+
+            @Override
+            public String getCurrentUsername() {
+                return "";
             }
         };
 
@@ -59,7 +74,7 @@ class AddWatchListInteractorTest {
             }
         };
 
-        AddWatchListInputBoundary interactor = new AddWatchListInteractor(successPresenter, userGateway);
+        AddWatchListInputBoundary interactor = new AddWatchListInteractor(successPresenter, userDataAccessInterface);
         interactor.execute(inputData);
     }
 
@@ -82,15 +97,30 @@ class AddWatchListInteractorTest {
         // add movie to WatchList
         watchList.addMovie(movie);
 
-        UserGateway userGateway = new UserGateway() {
+        UserDataAccessInterface userDataAccessInterface = new UserDataAccessInterface() {
             @Override
-            public Optional<User> findByUserName(String userName) {
-                return Optional.of(testUser) ;
+            public User getUser(String userName) {
+                return testUser ;
             }
 
             @Override
             public void save(User user) {
                 System.out.println("User saved: " + user.getUserName());
+            }
+
+            @Override
+            public boolean existsByName(String username) {
+                return false;
+            }
+
+            @Override
+            public void setCurrentUsername(String username) {
+
+            }
+
+            @Override
+            public String getCurrentUsername() {
+                return "";
             }
         };
 
@@ -110,7 +140,7 @@ class AddWatchListInteractorTest {
             }
         };
 
-        AddWatchListInputBoundary interactor = new AddWatchListInteractor(successPresenter, userGateway);
+        AddWatchListInputBoundary interactor = new AddWatchListInteractor(successPresenter, userDataAccessInterface);
         interactor.execute(inputData);
     }
 }
