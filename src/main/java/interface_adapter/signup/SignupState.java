@@ -68,7 +68,7 @@ public class SignupState {
                 + '}';
     }
 
-    public void setSuccessMessage(String s) {
-
-    }
+//    public void setSuccessMessage(String s) {
+//
+//    }
 }

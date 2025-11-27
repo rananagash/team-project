@@ -2,103 +2,141 @@ package data_access;
 
 import entity.User;
 import entity.factories.UserFactory;
+import use_case.add_to_watchlist.AddWatchListUserDataAccessInterface;
+import use_case.change_password.ChangePasswordUserDataAccessInterface;
+import use_case.login.LoginUserDataAccessInterface;
+import use_case.logout.LogoutUserDataAccessInterface;
+import use_case.review_movie.ReviewMovieUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 import use_case.view_profile.ViewProfileUserDataAccessInterface;
 import use_case.view_profile.ProfileStats; // Add this import
 
 import java.io.*;
-import java.time.LocalDateTime; // Add this import
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * DAO for user data implemented using a File to persist the data.
  */
 public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
-        ViewProfileUserDataAccessInterface { // Add comma
+        LoginUserDataAccessInterface,
+        ChangePasswordUserDataAccessInterface,
+        LogoutUserDataAccessInterface,
+        ViewProfileUserDataAccessInterface,
+        AddWatchListUserDataAccessInterface,
+        ReviewMovieUserDataAccessInterface {
 
-    private static final String HEADER = "username,password";
-
-    private final File csvFile;
-    private final Map<String, Integer> headers = new LinkedHashMap<>();
+    private final Path jsonPath;
+    private final UserFactory userFactory;
     private final Map<String, User> accounts = new HashMap<>();
+
+    private String currentUsername;
 
     /**
      * Construct this DAO for saving to and reading from a local file.
-     * @param csvPath the path of the file to save to
+     * @param filePath the path of the file to save to
      * @param userFactory factory for creating user objects
      * @throws RuntimeException if there is an IOException when accessing the file
      */
-    public FileUserDataAccessObject(String csvPath, UserFactory userFactory) {
+    public FileUserDataAccessObject(String filePath, UserFactory userFactory) {
+        this.jsonPath = Path.of(filePath);
+        this.userFactory = userFactory;
 
-        csvFile = new File(csvPath);
-        headers.put("username", 0);
-        headers.put("password", 1);
-
-        if (csvFile.length() == 0) {
-            save();
+        if (!Files.exists(jsonPath)) {
+            save(); //writes empty JSON
         }
         else {
-
-            try (BufferedReader reader = new BufferedReader(new FileReader(csvFile))) {
-                final String header = reader.readLine();
-
-                if (!header.equals(HEADER)) {
-                    throw new RuntimeException(String.format("header should be%n: %s%n but was:%n%s", HEADER, header));
-                }
-
-                String row;
-                while ((row = reader.readLine()) != null) {
-                    final String[] col = row.split(",");
-                    final String username = String.valueOf(col[headers.get("username")]);
-                    final String password = String.valueOf(col[headers.get("password")]);
-                    final User user = userFactory.create(username, password);
-                    accounts.put(username, user);
-                }
-            }
-            catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+            load(); // reads JSON
         }
     }
 
     private void save() {
-        final BufferedWriter writer;
-        try {
-            writer = new BufferedWriter(new FileWriter(csvFile));
-            writer.write(String.join(",", headers.keySet()));
-            writer.newLine();
+        writeJSON();
+    }
 
-            for (User user : accounts.values()) {
-                final String line = String.format("%s,%s",
-                        user.getUserName(), user.getPassword());
-                writer.write(line);
-                writer.newLine();
+    private void load() {
+        try {
+            String raw = Files.readString(jsonPath);
+
+            if  (raw.isBlank()) {
+                return;
             }
 
-            writer.close();
+            JSONObject root = new JSONObject(raw);
 
+            // restore current user
+            this.currentUsername = root.optString("currentUser", null);
+
+            JSONObject usersJson = root.getJSONObject("users");
+            if (usersJson != null) {
+                for (String username : usersJson.keySet()) {
+                    JSONObject u = usersJson.getJSONObject(username);
+                    User user = userFactory.create(
+                            u.getString("username"),
+                            u.getString("password")
+                    );
+                    accounts.put(username, user);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        catch (IOException ex) {
-            throw new RuntimeException(ex);
+    }
+
+    private void writeJSON() {
+        try {
+            JSONObject root = new JSONObject();
+
+            // current logged-in user
+            root.put("currentUser", currentUsername);
+
+            // users object
+            JSONObject usersJson = new JSONObject();
+            for (User user : accounts.values()) {
+                JSONObject u = new JSONObject();
+                u.put("username", user.getUserName());
+                u.put("password", user.getPassword());
+                usersJson.put(user.getUserName(), u);
+            }
+
+            root.put("users", usersJson);
+
+            Files.writeString(jsonPath, root.toString(4));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     public void save(User user) {
         accounts.put(user.getUserName(), user);
-        this.save();
+        writeJSON();
     }
 
-    @Override
-    public boolean existsByName(String identifier) {
-        return accounts.containsKey(identifier);
-    }
-
+    //TODO: error handling? What if not found?
     @Override
     public User getUser(String username) {
         return accounts.get(username);
+    }
+
+    @Override
+    public void setCurrentUsername(String username) {
+        this.currentUsername = username;
+        writeJSON();
+    }
+
+    @Override
+    public String getCurrentUsername() {
+        return "";
+    }
+
+    @Override
+    public boolean existsByName(String username) {
+        return accounts.containsKey(username);
     }
 
     @Override
@@ -114,5 +152,10 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
         int watchedMoviesCount = 0; // TODO need to implement getWatchHistory() in User class
 
         return new ProfileStats(watchlistCount, reviewCount, watchedMoviesCount);
+    }
+
+    @Override
+    public void changePassword(User user) {
+        //TODO: implement
     }
 }

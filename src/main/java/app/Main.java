@@ -2,76 +2,33 @@ package app;
 
 import data_access.TMDbMovieDataAccessObject;
 import entity.Movie;
-import interface_adapter.logged_in.LoggedInViewModel;
-import interface_adapter.logged_in.LoggedInState;
-import interface_adapter.view_watchhistory.ViewWatchHistoryController;
-import interface_adapter.review_movie.ReviewMovieController;
-import interface_adapter.review_movie.ReviewMovieViewModel;
-import view.LoggedInView;
 
 import javax.swing.*;
 import java.util.Optional;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
-        AppBuilder builder = new AppBuilder();
+    public static void main(String[] args) {
+        AppBuilder appBuilder = new AppBuilder();
+        JFrame application = appBuilder
+                .addLoginView()
+                .addSignupView()
+                .addLoggedInView()
+                .addProfileView()
+                .addSignupUseCase()
+                .addLoginUseCase()
+                .addLogoutUseCase()
+                .addSearchMoviesUseCase()
+                .addChangePasswordUseCase()
+                .addViewProfileUseCase()
+                .addViewWatchHistoryUseCase()
+                .addAddToWatchListUseCase()
+                .addRecordWatchHistoryPopup()
+                .addAddReviewPopup()
+                .build();
 
-        /*
-         * TODO(team): Build the main window here and inject controllers into the UI.
-         */
-        builder.buildSearchMovieController();
-        builder.buildFilterMoviesController();
-        builder.buildAddWatchListController();
-        builder.buildCompareWatchListController();
-        ReviewMovieController reviewController = builder.buildReviewMovieController();
-        ReviewMovieViewModel reviewViewModel = builder.getReviewMovieViewModel();
-
-
-        // 创建主窗口
-        JFrame application = new JFrame("Movie App");
-        application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        application.setSize(800, 600);
-
-        // 创建 ViewWatchHistoryController（带弹窗，传入主窗口）
-        ViewWatchHistoryController viewHistoryController =
-                builder.buildViewWatchHistoryController(application);
-
-        // 创建 LoggedInView 和 ViewModel
-        LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
-        LoggedInView loggedInView = new LoggedInView(loggedInViewModel);
-
-        // For the review functionality
-        loggedInView.setReviewMovieController(reviewController);
-        loggedInView.setReviewMovieViewModel(reviewViewModel);
-
-
-        // 连接 ViewWatchHistoryController 到 LoggedInView
-        loggedInView.setViewWatchHistoryController(viewHistoryController);
-
-        // 设置测试用户名（用于demo）
-        LoggedInState state = loggedInViewModel.getState();
-        state.setUsername("demo_user");
-        loggedInViewModel.setState(state);
-
-        // 将 view 添加到主窗口
-        application.add(loggedInView);
-        application.setLocationRelativeTo(null); // 居中显示
+        application.pack();
+        application.setLocationRelativeTo(null);
         application.setVisible(true);
-
-        // 可选：添加一些测试数据用于demo
-        // 取消下面的注释来添加测试观看历史数据
-        /*
-        RecordWatchHistoryController recordController = builder.buildRecordWatchHistoryController();
-        try {
-            recordController.recordMovie("demo_user", "299534"); // Avengers Endgame
-            recordController.recordMovie("demo_user", "550");    // Fight Club
-            System.out.println("Test watch history data added for demo_user");
-        } catch (Exception e) {
-            System.out.println("Note: Could not add test data. You can still demo the empty state.");
-        }
-        */
-
-
 
         // This is just testing out the data access object.
         // the id of Avengers Endgame is 299534
@@ -90,11 +47,5 @@ public class Main {
         } else {
             System.out.println("Movie not found or error occurred.");
         }
-
-
-
-
-
-
     }
 }

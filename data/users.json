@@ -1,0 +1,13 @@
+{
+    "currentUser": "altest",
+    "users": {
+        "dummy": {
+            "password": "user",
+            "username": "dummy"
+        },
+        "altest": {
+            "password": "123",
+            "username": "altest"
+        }
+    }
+}
