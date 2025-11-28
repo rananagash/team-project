@@ -5,7 +5,7 @@ import entity.User;
 import entity.WatchHistory;
 import entity.WatchedMovie;
 import use_case.common.MovieGateway;
-import use_case.common.UserGateway;
+import use_case.common.UserDataAccessInterface;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -36,16 +36,31 @@ class RecordWatchHistoryInteractorTest {
 
         LocalDateTime watchedAt = LocalDateTime.now().minusDays(1);
 
-        UserGateway userGateway = new UserGateway() {
+        UserDataAccessInterface userDataAccessInterface = new UserDataAccessInterface() {
             @Override
-            public Optional<User> findByUserName(String userName) {
-                return Optional.of(testUser);
+            public User getUser(String userName) {
+                return testUser;
             }
 
             @Override
             public void save(User user) {
                 // Verify that user was saved
                 assertNotNull(user.getWatchHistory());
+            }
+
+            @Override
+            public boolean existsByName(String username) {
+                return false;
+            }
+
+            @Override
+            public void setCurrentUsername(String username) {
+
+            }
+
+            @Override
+            public String getCurrentUsername() {
+                return "";
             }
         };
 
@@ -92,7 +107,7 @@ class RecordWatchHistoryInteractorTest {
 
         // Execute
         RecordWatchHistoryInteractor interactor = new RecordWatchHistoryInteractor(
-                userGateway, movieGateway, successPresenter
+                userDataAccessInterface, movieGateway, successPresenter
         );
         interactor.execute(requestModel);
 
@@ -121,16 +136,31 @@ class RecordWatchHistoryInteractorTest {
                 "poster-url"
         );
 
-        UserGateway userGateway = new UserGateway() {
+        UserDataAccessInterface userDataAccessInterface = new UserDataAccessInterface() {
             @Override
-            public Optional<User> findByUserName(String userName) {
-                return Optional.of(testUser);
+            public User getUser(String userName) {
+                return testUser;
             }
 
             @Override
             public void save(User user) {
                 // Verify that watch history was created
                 assertNotNull(user.getWatchHistory());
+            }
+
+            @Override
+            public boolean existsByName(String username) {
+                return false;
+            }
+
+            @Override
+            public void setCurrentUsername(String username) {
+
+            }
+
+            @Override
+            public String getCurrentUsername() {
+                return "";
             }
         };
 
@@ -179,7 +209,7 @@ class RecordWatchHistoryInteractorTest {
 
         // Execute
         RecordWatchHistoryInteractor interactor = new RecordWatchHistoryInteractor(
-                userGateway, movieGateway, successPresenter
+                userDataAccessInterface, movieGateway, successPresenter
         );
         interactor.execute(requestModel);
 
@@ -209,15 +239,30 @@ class RecordWatchHistoryInteractorTest {
         LocalDateTime firstWatch = LocalDateTime.now().minusDays(2);
         LocalDateTime secondWatch = LocalDateTime.now().minusDays(1);
 
-        UserGateway userGateway = new UserGateway() {
+        UserDataAccessInterface userDataAccessInterface = new UserDataAccessInterface() {
             @Override
-            public Optional<User> findByUserName(String userName) {
-                return Optional.of(testUser);
+            public User getUser(String userName) {
+                return testUser;
             }
 
             @Override
             public void save(User user) {
                 // User should be saved
+            }
+
+            @Override
+            public boolean existsByName(String username) {
+                return false;
+            }
+
+            @Override
+            public void setCurrentUsername(String username) {
+
+            }
+
+            @Override
+            public String getCurrentUsername() {
+                return "";
             }
         };
 
@@ -261,7 +306,7 @@ class RecordWatchHistoryInteractorTest {
         };
 
         RecordWatchHistoryInteractor interactor = new RecordWatchHistoryInteractor(
-                userGateway, movieGateway, presenter
+                userDataAccessInterface, movieGateway, presenter
         );
         interactor.execute(firstRequest);
 
@@ -373,15 +418,30 @@ class RecordWatchHistoryInteractorTest {
 
     @Test
     void failWhenUserNotFound() {
-        UserGateway userGateway = new UserGateway() {
+        UserDataAccessInterface userDataAccessInterface = new UserDataAccessInterface() {
             @Override
-            public Optional<User> findByUserName(String userName) {
-                return Optional.empty();
+            public User getUser(String userName) {
+                return null;
             }
 
             @Override
             public void save(User user) {
                 // Should not be called
+            }
+
+            @Override
+            public boolean existsByName(String username) {
+                return false;
+            }
+
+            @Override
+            public void setCurrentUsername(String username) {
+
+            }
+
+            @Override
+            public String getCurrentUsername() {
+                return "";
             }
         };
 
@@ -402,7 +462,7 @@ class RecordWatchHistoryInteractorTest {
         };
 
         RecordWatchHistoryInteractor interactor = new RecordWatchHistoryInteractor(
-                userGateway, null, failPresenter
+                userDataAccessInterface, null, failPresenter
         );
         interactor.execute(requestModel);
     }
@@ -411,15 +471,30 @@ class RecordWatchHistoryInteractorTest {
     void failWhenMovieNotFound() {
         User testUser = new User("testuser", "1234");
 
-        UserGateway userGateway = new UserGateway() {
+        UserDataAccessInterface userDataAccessInterface = new UserDataAccessInterface() {
             @Override
-            public Optional<User> findByUserName(String userName) {
-                return Optional.of(testUser);
+            public User getUser(String userName) {
+                return testUser;
             }
 
             @Override
             public void save(User user) {
                 // Should not be called
+            }
+
+            @Override
+            public boolean existsByName(String username) {
+                return false;
+            }
+
+            @Override
+            public void setCurrentUsername(String username) {
+
+            }
+
+            @Override
+            public String getCurrentUsername() {
+                return "";
             }
         };
 
@@ -462,7 +537,7 @@ class RecordWatchHistoryInteractorTest {
         };
 
         RecordWatchHistoryInteractor interactor = new RecordWatchHistoryInteractor(
-                userGateway, movieGateway, failPresenter
+                userDataAccessInterface, movieGateway, failPresenter
         );
         interactor.execute(requestModel);
     }
@@ -482,15 +557,30 @@ class RecordWatchHistoryInteractorTest {
                 "poster-url"
         );
 
-        UserGateway userGateway = new UserGateway() {
+        UserDataAccessInterface userDataAccessInterface = new UserDataAccessInterface() {
             @Override
-            public Optional<User> findByUserName(String userName) {
-                return Optional.of(testUser);
+            public User getUser(String userName) {
+                return testUser;
             }
 
             @Override
             public void save(User user) {
                 // Should not be called
+            }
+
+            @Override
+            public boolean existsByName(String username) {
+                return false;
+            }
+
+            @Override
+            public void setCurrentUsername(String username) {
+
+            }
+
+            @Override
+            public String getCurrentUsername() {
+                return "";
             }
         };
 
@@ -534,7 +624,7 @@ class RecordWatchHistoryInteractorTest {
         };
 
         RecordWatchHistoryInteractor interactor = new RecordWatchHistoryInteractor(
-                userGateway, movieGateway, failPresenter
+                userDataAccessInterface, movieGateway, failPresenter
         );
         interactor.execute(requestModel);
     }

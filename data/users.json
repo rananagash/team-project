@@ -3,10 +3,14 @@
     "users": {
         "dummy": {
             "password": "user",
+            "reviews": {},
+            "watchlists": [],
             "username": "dummy"
         },
         "altest": {
             "password": "123",
+            "reviews": {},
+            "watchlists": [],
             "username": "altest"
         }
     }

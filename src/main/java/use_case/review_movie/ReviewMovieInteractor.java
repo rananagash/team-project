@@ -4,18 +4,18 @@ import entity.Movie;
 import entity.Review;
 import entity.User;
 import use_case.common.MovieGateway;
-import use_case.common.UserGateway;
+import use_case.common.UserDataAccessInterface;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class ReviewMovieInteractor implements ReviewMovieInputBoundary {
 
-    private final ReviewMovieUserDataAccessInterface userDataAccess;
+    private final UserDataAccessInterface userDataAccess;
     private final MovieGateway movieGateway;
     private final ReviewMovieOutputBoundary presenter;
 
-    public ReviewMovieInteractor(ReviewMovieUserDataAccessInterface userDataAccess,
+    public ReviewMovieInteractor(UserDataAccessInterface userDataAccess,
                                  MovieGateway movieGateway,
                                  ReviewMovieOutputBoundary presenter) {
         this.userDataAccess = userDataAccess;

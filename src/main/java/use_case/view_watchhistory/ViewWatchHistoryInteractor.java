@@ -1,29 +1,38 @@
 package use_case.view_watchhistory;
 
-import use_case.common.UserGateway;
+import entity.User;
+import use_case.common.UserDataAccessInterface;
 
 public class ViewWatchHistoryInteractor implements ViewWatchHistoryInputBoundary {
 
-    private final UserGateway userGateway;
+    private final UserDataAccessInterface userDataAccessInterface;
     private final ViewWatchHistoryOutputBoundary presenter;
 
-    public ViewWatchHistoryInteractor(UserGateway userGateway,
+    public ViewWatchHistoryInteractor(UserDataAccessInterface userDataAccessInterface,
                                       ViewWatchHistoryOutputBoundary presenter) {
-        this.userGateway = userGateway;
+        this.userDataAccessInterface = userDataAccessInterface;
         this.presenter = presenter;
     }
 
     @Override
     public void execute(ViewWatchHistoryRequestModel requestModel) {
-        userGateway.findByUserName(requestModel.getUserName()).ifPresentOrElse(user -> {
-            if (user.getWatchHistory() == null) {
-                presenter.prepareFailView("This user has no watch history yet.");
-                return;
-            }
-            presenter.prepareSuccessView(new ViewWatchHistoryResponseModel(
-                    user.getUserName(),
-                    user.getWatchHistory().getMovies()));
-        }, () -> presenter.prepareFailView("User not found: " + requestModel.getUserName()));
+        User user = userDataAccessInterface.getUser(requestModel.getUserName());
+
+        if (user == null) {
+            presenter.prepareFailView("User not found: " + requestModel.getUserName());
+            return;
+        }
+
+        if (user.getWatchHistory() == null) {
+            presenter.prepareFailView("This user has no watch history yet.");
+        }
+
+        presenter.prepareSuccessView(
+                new ViewWatchHistoryResponseModel(
+                user.getUserName(),
+                user.getWatchHistory().getMovies()
+                )
+        );
     }
 }
 
