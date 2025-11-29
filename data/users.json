@@ -1,5 +1,5 @@
 {
-    "currentUser": "altest",
+    "currentUser": "asdf",
     "users": {
         "dummy": {
             "password": "user",
@@ -108,6 +108,51 @@
                 }
             ],
             "username": "altest"
+        },
+        "asdf": {
+            "password": "asdf",
+            "reviews": {},
+            "watchlists": [{
+                "movies": [],
+                "dateCreated": "2025-11-29T14:36:15.856245300",
+                "name": "asdf's Watch List",
+                "id": "a6e0d2ca-2c64-47e3-97b3-1f616ca60b81"
+            }],
+            "username": "asdf"
+        },
+        "dummy-user": {
+            "password": "password",
+            "reviews": {},
+            "watchlists": [{
+                "movies": [{
+                    "posterUrl": "poster-url",
+                    "plot": "A test movie plot happens",
+                    "releaseDate": "2025-01-01",
+                    "popularity": 0,
+                    "rating": 7.5,
+                    "id": "m1",
+                    "title": "Test Movie",
+                    "genreIds": [
+                        1,
+                        2
+                    ]
+                }],
+                "dateCreated": "2025-11-29T14:36:31.296143500",
+                "name": "dummy-user's Watch List",
+                "id": "4edf0488-f9ba-4de7-88b2-e9f79f1eb230"
+            }],
+            "username": "dummy-user"
+        },
+        "oliver": {
+            "password": "123",
+            "reviews": {},
+            "watchlists": [{
+                "movies": [],
+                "dateCreated": "2025-11-29T14:36:08.192311700",
+                "name": "oliver's Watch List",
+                "id": "c01444e1-7104-419f-a4d8-df6d9f824791"
+            }],
+            "username": "oliver"
         }
     }
 }

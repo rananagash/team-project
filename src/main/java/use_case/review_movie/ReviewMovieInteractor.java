@@ -36,9 +36,6 @@ public class ReviewMovieInteractor implements ReviewMovieInputBoundary {
             return;
         }
 
-        /*
-         * TODO(Oliver Bisbee): Decide whether to update existing reviews and whether to sync with remote services or friend feeds.
-         */
         Movie movie = movieGateway.findById(requestModel.getMovieId()).orElse(null);
         if (movie == null) {
             presenter.prepareFailView("Movie not found: " + requestModel.getMovieId());
