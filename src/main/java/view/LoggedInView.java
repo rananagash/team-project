@@ -595,7 +595,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         }
 
         try {
-            // 使用SwingWorker在后台加载图片，避免界面卡顿
             SwingWorker<ImageIcon, Void> worker = new SwingWorker<ImageIcon, Void>() {
                 @Override
                 protected ImageIcon doInBackground() throws Exception {
