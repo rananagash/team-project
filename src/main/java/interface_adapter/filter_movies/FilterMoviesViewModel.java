@@ -5,6 +5,9 @@ import entity.Movie;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 /**
  * View model for the Filter Movies use case.
  * <p>
@@ -14,6 +17,7 @@ import java.util.List;
  */
 public class FilterMoviesViewModel {
 
+    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private List<Movie> filteredMovies = new ArrayList<>();
     private List<String> selectedGenreNames = new ArrayList<>();
     private String errorMessage = null;
@@ -36,7 +40,9 @@ public class FilterMoviesViewModel {
      * @param filteredMovies the list of movies to set
      */
     public void setFilteredMovies(List<Movie> filteredMovies) {
+        List<Movie> oldValue = this.filteredMovies;
         this.filteredMovies = filteredMovies != null ? new ArrayList<>(filteredMovies) : new ArrayList<>();
+        support.firePropertyChange("filteredMovies", oldValue, this.filteredMovies);
     }
 
     /**
@@ -76,8 +82,10 @@ public class FilterMoviesViewModel {
      * @param errorMessage the error message to set
      */
     public void setErrorMessage(String errorMessage) {
+        String oldValue = this.errorMessage;
         this.errorMessage = errorMessage;
         this.hasError = errorMessage != null && !errorMessage.isEmpty();
+        support.firePropertyChange("errorMessage", oldValue, this.errorMessage);
     }
 
     /**
@@ -93,8 +101,10 @@ public class FilterMoviesViewModel {
      * Clears the current error message and resets the error flag.
      */
     public void clearError() {
+        String oldValue = this.errorMessage;
         this.errorMessage = null;
         this.hasError = false;
+        support.firePropertyChange("errorMessage", oldValue, this.errorMessage);
     }
 
     /**
@@ -104,5 +114,13 @@ public class FilterMoviesViewModel {
      */
     public int getMovieCount() {
         return filteredMovies.size();
+    }
+
+    /**
+     * Adds a PropertyChangeListener to this ViewModel.
+     * @param listener The PropertyChangeListener to be added
+     */
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        support.addPropertyChangeListener(listener);
     }
 }

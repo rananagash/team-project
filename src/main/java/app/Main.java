@@ -22,6 +22,7 @@ public class Main {
                 .addViewProfileUseCase()
                 .addViewWatchHistoryUseCase()
                 .addAddToWatchListUseCase()
+                .addFilterMoviesUseCase()
                 .addRecordWatchHistoryPopup()
                 .addAddReviewPopup()
                 .build();

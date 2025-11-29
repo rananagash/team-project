@@ -21,29 +21,35 @@ import interface_adapter.review_movie.ReviewMovieViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
+import interface_adapter.view_profile.ViewProfileController;
+import interface_adapter.view_profile.ViewProfilePresenter;
+import interface_adapter.view_profile.ViewProfileViewModel;
 import use_case.add_to_watchlist.AddWatchListInputBoundary;
+import use_case.add_to_watchlist.AddWatchListInteractor;
 import use_case.change_password.ChangePasswordInputBoundary;
+import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
 import use_case.common.UserDataAccessInterface;
 import use_case.login.LoginInputBoundary;
+import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
+import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
+import use_case.review_movie.ReviewMovieInteractor;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
 import use_case.view_profile.ViewProfileInputBoundary;
-import use_case.view_profile.ViewProfileOutputBoundary;
-import view.*;
-import interface_adapter.view_profile.ViewProfileController;
-import interface_adapter.view_profile.ViewProfilePresenter;
-import interface_adapter.view_profile.ViewProfileViewModel;
-import use_case.add_to_watchlist.AddWatchListInteractor;
-import use_case.change_password.ChangePasswordInteractor;
-import use_case.login.LoginInteractor;
-import use_case.logout.LogoutInteractor;
-import use_case.review_movie.ReviewMovieInteractor;
 import use_case.view_profile.ViewProfileInteractor;
+import use_case.view_profile.ViewProfileOutputBoundary;
+import interface_adapter.filter_movies.FilterMoviesController;
+import interface_adapter.filter_movies.FilterMoviesPresenter;
+import interface_adapter.filter_movies.FilterMoviesViewModel;
+import use_case.filter_movies.FilterMoviesInputBoundary;
+import use_case.filter_movies.FilterMoviesInteractor;
+import use_case.filter_movies.FilterMoviesOutputBoundary;
+import view.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,7 +78,7 @@ public class AppBuilder {
     private ViewWatchHistoryPopup viewWatchHistoryPopup;
     private ProfileView profileView;
     private ViewProfileViewModel viewProfileViewModel;
-
+    private FilterMoviesViewModel filterMoviesViewModel;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -180,7 +186,14 @@ public class AppBuilder {
     }
 
     public AppBuilder addFilterMoviesUseCase() {
-        //TODO: Inba
+        filterMoviesViewModel = new FilterMoviesViewModel();
+        FilterMoviesOutputBoundary presenter = new FilterMoviesPresenter(filterMoviesViewModel);
+        TMDbMovieDataAccessObject movieGateway = new TMDbMovieDataAccessObject();
+        FilterMoviesInputBoundary interactor = new FilterMoviesInteractor(movieGateway, presenter);
+        FilterMoviesController controller = new FilterMoviesController(interactor);
+
+        loggedInView.setFilterMoviesController(controller);
+        loggedInView.setFilterMoviesViewModel(filterMoviesViewModel);
         return this;
     }
 

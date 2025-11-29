@@ -8,20 +8,18 @@ import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.record_watchhistory.RecordWatchHistoryController;
-import interface_adapter.record_watchhistory.RecordWatchHistoryPresenter;
 import interface_adapter.view_watchhistory.ViewWatchHistoryController;
 import interface_adapter.search_movie.SearchMovieController;
 import interface_adapter.view_profile.ViewProfileController;
-import use_case.record_watchhistory.RecordWatchHistoryInteractor;
+import interface_adapter.filter_movies.FilterMoviesController;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,9 +40,11 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private ViewProfileController viewProfileController;
     private AddWatchListController addWatchListController;
     private RecordWatchHistoryController recordWatchHistoryController;
+    private FilterMoviesController filterMoviesController;
 
     // ViewModels
     private interface_adapter.review_movie.ReviewMovieViewModel reviewMovieViewModel;
+    private interface_adapter.filter_movies.FilterMoviesViewModel filterMoviesViewModel;
 
     // UI Components - Top panel
     private JLabel username;
@@ -53,6 +53,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private JButton viewHistoryBtn;
     private JButton profileBtn;
     private JButton reviewBtn;
+    private JButton filterMoviesBtn;
 
     // Middle Panel (testing only)
     //TODO: remove before final version
@@ -85,6 +86,17 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         this.loggedInViewModel = loggedInViewModel;
         this.loggedInViewModel.addPropertyChangeListener(this);
         initComponents();
+    }
+
+    public void setFilterMoviesController(FilterMoviesController controller) {
+        this.filterMoviesController = controller;
+    }
+
+    public void setFilterMoviesViewModel(interface_adapter.filter_movies.FilterMoviesViewModel viewModel) {
+        this.filterMoviesViewModel = viewModel;
+        if (viewModel != null) {
+            viewModel.addPropertyChangeListener(this);
+        }
     }
 
     private void initComponents() {
@@ -281,8 +293,26 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
             setStatus("Searching...");
             searchController.search(lastQuery, currentPage);
         });
+
+        filterMoviesBtn = new JButton("Filter Movies");
+        filterMoviesBtn.addActionListener(e -> {
+            if (filterMoviesController != null && filterMoviesViewModel != null) {
+                JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+                FilterMoviesPopup popup = new FilterMoviesPopup(
+                        parent,
+                        filterMoviesController,
+                        filterMoviesViewModel
+                );
+                popup.setVisible(true);
+            }
+        });
+
+        JPanel searchButtonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
+        searchButtonsPanel.add(searchButton);
+        searchButtonsPanel.add(filterMoviesBtn);
+
         searchPanel.add(queryField, BorderLayout.CENTER);
-        searchPanel.add(searchButton, BorderLayout.EAST);
+        searchPanel.add(searchButtonsPanel, BorderLayout.EAST);
 //        this.add(searchPanel, BorderLayout.NORTH);
 
         // Wrap two top panels so they can both be in the "NORTH" section of BorderLayout
@@ -423,6 +453,27 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
                     JOptionPane.showMessageDialog(this, state.getPasswordError());
                 }
             }
+        } else if (evt.getPropertyName().equals("filteredMovies") && filterMoviesViewModel != null) {
+            // Display filtered movies in the results list
+            List<entity.Movie> movies = filterMoviesViewModel.getFilteredMovies();
+            List<String> movieLines = new ArrayList<>();
+            for (entity.Movie movie : movies) {
+                String line = String.format("%s (%.1f) - %s",
+                        movie.getTitle(),
+                        movie.getRating(),
+                        movie.getPlot().length() > 60
+                                ? movie.getPlot().substring(0, 60) + "..."
+                                : movie.getPlot());
+                movieLines.add(line);
+            }
+            showResults(movieLines, 1, 1);
+            if (filterMoviesViewModel.hasError()) {
+                showError(filterMoviesViewModel.getErrorMessage());
+            } else {
+                setStatus("Found " + movies.size() + " filtered movies");
+            }
+        } else if (evt.getPropertyName().equals("errorMessage") && filterMoviesViewModel != null && filterMoviesViewModel.hasError()) {
+            showError(filterMoviesViewModel.getErrorMessage());
         }
     }
 

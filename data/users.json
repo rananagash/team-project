@@ -1,5 +1,5 @@
 {
-    "currentUser": "altest",
+    "currentUser": "inba",
     "users": {
         "dummy": {
             "password": "user",
@@ -12,6 +12,17 @@
             "reviews": {},
             "watchlists": [],
             "username": "altest"
+        },
+        "inba": {
+            "password": "inba",
+            "reviews": {},
+            "watchlists": [{
+                "movies": [],
+                "dateCreated": "2025-11-29T12:04:06.195533",
+                "name": "inba's Watch List",
+                "id": "0bf1f7a9-e4d5-4386-b341-012d66f43c5d"
+            }],
+            "username": "inba"
         }
     }
 }
