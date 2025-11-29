@@ -4,10 +4,8 @@ import entity.Movie;
 import use_case.common.MovieGateway;
 import use_case.common.PagedMovieResult;
 import use_case.common.MovieDataAccessException;
-import java.util.Collections;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Optional;
+
+import java.util.*;
 //Imports for the API call
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -163,9 +161,9 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
 
     @Override
     public List<Movie> searchByTitle(String query) {
-        /*
-         * TODO(Chester Zhao): Hit TMDb search endpoint and return a list of matching movies.
-         */
+        if (query == null || query.trim().isEmpty()) {
+            return Collections.emptyList();
+        }
         return Collections.emptyList();
     }
 

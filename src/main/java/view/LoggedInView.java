@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -64,8 +65,10 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     // UI Components - Search panel
     private JTextField queryField;
     private JButton searchButton;
-    private JList<String> resultsList;
-    private DefaultListModel<String> listModel;
+//    private JList<String> resultsList;
+//    private DefaultListModel<String> listModel;
+    private JPanel movieResultsPanel; // will replace JList
+    private JScrollPane movieScrollPane;
 
     // UI Components - Pagination
     private JButton prevPageButton;
@@ -294,10 +297,16 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         this.add(northWrapper, BorderLayout.NORTH);
 
         // ===== Result list =====
-        listModel = new DefaultListModel<>();
-        resultsList = new JList<>(listModel);
-        JScrollPane scrollPane = new JScrollPane(resultsList);
-        this.add(scrollPane, BorderLayout.CENTER);
+        movieResultsPanel = new JPanel();
+        movieResultsPanel.setLayout(new BoxLayout(movieResultsPanel, BoxLayout.Y_AXIS));
+        movieResultsPanel.setBackground(new Color(15, 23, 42));
+
+        movieScrollPane = new JScrollPane(movieResultsPanel);
+        movieScrollPane.setBorder(BorderFactory.createEmptyBorder());
+        movieScrollPane.getViewport().setBackground(new Color(15, 23, 42));
+        movieScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        this.add(movieScrollPane, BorderLayout.CENTER);
 
         // ===== Pagination + status =====
         JPanel bottomPanel = new JPanel(new BorderLayout(4, 4));
@@ -371,17 +380,40 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     /**
      * Display search results with pagination.
      */
-    public void showResults(List<String> movieLines, int currentPage, int totalPages) {
+    public void showResults(List<entity.Movie> movies, int currentPage, int totalPages) {
         this.currentPage = currentPage;
         this.totalPages = Math.max(totalPages, 1);
 
-        listModel.clear();
-        for (String line : movieLines) {
-            listModel.addElement(line);
+        // clear result
+        movieResultsPanel.removeAll();
+
+        if (movies.isEmpty()) {
+            // nothing found
+            JLabel noResultsLabel = new JLabel("No movies found for your search", SwingConstants.CENTER);
+            noResultsLabel.setForeground(new Color(209, 213, 219));
+            noResultsLabel.setFont(new Font("Helvetica", Font.PLAIN, 16));
+            noResultsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            movieResultsPanel.add(noResultsLabel);
+        } else {
+            // cards display
+            for (entity.Movie movie : movies) {
+                JPanel movieCard = createMovieCard(movie);
+                movieCard.setAlignmentX(Component.LEFT_ALIGNMENT);
+                movieResultsPanel.add(movieCard);
+                movieResultsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+            }
         }
 
+        // UI
+        movieResultsPanel.add(Box.createVerticalGlue());
+
+        // refresh
+        movieResultsPanel.revalidate();
+        movieResultsPanel.repaint();
+
+        // page button
         updatePaginationButtons();
-        setStatus("Found " + movieLines.size() + " results (page " + currentPage + ").");
+        setStatus("Found " + movies.size() + " results (page " + currentPage + ").");
     }
 
     /**
@@ -412,15 +444,12 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
             final LoggedInState state = (LoggedInState) evt.getNewValue();
             if (state != null) {
                 username.setText(state.getUsername());
-            }
-        } else if (evt.getPropertyName().equals("password")) {
-            final LoggedInState state = (LoggedInState) evt.getNewValue();
-            if (state != null) {
-                if (state.getPasswordError() == null) {
-                    JOptionPane.showMessageDialog(this, "password updated for " + state.getUsername());
-                    passwordInputField.setText("");
-                } else {
-                    JOptionPane.showMessageDialog(this, state.getPasswordError());
+
+                if (state.getSearchResults() != null && !state.getSearchResults().isEmpty()) {
+                    System.out.println("Showing " + state.getSearchResults().size() + " search results");
+                    showResults(state.getSearchResults(), state.getCurrentPage(), state.getTotalPages());
+                } else if (state.getSearchError() != null) {
+                    showError(state.getSearchError());
                 }
             }
         }
@@ -464,5 +493,141 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     public void setRecordWatchHistoryController(RecordWatchHistoryController controller) {
         this.recordWatchHistoryController = controller;
+    }
+
+    private JPanel createMovieCard(Movie movie) {
+        JPanel card = new JPanel(new BorderLayout(10, 0));
+        card.setBackground(new Color(255, 255, 255, 13));
+        card.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(255, 255, 255, 26)),
+                BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        ));
+        card.setMaximumSize(new Dimension(900, 150));
+
+        // Poster
+        JLabel posterLabel = new JLabel("Loading...", SwingConstants.CENTER);
+        posterLabel.setPreferredSize(new Dimension(80, 120));
+        posterLabel.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255, 38)));
+        posterLabel.setForeground(Color.WHITE);
+        posterLabel.setFont(new Font("Helvetica", Font.PLAIN, 8));
+        posterLabel.setOpaque(true);
+        posterLabel.setBackground(new Color(30, 41, 59));
+
+        // load Poster
+        loadPosterImage(movie.getPosterUrl(), posterLabel);
+
+        // info
+        JPanel infoPanel = new JPanel(new GridLayout(2, 1));
+        infoPanel.setOpaque(false);
+
+        JLabel titleLabel = new JLabel(movie.getTitle());
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setFont(new Font("Helvetica", Font.BOLD, 18));
+
+        // detail
+        Integer year = movie.getReleaseYear() != null ? movie.getReleaseYear() : 0000;
+        String rating = String.format("%.1f/10", movie.getRating());
+        String detailsText = "<html>Year: " + year + "<br>Rating: " + rating + "</html>";
+
+        JLabel detailsLabel = new JLabel(detailsText);
+        detailsLabel.setForeground(new Color(209, 213, 219));
+        detailsLabel.setFont(new Font("Helvetica", Font.PLAIN, 14));
+
+        infoPanel.add(titleLabel);
+        infoPanel.add(detailsLabel);
+
+        // 2 buttons
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 1, 0, 5));
+        buttonPanel.setOpaque(false);
+        buttonPanel.setPreferredSize(new Dimension(150, 80));
+
+        // list
+        JButton addToWatchlistBtn = new JButton("Add to Watchlist");
+        addToWatchlistBtn.setFont(new Font("Helvetica", Font.BOLD, 12));
+        addToWatchlistBtn.setBackground(new Color(37, 99, 235));
+        addToWatchlistBtn.setForeground(Color.BLACK);
+        addToWatchlistBtn.setFocusPainted(false);
+
+        // history
+        JButton addToHistoryBtn = new JButton("Add to History");
+        addToHistoryBtn.setFont(new Font("Helvetica", Font.BOLD, 12));
+        addToHistoryBtn.setBackground(new Color(147, 51, 234));
+        addToHistoryBtn.setForeground(Color.BLACK);
+        addToHistoryBtn.setFocusPainted(false);
+
+        buttonPanel.add(addToWatchlistBtn);
+        buttonPanel.add(addToHistoryBtn);
+
+        // layout
+        card.add(posterLabel, BorderLayout.WEST);
+        card.add(infoPanel, BorderLayout.CENTER);
+        card.add(buttonPanel, BorderLayout.EAST);
+
+        // listners
+        addToWatchlistBtn.addActionListener(e -> {
+            if (addWatchListController != null) {
+                // may need AddWatchListController
+                // only update the look for now
+                addToWatchlistBtn.setText("In Watchlist");
+                addToWatchlistBtn.setBackground(new Color(22, 163, 74));
+                addToWatchlistBtn.setEnabled(false);
+
+                // TODO: need to call watch list Controller
+                System.out.println("Add to watchlist: " + movie.getTitle());
+            }
+        });
+
+        addToHistoryBtn.addActionListener(e -> {
+            // TODO: need to call history Controller
+            addToHistoryBtn.setText("Watched");
+            addToHistoryBtn.setBackground(new Color(22, 163, 74));
+            addToHistoryBtn.setEnabled(false);
+            System.out.println("Add to history: " + movie.getTitle());
+        });
+
+        return card;
+    }
+
+    private void loadPosterImage(String posterUrl, JLabel posterLabel) {
+        if (posterUrl == null || posterUrl.isEmpty() || posterUrl.equals("null")) {
+            showNoImagePlaceholder(posterLabel);
+            return;
+        }
+
+        try {
+            // 使用SwingWorker在后台加载图片，避免界面卡顿
+            SwingWorker<ImageIcon, Void> worker = new SwingWorker<ImageIcon, Void>() {
+                @Override
+                protected ImageIcon doInBackground() throws Exception {
+                    URL imageUrl = new URL(posterUrl);
+                    return new ImageIcon(imageUrl);
+                }
+
+                @Override
+                protected void done() {
+                    try {
+                        ImageIcon imageIcon = get();
+                        Image image = imageIcon.getImage().getScaledInstance(80, 120, Image.SCALE_SMOOTH);
+                        posterLabel.setIcon(new ImageIcon(image));
+                        posterLabel.setText("");
+                    } catch (Exception e) {
+                        showNoImagePlaceholder(posterLabel);
+                    }
+                }
+            };
+            worker.execute();
+
+        } catch (Exception e) {
+            showNoImagePlaceholder(posterLabel);
+        }
+    }
+
+    private void showNoImagePlaceholder(JLabel posterLabel) {
+        posterLabel.setIcon(null);
+        posterLabel.setText("No Image");
+        posterLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        posterLabel.setVerticalAlignment(SwingConstants.CENTER);
+        posterLabel.setForeground(new Color(156, 163, 175));
+        posterLabel.setFont(new Font("Helvetica", Font.PLAIN, 10));
     }
 }
