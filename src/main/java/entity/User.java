@@ -45,6 +45,10 @@ public class User {
         return watchLists;
     }
 
+    public void clearWatchLists() {
+        this.watchLists.clear();
+    }
+
     public void addWatchList(WatchList watchList) {
         Objects.requireNonNull(watchList, "WatchList cannot be null");
 
