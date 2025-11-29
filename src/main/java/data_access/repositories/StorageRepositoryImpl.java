@@ -1,6 +1,6 @@
 package data_access.repositories;
 
-import com.moviesearch.domain.entities.Movie;
+import entity.Movie;
 
 import java.util.ArrayList;
 import java.util.List;

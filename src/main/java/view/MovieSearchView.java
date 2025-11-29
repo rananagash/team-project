@@ -1,6 +1,6 @@
 package view;
 
-import com.moviesearch.domain.entities.Movie;
+import entity.Movie;
 import java.util.List;
 
 public interface MovieSearchView {

@@ -1,6 +1,6 @@
 package use_case.usecases;
 
-import com.moviesearch.domain.entities.Movie;
+import entity.Movie;
 import java.util.List;
 import java.util.stream.Collectors;
 

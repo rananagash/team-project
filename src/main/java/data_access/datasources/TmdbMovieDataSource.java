@@ -1,6 +1,6 @@
 package data_access.datasources;
 
-import com.moviesearch.domain.entities.Movie;
+import entity.Movie;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -23,7 +23,6 @@ public class TmdbMovieDataSource {
         List<Movie> movies = new ArrayList<>();
 
         try {
-            // API code decipher
             String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8.toString());
             String urlString = BASE_URL + "/search/movie?query=" + encodedQuery + "&include_adult=false&language=en-US&page=1";
 
@@ -36,15 +35,13 @@ public class TmdbMovieDataSource {
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String inputLine;
                 StringBuilder response = new StringBuilder();
-
+                String inputLine;
                 while ((inputLine = in.readLine()) != null) {
                     response.append(inputLine);
                 }
                 in.close();
 
-                // JSON respond receiver
                 JSONObject jsonResponse = new JSONObject(response.toString());
                 JSONArray results = jsonResponse.getJSONArray("results");
 
@@ -71,11 +68,13 @@ public class TmdbMovieDataSource {
 
     private Movie parseMovieFromJson(JSONObject movieJson) {
         try {
-            int id = movieJson.getInt("id");
-            String title = movieJson.getString("title");
+            // Convert TMDb numeric ID to String
+            String id = String.valueOf(movieJson.getInt("id"));
+            String title = movieJson.optString("title", "");
             String releaseDate = movieJson.optString("release_date", "");
+            String overview = movieJson.optString("overview", "");
 
-            // processing genre IDs
+            // Genre IDs
             List<Integer> genreIds = new ArrayList<>();
             if (movieJson.has("genre_ids")) {
                 JSONArray genreArray = movieJson.getJSONArray("genre_ids");
@@ -84,12 +83,16 @@ public class TmdbMovieDataSource {
                 }
             }
 
-            String posterPath = movieJson.optString("poster_path", null);
-            if (posterPath == null || posterPath.equals("null") || posterPath.isEmpty())  {
-                posterPath = "";
-            }
+            // Poster path
+            String posterPath = movieJson.optString("poster_path", "");
+            if (posterPath.equals("null")) posterPath = "";
+            posterPath = posterPath.isEmpty() ? "" : "https://image.tmdb.org/t/p/w500" + posterPath;
 
-            return new Movie(id, title, releaseDate, genreIds, posterPath);
+            // Numeric fields
+            double voteAverage = movieJson.optDouble("vote_average", 0.0);
+            double popularity = movieJson.optDouble("popularity", 0.0);
+
+            return new Movie(id, title, overview, genreIds, releaseDate, voteAverage, popularity, posterPath);
 
         } catch (Exception e) {
             System.err.println("Error parsing movie JSON: " + e.getMessage());

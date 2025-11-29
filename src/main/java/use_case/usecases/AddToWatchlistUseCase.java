@@ -1,7 +1,7 @@
 package use_case.usecases;
 
-import com.moviesearch.domain.entities.Movie;
-import com.moviesearch.data.repositories.StorageRepository;
+import entity.Movie;
+import data_access.repositories.StorageRepository;
 
 public class AddToWatchlistUseCase {
     private final StorageRepository storageRepository;
@@ -14,7 +14,7 @@ public class AddToWatchlistUseCase {
         try {
             var watchlist = storageRepository.getWatchlist();
             boolean alreadyExists = watchlist.stream()
-                    .anyMatch(m -> m.getId() == movie.getId());
+                    .anyMatch(m -> m.getMovieId() == movie.getMovieId());
 
             if (!alreadyExists) {
                 watchlist.add(movie);

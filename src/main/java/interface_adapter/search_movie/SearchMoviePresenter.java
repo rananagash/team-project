@@ -1,12 +1,12 @@
 
 package interface_adapter.search_movie;
 
-import com.moviesearch.domain.entities.Movie;
-import com.moviesearch.domain.entities.SearchResult;
-import com.moviesearch.data.repositories.MovieRepository;
-import com.moviesearch.data.repositories.StorageRepository;
-import com.moviesearch.domain.usecases.*;
-import com.moviesearch.presentation.views.MovieSearchView;
+import entity.Movie;
+import entity.SearchResult;
+import data_access.repositories.MovieRepository;
+import data_access.repositories.StorageRepository;
+import use_case.usecases.*;
+import view.MovieSearchView;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -77,13 +77,15 @@ public class SearchMoviePresenter {
 
     public boolean isInWatchlist(int movieId) {
         return storageRepository.getWatchlist().stream()
-                .anyMatch(movie -> movie.getId() == movieId);
+                .anyMatch(movie -> movie.getMovieId().equals(String.valueOf(movieId)));
     }
 
     public boolean isInWatchHistory(int movieId) {
         return storageRepository.getWatchHistory().stream()
-                .anyMatch(movie -> movie.getId() == movieId);
+                .anyMatch(movie -> movie.getMovieId().equals(String.valueOf(movieId)));
     }
+
+
 
     public void addToWatchHistory(Movie movie) {
         boolean success = addToWatchHistoryUseCase.execute(movie);

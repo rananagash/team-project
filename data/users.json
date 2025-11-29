@@ -1,5 +1,5 @@
 {
-    "currentUser": "ykk",
+    "currentUser": "inba",
     "users": {
         "dummy": {
             "password": "user",
@@ -13,14 +13,25 @@
             "watchlists": [],
             "username": "altest"
         },
+        "inba": {
+            "password": "inba",
+            "reviews": {},
+            "watchlists": [{
+                "movies": [],
+                "dateCreated": "2025-11-29T10:41:58.057312",
+                "name": "inba's Watch List",
+                "id": "4d155635-11b2-4f97-9c05-3f91f1ba68dc"
+            }],
+            "username": "inba"
+        },
         "ykk": {
             "password": "ykk101",
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-28T22:13:12.508414",
+                "dateCreated": "2025-11-29T10:41:49.537770",
                 "name": "ykk's Watch List",
-                "id": "1cf3b02a-440d-4a72-b63c-34b1d4eb0412"
+                "id": "a4032df9-5636-4a53-b73d-7adeca561008"
             }],
             "username": "ykk"
         }

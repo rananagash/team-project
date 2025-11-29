@@ -1,8 +1,8 @@
 package use_case.usecases;
 
-import com.moviesearch.domain.entities.Movie;
-import com.moviesearch.domain.entities.SearchResult;
-import com.moviesearch.data.repositories.MovieRepository;
+import entity.Movie;
+import entity.SearchResult;
+import data_access.repositories.MovieRepository;
 import java.util.List;
 
 public class SearchMoviesUseCase {

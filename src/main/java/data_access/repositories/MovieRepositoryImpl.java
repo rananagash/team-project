@@ -1,9 +1,9 @@
 // data/repositories/MovieRepositoryImpl.java
 package data_access.repositories;
 
-import com.moviesearch.domain.entities.Movie;
-import com.moviesearch.data.repositories.MovieRepository;
-import com.moviesearch.data.datasources.TmdbMovieDataSource;
+import entity.Movie;
+import data_access.repositories.MovieRepository;
+import data_access.datasources.TmdbMovieDataSource;
 import java.util.List;
 
 public class MovieRepositoryImpl implements MovieRepository {
