@@ -10,7 +10,7 @@ and summaries.
 
 The app is structured using Clean Architecture and SOLID design principles. Core logic is seperated from the UI, allowing for easy extension and maintaining. Movie data is retrieved through a dedicated data access layer that communicates with TMDb using authenticated HTTP requests.
 
-Users can search for movies by title, create and compare watchlists, store their viewing history, and rate or review movies. The Swing interface presents search results, watchlist tools, and movie information in a simple and interactive layout.
+Users can search for movies by title, create watchlists, store their viewing history, and rate or review movies. The Swing interface presents search results, watchlist tools, and movie information in a simple and interactive layout.
 
 ---
 
