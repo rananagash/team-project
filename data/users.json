@@ -1,5 +1,5 @@
 {
-    "currentUser": "altest",
+    "currentUser": "ykk",
     "users": {
         "dummy": {
             "password": "user",
@@ -12,6 +12,17 @@
             "reviews": {},
             "watchlists": [],
             "username": "altest"
+        },
+        "ykk": {
+            "password": "ykk101",
+            "reviews": {},
+            "watchlists": [{
+                "movies": [],
+                "dateCreated": "2025-11-28T22:13:12.508414",
+                "name": "ykk's Watch List",
+                "id": "1cf3b02a-440d-4a72-b63c-34b1d4eb0412"
+            }],
+            "username": "ykk"
         }
     }
 }
