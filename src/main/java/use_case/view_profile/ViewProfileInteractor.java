@@ -1,16 +1,15 @@
 package use_case.view_profile;
 
-import data_access.CachedUserDataAccessObject;
 import entity.User;
 
 /**
  * Interactor for the View Profile use case.
  */
 public class ViewProfileInteractor implements ViewProfileInputBoundary {
-    private final CachedUserDataAccessObject userDataAccessObject;
+    private final ViewProfileUserDataAccessInterface userDataAccessObject;
     private final ViewProfileOutputBoundary userPresenter;
 
-    public ViewProfileInteractor(CachedUserDataAccessObject userDataAccessInterface,
+    public ViewProfileInteractor(ViewProfileUserDataAccessInterface userDataAccessInterface,
                                  ViewProfileOutputBoundary viewProfileOutputBoundary) {
         this.userDataAccessObject = userDataAccessInterface;
         this.userPresenter = viewProfileOutputBoundary;

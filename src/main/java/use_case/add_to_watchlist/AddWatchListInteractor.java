@@ -1,9 +1,9 @@
 package use_case.add_to_watchlist;
 
-import data_access.CachedUserDataAccessObject;
 import entity.Movie;
 import entity.User;
 import entity.WatchList;
+import use_case.common.UserDataAccessInterface;
 
 /**
  * Interactor for the Add to Watch List use case.
@@ -13,14 +13,14 @@ import entity.WatchList;
  *     <li>Attempts to add a movie to a Watch List</li>
  *     <li>Detect if movie was already on Watch List</li>
  *     <li>Create a response model describing the result</li>
- *     <li>Persists state changes via {@link data_access.CachedUserDataAccessObject}</li>
+ *     <li>Persists state changes via {@link UserDataAccessInterface}</li>
  *     <li>Call the appropriate presenter method</li>
  * </ul>
  */
 public class AddWatchListInteractor implements AddWatchListInputBoundary {
 
     private final AddWatchListOutputBoundary presenter;
-    private final CachedUserDataAccessObject userDataAccessObject;
+    private final UserDataAccessInterface userDataAccessObject;
 
     /**
      * Constructs an interactor with a presenter that will translate the results.
@@ -28,7 +28,7 @@ public class AddWatchListInteractor implements AddWatchListInputBoundary {
      * @param userDataAccessObject persistence gateway used to save changes
      */
     public AddWatchListInteractor(AddWatchListOutputBoundary presenter,
-                                  CachedUserDataAccessObject userDataAccessObject) {
+                                  UserDataAccessInterface userDataAccessObject) {
         this.presenter = presenter;
         this.userDataAccessObject = userDataAccessObject;
     }

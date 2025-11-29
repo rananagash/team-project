@@ -8,11 +8,11 @@ import entity.factories.UserFactory;
  * The Change Password Interactor.
  */
 public class ChangePasswordInteractor implements ChangePasswordInputBoundary {
-    private final CachedUserDataAccessObject userDataAccessObject;
+    private final ChangePasswordUserDataAccessInterface userDataAccessObject;
     private final ChangePasswordOutputBoundary userPresenter;
     private final UserFactory userFactory;
 
-    public ChangePasswordInteractor(CachedUserDataAccessObject changePasswordDataAccessInterface,
+    public ChangePasswordInteractor(ChangePasswordUserDataAccessInterface changePasswordDataAccessInterface,
                                     ChangePasswordOutputBoundary changePasswordOutputBoundary,
                                     UserFactory userFactory) {
         this.userDataAccessObject = changePasswordDataAccessInterface;
