@@ -21,6 +21,9 @@ import interface_adapter.review_movie.ReviewMovieViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
+import interface_adapter.view_watchlists.ViewWatchListsController;
+import interface_adapter.view_watchlists.ViewWatchListsPresenter;
+import interface_adapter.view_watchlists.ViewWatchListsViewModel;
 import use_case.add_to_watchlist.AddWatchListInputBoundary;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordOutputBoundary;
@@ -34,6 +37,9 @@ import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
 import use_case.view_profile.ViewProfileInputBoundary;
 import use_case.view_profile.ViewProfileOutputBoundary;
+import use_case.view_watchlists.ViewWatchListsInputBoundary;
+import use_case.view_watchlists.ViewWatchListsInteractor;
+import use_case.view_watchlists.ViewWatchListsOutputBoundary;
 import view.*;
 import interface_adapter.view_profile.ViewProfileController;
 import interface_adapter.view_profile.ViewProfilePresenter;
@@ -72,6 +78,8 @@ public class AppBuilder {
     private ViewWatchHistoryPopup viewWatchHistoryPopup;
     private ProfileView profileView;
     private ViewProfileViewModel viewProfileViewModel;
+    private ViewWatchListsView viewWatchListsView;
+    private ViewWatchListsViewModel viewWatchListsViewModel;
 
 
     public AppBuilder() {
@@ -104,6 +112,13 @@ public class AppBuilder {
         viewProfileViewModel = new ViewProfileViewModel();
         profileView = new ProfileView(viewProfileViewModel);
         cardPanel.add(profileView, profileView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addViewWatchListsView() {
+        viewWatchListsViewModel = new ViewWatchListsViewModel(viewManagerModel);
+        viewWatchListsView = new ViewWatchListsView(viewWatchListsViewModel);
+        cardPanel.add(viewWatchListsView, viewWatchListsView.getViewName());
         return this;
     }
 
@@ -174,6 +189,19 @@ public class AppBuilder {
         return this;
     }
 
+    public AppBuilder addViewWatchListsUseCase() {
+        ViewWatchListsOutputBoundary viewWatchListsPresenter = new ViewWatchListsPresenter(viewWatchListsViewModel, viewManagerModel);
+        ViewWatchListsInputBoundary viewWatchListsInteractor = new ViewWatchListsInteractor(userDataAccessObject,
+                viewWatchListsPresenter);
+        ViewWatchListsController viewWatchListsController = new ViewWatchListsController(viewWatchListsInteractor,  viewManagerModel);
+
+        viewWatchListsView.setController(viewWatchListsController);
+        loggedInView.setViewWatchListsController(viewWatchListsController);
+        profileView.setViewWatchListsController(viewWatchListsController);
+
+        return this;
+    }
+
     public AppBuilder addViewWatchHistoryUseCase() {
         //TODO: Jiaqi
         return this;
@@ -211,10 +239,14 @@ public class AppBuilder {
     }
 
     public JFrame build() {
-        final JFrame application = new JFrame("User Login Example");
+        final JFrame application = new JFrame("MovieNight");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         application.add(cardPanel);
+
+        // initial size of app
+        application.setPreferredSize(new Dimension(900, 600));
+        application.setMinimumSize(new Dimension(900, 600));
 
         viewManagerModel.setState(signupView.getViewName());
         viewManagerModel.firePropertyChange();

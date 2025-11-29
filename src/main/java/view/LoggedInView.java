@@ -12,6 +12,7 @@ import interface_adapter.record_watchhistory.RecordWatchHistoryPresenter;
 import interface_adapter.view_watchhistory.ViewWatchHistoryController;
 import interface_adapter.search_movie.SearchMovieController;
 import interface_adapter.view_profile.ViewProfileController;
+import interface_adapter.view_watchlists.ViewWatchListsController;
 import use_case.record_watchhistory.RecordWatchHistoryInteractor;
 
 import javax.swing.*;
@@ -42,6 +43,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private ViewProfileController viewProfileController;
     private AddWatchListController addWatchListController;
     private RecordWatchHistoryController recordWatchHistoryController;
+    private ViewWatchListsController viewWatchListsController;
 
     // ViewModels
     private interface_adapter.review_movie.ReviewMovieViewModel reviewMovieViewModel;
@@ -464,5 +466,9 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     public void setRecordWatchHistoryController(RecordWatchHistoryController controller) {
         this.recordWatchHistoryController = controller;
+    }
+
+    public void setViewWatchListsController(ViewWatchListsController controller) {
+        this.viewWatchListsController = controller;
     }
 }
