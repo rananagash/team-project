@@ -1,17 +1,28 @@
 package view;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
+
 import interface_adapter.MovieViewData;
 import interface_adapter.view_watchlists.ViewWatchListsController;
 import interface_adapter.view_watchlists.ViewWatchListsState;
 import interface_adapter.view_watchlists.ViewWatchListsViewModel;
 import view.components.MovieCard;
-
-import javax.swing.*;
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import java.awt.List.*;
 
 /**
  * The view responsible for displaying a user's watchlists and the movies inside the selected watchlist.
@@ -42,13 +53,13 @@ public class ViewWatchListsView extends JPanel implements PropertyChangeListener
     public ViewWatchListsView(ViewWatchListsViewModel viewModel) {
         this.viewModel = viewModel;
         viewModel.addPropertyChangeListener(this);
-        initializeUI();
+        initializeui();
     }
 
     /**
      * Initializes and lays out all UI components for this view.
      */
-    private void initializeUI() {
+    private void initializeui() {
         setLayout(new BorderLayout());
 
         // ---------- NAV BAR ----------
@@ -95,12 +106,14 @@ public class ViewWatchListsView extends JPanel implements PropertyChangeListener
             }
         });
 
-        createButton.addActionListener(e -> JOptionPane.showMessageDialog(
-                this,
-                "Create WatchList is not yet implemented.",
-                "Not Implemented",
-                JOptionPane.WARNING_MESSAGE
-        ));
+        createButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Create WatchList is not yet implemented.",
+                    "Not Implemented",
+                    JOptionPane.WARNING_MESSAGE
+            );
+        });
 
         // ---------- MOVIE LIST ----------
         moviePanel = new JPanel();
@@ -160,24 +173,7 @@ public class ViewWatchListsView extends JPanel implements PropertyChangeListener
                     movie.getPosterUrl()
             );
 
-            // ------------------------------
-            // TEMPORARY TEST BUTTONS
-            // ------------------------------
-            JButton removeButton = new JButton("Remove");
-            removeButton.addActionListener(e -> {
-                JOptionPane.showMessageDialog(this, "Pretend to remove: " + movie.getTitle());
-            });
-
-            JButton detailsButton = new JButton("Details");
-            detailsButton.addActionListener(e -> {
-                JOptionPane.showMessageDialog(this,
-                        "Pretend to show details for: " + movie.getTitle());
-            });
-
-            java.util.List<JButton> testButtons = java.util.List.of(removeButton, detailsButton);
-
-            // Use MovieCard with buttons (for testing)
-            moviePanel.add(new MovieCard(movieView, testButtons));
+            moviePanel.add(new MovieCard(movieView));
             moviePanel.add(Box.createRigidArea(new Dimension(0, 5)));
         }
 

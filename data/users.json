@@ -83,9 +83,9 @@
                             ]
                         }
                     ],
-                    "dateCreated": "2025-11-29T13:19:06.067146",
+                    "dateCreated": "2025-11-29T13:49:37.859798",
                     "name": "altest's Watch List",
-                    "id": "dfdeefd7-3748-4611-940b-a6b377ec002a"
+                    "id": "1a401ace-e6c5-49af-ad4d-d5174153073b"
                 },
                 {
                     "movies": [{
@@ -102,9 +102,9 @@
                             878
                         ]
                     }],
-                    "dateCreated": "2025-11-29T13:19:06.067542",
+                    "dateCreated": "2025-11-29T13:49:37.860140",
                     "name": "Second Watchlist",
-                    "id": "fe8037b3-22c2-408b-8d42-55d692562c1c"
+                    "id": "94b4d43f-ddf7-4058-a7d0-25b1cb87fcfe"
                 }
             ],
             "username": "altest"
