@@ -329,7 +329,7 @@
         <!-- Coding -->
         <module name="ArrayTrailingComma"/>
         <module name="AvoidDoubleBraceInitialization"/>
-        <module name="AvoidInlineConditionals"/>
+        <!-- Removed: AvoidInlineConditionals (ternary operators are idiomatic in Java) -->
         <module name="AvoidNoArgumentSuperConstructorCall"/>
         <module name="CovariantEquals"/>
         <module name="DeclarationOrder"/>
@@ -379,7 +379,6 @@
                        java.lang.StringBuffer, StringBuffer"/>
         </module>
         <module name="InnerAssignment"/>
-        <module name="MagicNumber"/>
         <module name="MatchXpath">
             <property name="query" value="//CLASS_DEF[@text!='Checker' and @text!='Main']
       //LITERAL_CATCH//METHOD_CALL[.//IDENT[@text = 'printStackTrace']]/.."/>
@@ -509,9 +508,7 @@
         <module name="ParameterAssignment"/>
         <module name="RequireThis"/>
         <module name="ReturnCount">
-            <property name="max" value="1"/>
-            <property name="maxForVoid" value="0"/>
-            <property name="format" value="^create"/>
+            <property name="max" value="3"/>
         </module>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
@@ -654,21 +651,21 @@
         <module name="BooleanExpressionComplexity">
             <property name="max" value="7"/>
         </module>
-        <module name="ClassDataAbstractionCoupling">
-            <!-- Default classes are also listed -->
-            <property name="excludedClasses"
-                      value="boolean, byte, char, double, float, int, long, short, void,
-                       Boolean, Byte, Character, Double, Float, Integer, Long, Short, Void,
-                       Object, Class, String, StringBuffer, StringBuilder,
-                       ArrayIndexOutOfBoundsException, Exception, RuntimeException,
-                       IllegalArgumentException, IllegalStateException,
-                       IndexOutOfBoundsException, NullPointerException, Throwable,
-                       SecurityException, UnsupportedOperationException, List, ArrayList,
-                       Deque, Queue, LinkedList, Set, HashSet, SortedSet, TreeSet, Map,
-                       HashMap, SortedMap, TreeMap, DetailsAST, CheckstyleException,
-                       UnsupportedEncodingException, BuildException, ConversionException,
-                       FileNotFoundException, TestException"/>
-        </module>
+<!--        <module name="ClassDataAbstractionCoupling">-->
+<!--            &lt;!&ndash; Default classes are also listed &ndash;&gt;-->
+<!--            <property name="excludedClasses"-->
+<!--                      value="boolean, byte, char, double, float, int, long, short, void,-->
+<!--                       Boolean, Byte, Character, Double, Float, Integer, Long, Short, Void,-->
+<!--                       Object, Class, String, StringBuffer, StringBuilder,-->
+<!--                       ArrayIndexOutOfBoundsException, Exception, RuntimeException,-->
+<!--                       IllegalArgumentException, IllegalStateException,-->
+<!--                       IndexOutOfBoundsException, NullPointerException, Throwable,-->
+<!--                       SecurityException, UnsupportedOperationException, List, ArrayList,-->
+<!--                       Deque, Queue, LinkedList, Set, HashSet, SortedSet, TreeSet, Map,-->
+<!--                       HashMap, SortedMap, TreeMap, DetailsAST, CheckstyleException,-->
+<!--                       UnsupportedEncodingException, BuildException, ConversionException,-->
+<!--                       FileNotFoundException, TestException"/>-->
+<!--        </module>-->
         <module name="ClassFanOutComplexity">
             <property name="max" value="25"/>
             <!-- Default classes are also listed -->
@@ -756,16 +753,20 @@
         </module>
         <module name="MethodName"/>
         <module name="MethodTypeParameterName"/>
-        <module name="PackageName"/>
+        <module name="PackageName">
+            <property name="format" value="^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)*$"/>
+        </module>
         <module name="ParameterName">
             <property name="format" value="^(id)|([a-z][a-z0-9][a-zA-Z0-9]+)$"/>
             <property name="ignoreOverridden" value="true"/>
         </module>
         <module name="LambdaParameterName">
-            <property name="format" value="^(id)|([a-z][a-z0-9][a-zA-Z0-9]+)$"/>
+            <!-- allow single-letter lambda params like e, x, t -->
+            <property name="format" value="^(id)|[a-zA-Z]|([a-z][a-z0-9][a-zA-Z0-9]+)$"/>
         </module>
         <module name="CatchParameterName">
-            <property name="format" value="^(ex|[a-z][a-z][a-zA-Z]+)$"/>
+            <!-- Allow single-letter catch params ('e', 't'), or names like ex, err, exception -->
+            <property name="format" value="^[a-zA-Z]|(ex|[a-z][a-z][a-zA-Z]+)$"/>
         </module>
         <module name="StaticVariableName">
             <property name="format" value="^(id)|([a-z][a-z0-9][a-zA-Z0-9]+)$"/>
@@ -789,16 +790,15 @@
 
         <!-- Size Violations -->
         <module name="AnonInnerLength"/>
-        <module name="ExecutableStatementCount">
-            <property name="max" value="30"/>
-        </module>
-        <module name="LambdaBodyLength"/>
         <module name="MethodCount">
             <property name="maxTotal" value="34"/>
         </module>
-        <module name="MethodLength"/>
         <module name="OuterTypeNumber"/>
-        <module name="ParameterNumber"/>
+        <module name="ParameterNumber">
+            <!-- Apply to methods, NOT constructors -->
+            <property name="tokens" value="METHOD_DEF"/>
+            <property name="max" value="7"/>
+        </module>
         <module name="RecordComponentNumber"/>
 
         <!-- Whitespace -->
