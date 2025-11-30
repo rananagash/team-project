@@ -87,6 +87,11 @@ class ReviewMovieInteractorTest {
         public List<Movie> filterByGenres(List<Integer> genres) {
             return List.of();
         }
+
+        @Override
+        public PagedMovieResult getPopularMovies(int page) throws MovieDataAccessException {
+            return new PagedMovieResult(List.of(), page, 1);
+        }
     }
 
     @Test

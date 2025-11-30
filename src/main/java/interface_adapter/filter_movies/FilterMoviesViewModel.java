@@ -2,6 +2,8 @@ package interface_adapter.filter_movies;
 
 import entity.Movie;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +16,7 @@ import java.util.List;
  */
 public class FilterMoviesViewModel {
 
+    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private List<Movie> filteredMovies = new ArrayList<>();
     private List<String> selectedGenreNames = new ArrayList<>();
     private String errorMessage = null;
@@ -36,7 +39,9 @@ public class FilterMoviesViewModel {
      * @param filteredMovies the list of movies to set
      */
     public void setFilteredMovies(List<Movie> filteredMovies) {
+        List<Movie> oldValue = this.filteredMovies;
         this.filteredMovies = filteredMovies != null ? new ArrayList<>(filteredMovies) : new ArrayList<>();
+        support.firePropertyChange("filteredMovies", oldValue, this.filteredMovies);
     }
 
     /**
@@ -76,8 +81,10 @@ public class FilterMoviesViewModel {
      * @param errorMessage the error message to set
      */
     public void setErrorMessage(String errorMessage) {
+        String oldValue = this.errorMessage;
         this.errorMessage = errorMessage;
         this.hasError = errorMessage != null && !errorMessage.isEmpty();
+        support.firePropertyChange("errorMessage", oldValue, this.errorMessage);
     }
 
     /**
@@ -104,5 +111,23 @@ public class FilterMoviesViewModel {
      */
     public int getMovieCount() {
         return filteredMovies.size();
+    }
+
+    /**
+     * Adds a PropertyChangeListener to this view model.
+     *
+     * @param listener the listener to add
+     */
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        support.addPropertyChangeListener(listener);
+    }
+
+    /**
+     * Removes a PropertyChangeListener from this view model.
+     *
+     * @param listener the listener to remove
+     */
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        support.removePropertyChangeListener(listener);
     }
 }
