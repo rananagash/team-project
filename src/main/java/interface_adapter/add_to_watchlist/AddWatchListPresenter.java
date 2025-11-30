@@ -14,16 +14,10 @@ public class AddWatchListPresenter implements AddWatchListOutputBoundary {
 
     /**
      * Construct a presenter given a view interface that can display the results of the Add to Watch List operation.
-     * @param view view the UI interface used to display the results
      */
-    public AddWatchListPresenter(AddWatchListView view) {
-        this.view = view;
+    public AddWatchListPresenter() {
     }
 
-    /**
-     * Set the view for this presenter.
-     * @param view the view to set
-     */
     public void setView(AddWatchListView view) {
         this.view = view;
     }

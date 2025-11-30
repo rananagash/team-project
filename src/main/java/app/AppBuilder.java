@@ -73,7 +73,6 @@ import use_case.view_watchlists.ViewWatchListsInputBoundary;
 import use_case.view_watchlists.ViewWatchListsInteractor;
 import use_case.view_watchlists.ViewWatchListsOutputBoundary;
 import view.AddReviewPopup;
-import view.AddToWatchListPopup;
 import view.LoggedInView;
 import view.LoginView;
 import view.ProfileView;
@@ -138,8 +137,6 @@ public class AppBuilder {
 
     private AddReviewPopup addReviewPopup;
     private ReviewMovieViewModel reviewMovieViewModel;
-
-    private AddToWatchListPopup addToWatchListPopup;
 
     private RecordWatchHistoryPopup recordWatchHistoryPopup;
     private ViewWatchHistoryPopup viewWatchHistoryPopup;
@@ -356,21 +353,21 @@ public class AppBuilder {
         final JFrame tempParent = new JFrame();
         tempParent.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         viewWatchHistoryPopup = new ViewWatchHistoryPopup(tempParent);
-        
+
         // Create presenter with the view
         final ViewWatchHistoryOutputBoundary presenter = new ViewWatchHistoryPresenter(viewWatchHistoryPopup);
-        
+
         // Create interactor with user data access and presenter
         final ViewWatchHistoryInputBoundary interactor =
                 new ViewWatchHistoryInteractor(userDataAccessObject, presenter);
-        
+
         // Create controller with the interactor
         final ViewWatchHistoryController controller = new ViewWatchHistoryController(interactor);
-        
+
         // Connect controller to LoggedInView and ProfileView
         loggedInView.setViewWatchHistoryController(controller);
         profileView.setViewWatchHistoryController(controller);
-        
+
         return this;
     }
 
@@ -390,12 +387,22 @@ public class AppBuilder {
      * @return this builder for chaining
      */
     public AppBuilder addAddToWatchListUseCase() {
-        final AddWatchListPresenter addWatchListOutputBoundary = new AddWatchListPresenter(null);
-        final AddWatchListInputBoundary addWatchListInputBoundary =
-                new AddWatchListInteractor(addWatchListOutputBoundary, userDataAccessObject);
+        // Create presenter (no view yet)
+        final AddWatchListPresenter addWatchListPresenter = new AddWatchListPresenter();
+
+        // Create interactor
+        final AddWatchListInputBoundary addWatchListInputBoundary = new AddWatchListInteractor(
+                addWatchListPresenter,
+                userDataAccessObject,
+                movieDataAccessObject);
+
+        // Create controller
         final AddWatchListController addWatchListController =
-                new AddWatchListController(addWatchListInputBoundary, addWatchListOutputBoundary);
+                new AddWatchListController(addWatchListInputBoundary, addWatchListPresenter);
+
+        // Inject controller & presenter into LoggedInView
         loggedInView.setAddWatchListController(addWatchListController);
+        loggedInView.setAddWatchListPresenter(addWatchListPresenter);
         return this;
     }
 
@@ -412,23 +419,20 @@ public class AppBuilder {
         final JFrame tempParent = new JFrame();
         tempParent.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         recordWatchHistoryPopup = new RecordWatchHistoryPopup(tempParent);
-        
-        // Create MovieGateway for fetching movie data
-        final MovieGateway movieGateway = new TMDbMovieDataAccessObject();
-        
+
         // Create presenter with the view
         final RecordWatchHistoryOutputBoundary presenter = new RecordWatchHistoryPresenter(recordWatchHistoryPopup);
-        
+
         // Create interactor with user data access, movie gateway, and presenter
         final RecordWatchHistoryInputBoundary interactor = new RecordWatchHistoryInteractor(
-                userDataAccessObject, movieGateway, presenter);
-        
+                userDataAccessObject, movieDataAccessObject, presenter);
+
         // Create controller with the interactor
         final RecordWatchHistoryController controller = new RecordWatchHistoryController(interactor);
-        
+
         // Connect controller to LoggedInView
         loggedInView.setRecordWatchHistoryController(controller);
-        
+
         return this;
     }
 
@@ -440,9 +444,8 @@ public class AppBuilder {
     public AppBuilder addAddReviewPopup() {
         reviewMovieViewModel = new ReviewMovieViewModel();
         final ReviewMoviePresenter presenter = new ReviewMoviePresenter(reviewMovieViewModel);
-        final TMDbMovieDataAccessObject movieGateway = new TMDbMovieDataAccessObject();
         final ReviewMovieInteractor interactor =
-                new ReviewMovieInteractor(userDataAccessObject, movieGateway, presenter);
+                new ReviewMovieInteractor(userDataAccessObject, movieDataAccessObject, presenter);
         final ReviewMovieController controller = new ReviewMovieController(interactor);
 
         loggedInView.setReviewMovieController(controller);

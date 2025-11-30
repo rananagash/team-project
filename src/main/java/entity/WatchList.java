@@ -17,6 +17,7 @@ import java.util.UUID;
  *     <li>A creation timestamp</li>
  *     <li>A modifiable list of {@link Movie} objects</li>
  * </ul>
+ *
  * <p>The {@code movies} list prevents duplicates. Callers should rely on
  * {@link #addMovie(Movie)} to enforce this rule.
  */
@@ -45,6 +46,7 @@ public class WatchList {
 
     /**
      * Creates a new Watch List with a default name for the given user.
+     *
      * <p>The default name is "[username]'s Watch List".
      *
      * @param user the owner of the watch list
@@ -58,7 +60,7 @@ public class WatchList {
     }
 
     /**
-     * Returns the unique identifier of this Watch List
+     * Returns the unique identifier of this Watch List.
      * @return the watch list ID
      */
     public String getWatchListId() {
@@ -66,7 +68,7 @@ public class WatchList {
     }
 
     /**
-     * Returns the owner of this Watch List
+     * Returns the owner of this Watch List.
      * @return the {@link User} who owns this list
      */
     public User getUser() {
@@ -74,7 +76,7 @@ public class WatchList {
     }
 
     /**
-     * Returns the name of this Watch List
+     * Returns the name of this Watch List.
      * @return the watch list name
      */
     public String getName() {
@@ -82,7 +84,7 @@ public class WatchList {
     }
 
     /**
-     * Returns the creation timestamp of this Watch List
+     * Returns the creation timestamp of this Watch List.
      * @return the date and time this Watch List was created
      */
     public LocalDateTime getDateCreated() {
@@ -90,12 +92,32 @@ public class WatchList {
     }
 
     /**
-     * Returns an immutable view of the movies in this Watch List
+     * Returns an immutable view of the movies in this Watch List.
      *
      * @return an unmodifiable list of movies
      */
     public List<Movie> getMovies() {
         return List.copyOf(movies);
+    }
+
+    /**
+     * Returns a movie in the watchlist by the given movieId, or {@code null}
+     * if the movie is not in the watchlist.
+     *
+     * @param movieId the movieId to search
+     * @return the movie or {@code null} if not found
+     */
+    public Movie getMovieById(String movieId) {
+        if (movieId == null) {
+            return null;
+        }
+
+        for (Movie movie : movies) {
+            if (movieId.equals(movie.getMovieId())) {
+                return movie;
+            }
+        }
+        return null;
     }
 
     /**
@@ -127,7 +149,7 @@ public class WatchList {
     }
 
     /**
-     * Return the name of this Watch List
+     * Return the name of this Watch List.
      *
      * @return the name of this Watch List
      */
