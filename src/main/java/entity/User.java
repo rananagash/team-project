@@ -96,22 +96,10 @@ public class User {
         return watchLists;
     }
 
-    /**
-     * Removes all watch lists from this user.
-     */
     public void clearWatchLists() {
         this.watchLists.clear();
     }
 
-    /**
-     * Adds a watch list to this user's collection.
-     *
-     * <p>The watch list must belong to this user (i.e., its user must be this user).
-     *
-     * @param watchList the watch list to add (must not be null)
-     * @throws NullPointerException if {@code watchList} is null
-     * @throws IllegalArgumentException if the watch list belongs to a different user
-     */
     public void addWatchList(WatchList watchList) {
         Objects.requireNonNull(watchList, "WatchList cannot be null");
 

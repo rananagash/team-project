@@ -13,8 +13,6 @@ import interface_adapter.view_watchhistory.ViewWatchHistoryController;
 import interface_adapter.search_movie.SearchMovieController;
 import interface_adapter.view_profile.ViewProfileController;
 import interface_adapter.view_watchlists.ViewWatchListsController;
-import interface_adapter.filter_movies.FilterMoviesController;
-import interface_adapter.filter_movies.FilterMoviesViewModel;
 import use_case.record_watchhistory.RecordWatchHistoryInteractor;
 import use_case.common.MovieGateway;
 import use_case.common.PagedMovieResult;
@@ -32,6 +30,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.URL;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -56,7 +55,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private AddWatchListController addWatchListController;
     private RecordWatchHistoryController recordWatchHistoryController;
     private ViewWatchListsController viewWatchListsController;
-    private FilterMoviesController filterMoviesController;
 
     // ViewModels
     private interface_adapter.review_movie.ReviewMovieViewModel reviewMovieViewModel;
@@ -81,10 +79,10 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     // UI Components - Search panel
     private JTextField queryField;
     private JButton searchButton;
-
-    // UI Components - Results panel (using MovieCard components)
-    private JPanel resultsPanel;
-    private JScrollPane resultsScrollPane;
+//    private JList<String> resultsList;
+//    private DefaultListModel<String> listModel;
+    private JPanel movieResultsPanel; // will replace JList
+    private JScrollPane movieScrollPane;
 
     // UI Components - Pagination
     private JButton prevPageButton;
@@ -327,17 +325,17 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         northWrapper.add(searchPanel, BorderLayout.SOUTH);
         this.add(northWrapper, BorderLayout.NORTH);
 
-        // ===== Results panel with MovieCard components =====
-        resultsPanel = new JPanel();
-        resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
-        resultsPanel.setBackground(new Color(245, 245, 245));
-        resultsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        // ===== Result list =====
+        movieResultsPanel = new JPanel();
+        movieResultsPanel.setLayout(new BoxLayout(movieResultsPanel, BoxLayout.Y_AXIS));
+        movieResultsPanel.setBackground(new Color(15, 23, 42));
 
-        resultsScrollPane = new JScrollPane(resultsPanel);
-        resultsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        resultsScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        resultsScrollPane.setBorder(BorderFactory.createEmptyBorder());
-        this.add(resultsScrollPane, BorderLayout.CENTER);
+        movieScrollPane = new JScrollPane(movieResultsPanel);
+        movieScrollPane.setBorder(BorderFactory.createEmptyBorder());
+        movieScrollPane.getViewport().setBackground(new Color(15, 23, 42));
+        movieScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        this.add(movieScrollPane, BorderLayout.CENTER);
 
         // ===== Pagination + status =====
         JPanel bottomPanel = new JPanel(new BorderLayout(4, 4));
@@ -469,99 +467,40 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     /**
      * Perform a movie search.
      */
-    private void performSearch() {
-        if (searchController == null) {
-            System.err.println("SearchController is null when performSearch() called");
-            showError("Search functionality not initialized. Please try again.");
-            return;
-        }
-
-        String query = queryField.getText().trim();
-        if (query.isEmpty()) {
-            showError("Search query cannot be empty.");
-            return;
-        }
-
-        System.out.println("Performing search for: " + query);
-        lastQuery = query;
-        currentPage = 1;
-        setStatus("Searching...");
-
-        // Run search in background thread to avoid blocking UI
-        new Thread(() -> {
-            try {
-                searchController.search(lastQuery, currentPage);
-            } catch (Exception e) {
-                e.printStackTrace();
-                SwingUtilities.invokeLater(() -> {
-                    showError("Error performing search: " + e.getMessage());
-                    setStatus("Search failed.");
-                });
-            }
-        }).start();
-    }
-
-    // Maximum number of movies to display at once to prevent UI lag
-    private static final int MAX_MOVIES_TO_DISPLAY = 10;
-
-    /**
-     * Display search results with pagination using MovieCard components.
-     */
-    public void showResults(List<Movie> movies, int currentPage, int totalPages) {
+    public void showResults(List<entity.Movie> movies, int currentPage, int totalPages) {
         this.currentPage = currentPage;
         this.totalPages = Math.max(totalPages, 1);
 
-        // Store the current movies for filtering
-        this.currentMovies = new ArrayList<>(movies);
+        // clear result
+        movieResultsPanel.removeAll();
 
-        // Clear previous results
-        resultsPanel.removeAll();
-
-        // Limit the number of movies displayed to prevent UI lag
-        List<Movie> moviesToDisplay = movies.size() > MAX_MOVIES_TO_DISPLAY
-                ? movies.subList(0, MAX_MOVIES_TO_DISPLAY)
-                : movies;
-
-        // Add MovieCard for each movie
-        for (Movie movie : moviesToDisplay) {
-            MovieViewData movieViewData = new MovieViewData(
-                    movie.getMovieId(),
-                    movie.getTitle(),
-                    movie.getPlot(),
-                    movie.getGenreIds(),
-                    movie.getReleaseDate(),
-                    movie.getRating(),
-                    movie.getPosterUrl()
-            );
-
-            MovieCard movieCard = new MovieCard(movieViewData);
-            movieCard.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(220, 220, 220)),
-                    BorderFactory.createEmptyBorder(5, 5, 5, 5)
-            ));
-
-            resultsPanel.add(movieCard);
-            resultsPanel.add(Box.createVerticalStrut(10));
-        }
-
-        // Add glue to push content to top
-        resultsPanel.add(Box.createVerticalGlue());
-
-        // Refresh the panel
-        resultsPanel.revalidate();
-        resultsPanel.repaint();
-
-        // Scroll to top
-        SwingUtilities.invokeLater(() -> {
-            resultsScrollPane.getVerticalScrollBar().setValue(0);
-        });
-
-        updatePaginationButtons();
-        if (movies.size() > MAX_MOVIES_TO_DISPLAY) {
-            setStatus("Showing " + MAX_MOVIES_TO_DISPLAY + " of " + movies.size() + " results (page " + currentPage + "). Use pagination to see more.");
+        if (movies.isEmpty()) {
+            // nothing found
+            JLabel noResultsLabel = new JLabel("No movies found for your search", SwingConstants.CENTER);
+            noResultsLabel.setForeground(new Color(209, 213, 219));
+            noResultsLabel.setFont(new Font("Helvetica", Font.PLAIN, 16));
+            noResultsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            movieResultsPanel.add(noResultsLabel);
         } else {
-            setStatus("Found " + movies.size() + " results (page " + currentPage + ").");
+            // cards display
+            for (entity.Movie movie : movies) {
+                JPanel movieCard = createMovieCard(movie);
+                movieCard.setAlignmentX(Component.LEFT_ALIGNMENT);
+                movieResultsPanel.add(movieCard);
+                movieResultsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+            }
         }
+
+        // UI
+        movieResultsPanel.add(Box.createVerticalGlue());
+
+        // refresh
+        movieResultsPanel.revalidate();
+        movieResultsPanel.repaint();
+
+        // page button
+        updatePaginationButtons();
+        setStatus("Found " + movies.size() + " results (page " + currentPage + ").");
     }
 
     /**
@@ -592,15 +531,12 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
             final LoggedInState state = (LoggedInState) evt.getNewValue();
             if (state != null) {
                 username.setText(state.getUsername());
-            }
-        } else if (evt.getPropertyName().equals("password")) {
-            final LoggedInState state = (LoggedInState) evt.getNewValue();
-            if (state != null) {
-                if (state.getPasswordError() == null) {
-                    JOptionPane.showMessageDialog(this, "password updated for " + state.getUsername());
-                    passwordInputField.setText("");
-                } else {
-                    JOptionPane.showMessageDialog(this, state.getPasswordError());
+
+                if (state.getSearchResults() != null && !state.getSearchResults().isEmpty()) {
+                    System.out.println("Showing " + state.getSearchResults().size() + " search results");
+                    showResults(state.getSearchResults(), state.getCurrentPage(), state.getTotalPages());
+                } else if (state.getSearchError() != null) {
+                    showError(state.getSearchError());
                 }
             }
         }
@@ -651,166 +587,143 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         this.recordWatchHistoryController = controller;
     }
 
-    public void setViewWatchListsController(ViewWatchListsController controller) {
-        this.viewWatchListsController = controller;
-    }
 
-    public void setFilterMoviesController(FilterMoviesController controller) {
-        this.filterMoviesController = controller;
-    }
+    private JPanel createMovieCard(Movie movie) {
+        JPanel card = new JPanel(new BorderLayout(10, 0));
+        card.setBackground(new Color(255, 255, 255, 13));
+        card.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(255, 255, 255, 26)),
+                BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        ));
+        card.setMaximumSize(new Dimension(900, 150));
 
-    public void setFilterMoviesViewModel(FilterMoviesViewModel viewModel) {
-        this.filterMoviesViewModel = viewModel;
-        // Listen to view model changes to update the display when movies are filtered
-        if (viewModel != null) {
-            viewModel.addPropertyChangeListener(evt -> {
-                if (evt.getPropertyName().equals("filteredMovies") ||
-                        evt.getPropertyName().equals("errorMessage")) {
-                    updateFilteredMoviesDisplay();
-                }
-            });
-        }
-    }
+        // Poster
+        JLabel posterLabel = new JLabel("Loading...", SwingConstants.CENTER);
+        posterLabel.setPreferredSize(new Dimension(80, 120));
+        posterLabel.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255, 38)));
+        posterLabel.setForeground(Color.WHITE);
+        posterLabel.setFont(new Font("Helvetica", Font.PLAIN, 8));
+        posterLabel.setOpaque(true);
+        posterLabel.setBackground(new Color(30, 41, 59));
 
-    /**
-     * Filters the currently displayed movies by the selected genre IDs.
-     *
-     * @param genreIds the list of genre IDs to filter by
-     */
-    public void filterCurrentMovies(List<Integer> genreIds) {
-        if (currentMovies.isEmpty()) {
-            showError("No movies to filter.");
-            return;
-        }
+        // load Poster
+        loadPosterImage(movie.getPosterUrl(), posterLabel);
 
-        System.out.println("Filtering " + currentMovies.size() + " movies by genres: " + genreIds);
+        // info
+        JPanel infoPanel = new JPanel(new GridLayout(2, 1));
+        infoPanel.setOpaque(false);
 
-        // Filter current movies by selected genres
-        List<Movie> filteredMovies = currentMovies.stream()
-                .filter(movie -> {
-                    List<Integer> movieGenres = movie.getGenreIds();
-                    if (movieGenres == null || movieGenres.isEmpty()) {
-                        System.out.println("Movie " + movie.getTitle() + " has no genres");
-                        return false;
-                    }
-                    // Check if movie has at least one of the selected genres
-                    boolean matches = movieGenres.stream().anyMatch(genreIds::contains);
-                    if (matches) {
-                        System.out.println("Movie " + movie.getTitle() + " matches with genres: " + movieGenres);
-                    }
-                    return matches;
-                })
-                .collect(Collectors.toList());
+        JLabel titleLabel = new JLabel(movie.getTitle());
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setFont(new Font("Helvetica", Font.BOLD, 18));
 
-        System.out.println("Filtered to " + filteredMovies.size() + " movies");
+        // detail
+        Integer year = movie.getReleaseYear() != null ? movie.getReleaseYear() : 0000;
+        String rating = String.format("%.1f/10", movie.getRating());
+        String detailsText = "<html>Year: " + year + "<br>Rating: " + rating + "</html>";
 
-        // Display filtered results
-        if (filteredMovies.isEmpty()) {
-            resultsPanel.removeAll();
-            resultsPanel.revalidate();
-            resultsPanel.repaint();
-            List<String> genreNames = GenreUtils.getGenreNames(genreIds);
-            String genreText = String.join(", ", genreNames);
-            setStatus("No movies found matching genres: " + genreText);
-        } else {
-            showResults(filteredMovies, 1, 1);
-            List<String> genreNames = GenreUtils.getGenreNames(genreIds);
-            String genreText = String.join(", ", genreNames);
-            setStatus("Showing " + filteredMovies.size() + " of " + currentMovies.size() + " movies filtered by: " + genreText);
-        }
-    }
+        JLabel detailsLabel = new JLabel(detailsText);
+        detailsLabel.setForeground(new Color(209, 213, 219));
+        detailsLabel.setFont(new Font("Helvetica", Font.PLAIN, 14));
 
-    /**
-     * Updates the display with filtered movies from the FilterMoviesViewModel.
-     */
-    private void updateFilteredMoviesDisplay() {
-        if (filterMoviesViewModel == null) {
-            return;
-        }
+        infoPanel.add(titleLabel);
+        infoPanel.add(detailsLabel);
 
-        if (filterMoviesViewModel.hasError()) {
-            showError(filterMoviesViewModel.getErrorMessage());
-            return;
-        }
+        // 2 buttons
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 1, 0, 5));
+        buttonPanel.setOpaque(false);
+        buttonPanel.setPreferredSize(new Dimension(150, 80));
 
-        List<Movie> filteredMovies = filterMoviesViewModel.getFilteredMovies();
-        if (filteredMovies != null && !filteredMovies.isEmpty()) {
-            // Display filtered movies
-            showResults(filteredMovies, 1, 1);
-            List<String> genreNames = filterMoviesViewModel.getSelectedGenreNames();
-            String genreText = String.join(", ", genreNames);
-            setStatus("Showing " + filteredMovies.size() + " movies filtered by: " + genreText);
-        } else {
-            // No movies found
-            resultsPanel.removeAll();
-            resultsPanel.revalidate();
-            resultsPanel.repaint();
-            setStatus("No movies found for selected genres.");
-        }
-    }
+        // list
+        JButton addToWatchlistBtn = new JButton("Add to Watchlist");
+        addToWatchlistBtn.setFont(new Font("Helvetica", Font.BOLD, 12));
+        addToWatchlistBtn.setBackground(new Color(37, 99, 235));
+        addToWatchlistBtn.setForeground(Color.BLACK);
+        addToWatchlistBtn.setFocusPainted(false);
 
-    public void setMovieGateway(MovieGateway movieGateway) {
-        this.movieGateway = movieGateway;
-        // Don't auto-load movies here - let it be triggered explicitly after login
-        // This prevents lag during app initialization
-    }
+        // history
+        JButton addToHistoryBtn = new JButton("Add to History");
+        addToHistoryBtn.setFont(new Font("Helvetica", Font.BOLD, 12));
+        addToHistoryBtn.setBackground(new Color(147, 51, 234));
+        addToHistoryBtn.setForeground(Color.BLACK);
+        addToHistoryBtn.setFocusPainted(false);
 
-    /**
-     * Load popular movies from TMDB and display them.
-     */
-    public void loadPopularMovies() {
-        if (movieGateway == null) {
-            showError("Movie gateway not initialized. Cannot load popular movies.");
-            return;
-        }
+        buttonPanel.add(addToWatchlistBtn);
+        buttonPanel.add(addToHistoryBtn);
 
-        if (resultsPanel == null) {
-            showError("Results panel not initialized. Cannot display movies.");
-            return;
-        }
+        // layout
+        card.add(posterLabel, BorderLayout.WEST);
+        card.add(infoPanel, BorderLayout.CENTER);
+        card.add(buttonPanel, BorderLayout.EAST);
 
-        // Update status immediately on EDT to show loading state
-        SwingUtilities.invokeLater(() -> {
-            setStatus("Loading popular movies...");
+        // listners
+        addToWatchlistBtn.addActionListener(e -> {
+            if (addWatchListController != null) {
+                // may need AddWatchListController
+                // only update the look for now
+                addToWatchlistBtn.setText("In Watchlist");
+                addToWatchlistBtn.setBackground(new Color(22, 163, 74));
+                addToWatchlistBtn.setEnabled(false);
+
+                // TODO: need to call watch list Controller
+                System.out.println("Add to watchlist: " + movie.getTitle());
+            }
         });
 
-        // Run API call in background thread with a short delay
-        // This ensures the view transition is complete and UI is responsive
-        new Thread(() -> {
-            try {
-                // Small delay to let view transition complete smoothly
-                // This prevents perceived lag during login
-                Thread.sleep(200);
+        addToHistoryBtn.addActionListener(e -> {
+            // TODO: need to call history Controller
+            addToHistoryBtn.setText("Watched");
+            addToHistoryBtn.setBackground(new Color(22, 163, 74));
+            addToHistoryBtn.setEnabled(false);
+            System.out.println("Add to history: " + movie.getTitle());
+        });
 
-                PagedMovieResult result = movieGateway.getPopularMovies(1);
-                List<Movie> movies = result.getMovies();
+        return card;
+    }
 
-                if (movies == null || movies.isEmpty()) {
-                    SwingUtilities.invokeLater(() -> {
-                        showError("No popular movies found.");
-                        setStatus("No movies to display.");
-                    });
-                    return;
+    private void loadPosterImage(String posterUrl, JLabel posterLabel) {
+        if (posterUrl == null || posterUrl.isEmpty() || posterUrl.equals("null")) {
+            showNoImagePlaceholder(posterLabel);
+            return;
+        }
+
+        try {
+            SwingWorker<ImageIcon, Void> worker = new SwingWorker<ImageIcon, Void>() {
+                @Override
+                protected ImageIcon doInBackground() throws Exception {
+                    URL imageUrl = new URL(posterUrl);
+                    return new ImageIcon(imageUrl);
                 }
 
-                SwingUtilities.invokeLater(() -> {
-                    showResults(movies, result.getPage(), result.getTotalPages());
-                    lastQuery = ""; // Clear last query since we're showing popular movies
-                    // Status message is already set by showResults(), no need to override it
-                });
-            } catch (MovieDataAccessException e) {
-                e.printStackTrace(); // Print stack trace for debugging
-                SwingUtilities.invokeLater(() -> {
-                    showError("Failed to load popular movies: " + e.getMessage());
-                    setStatus("Error loading movies.");
-                });
-            } catch (Exception e) {
-                e.printStackTrace(); // Print stack trace for debugging
-                SwingUtilities.invokeLater(() -> {
-                    showError("Unexpected error loading popular movies: " + e.getMessage());
-                    setStatus("Error loading movies.");
-                });
-            }
-        }, "MovieLoader").start();
+                @Override
+                protected void done() {
+                    try {
+                        ImageIcon imageIcon = get();
+                        Image image = imageIcon.getImage().getScaledInstance(80, 120, Image.SCALE_SMOOTH);
+                        posterLabel.setIcon(new ImageIcon(image));
+                        posterLabel.setText("");
+                    } catch (Exception e) {
+                        showNoImagePlaceholder(posterLabel);
+                    }
+                }
+            };
+            worker.execute();
+
+        } catch (Exception e) {
+            showNoImagePlaceholder(posterLabel);
+        }
+    }
+
+    private void showNoImagePlaceholder(JLabel posterLabel) {
+        posterLabel.setIcon(null);
+        posterLabel.setText("No Image");
+        posterLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        posterLabel.setVerticalAlignment(SwingConstants.CENTER);
+        posterLabel.setForeground(new Color(156, 163, 175));
+        posterLabel.setFont(new Font("Helvetica", Font.PLAIN, 10));
+
+    public void setViewWatchListsController(ViewWatchListsController controller) {
+        this.viewWatchListsController = controller;
+
     }
 }

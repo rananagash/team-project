@@ -37,6 +37,9 @@ import use_case.login.LoginInputBoundary;
 import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutOutputBoundary;
+import use_case.search_movie.SearchMovieInputBoundary;
+import use_case.search_movie.SearchMovieInteractor;
+import use_case.search_movie.SearchMovieOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
@@ -182,12 +185,23 @@ public class AppBuilder {
     }
 
     public AppBuilder addSearchMoviesUseCase() {
-        TMDbMovieDataAccessObject movieGateway = new TMDbMovieDataAccessObject();
-        SearchMoviePresenter presenter = new SearchMoviePresenter(loggedInView);
-        SearchMovieInteractor interactor = new SearchMovieInteractor(movieGateway, presenter);
-        SearchMovieController controller = new SearchMovieController(interactor);
-        loggedInView.setController(controller);
-        loggedInView.setMovieGateway(movieGateway);
+        // 赵
+        final SearchMovieOutputBoundary searchOutputBoundary =
+                new SearchMoviePresenter(loggedInViewModel);
+
+        // 赵
+        final TMDbMovieDataAccessObject movieGateway = new TMDbMovieDataAccessObject();
+
+        // 赵
+        final SearchMovieInputBoundary searchInteractor =
+                new SearchMovieInteractor(movieGateway, searchOutputBoundary);
+
+        // 赵
+        final SearchMovieController searchController = new SearchMovieController(searchInteractor);
+
+        // 赵
+        loggedInView.setController(searchController);
+
         return this;
     }
 
@@ -267,8 +281,8 @@ public class AppBuilder {
         application.add(cardPanel);
 
         // initial size of app
-        application.setPreferredSize(new Dimension(1100, 600));
-        application.setMinimumSize(new Dimension(1100, 600));
+        application.setPreferredSize(new Dimension(900, 600));
+        application.setMinimumSize(new Dimension(900, 600));
 
         viewManagerModel.setState(signupView.getViewName());
         viewManagerModel.firePropertyChange();

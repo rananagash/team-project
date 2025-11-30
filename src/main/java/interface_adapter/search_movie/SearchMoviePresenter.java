@@ -3,27 +3,48 @@ package interface_adapter.search_movie;
 import entity.Movie;
 import use_case.search_movie.SearchMovieOutputBoundary;
 import use_case.search_movie.SearchMovieResponseModel;
-import view.LoggedInView;
+import interface_adapter.logged_in.LoggedInViewModel;
+import interface_adapter.logged_in.LoggedInState;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class SearchMoviePresenter implements SearchMovieOutputBoundary {
 
-    private final LoggedInView loggedInView;
+    private final LoggedInViewModel loggedInViewModel;
 
-    public SearchMoviePresenter(LoggedInView loggedInView) {
-        this.loggedInView = loggedInView;
+    public SearchMoviePresenter(LoggedInViewModel loggedInViewModel) {
+        this.loggedInViewModel = loggedInViewModel;
     }
 
     @Override
     public void prepareSuccessView(SearchMovieResponseModel responseModel) {
-        List<Movie> movies = responseModel.getMovies();
-        loggedInView.showResults(movies, responseModel.getCurrentPage(), responseModel.getTotalPages());
+        // check what has API responded
+        LoggedInState currentState = loggedInViewModel.getState();
+        if (currentState == null) {
+            currentState = new LoggedInState();
+        }
+
+        currentState.setSearchResults(responseModel.getMovies());
+        currentState.setCurrentPage(responseModel.getCurrentPage());
+        currentState.setTotalPages(responseModel.getTotalPages());
+        currentState.setLastQuery(responseModel.getQuery());
+        currentState.setSearchError(null);
+        // refresh view
+        loggedInViewModel.setState(currentState);
+        loggedInViewModel.firePropertyChange();
     }
 
     @Override
     public void prepareFailView(String errorMessage) {
-        loggedInView.showError(errorMessage);
+        LoggedInState currentState = loggedInViewModel.getState();
+        if (currentState == null) {
+            currentState = new LoggedInState();
+        }
+
+        currentState.setSearchError(errorMessage);
+        currentState.setSearchResults(new ArrayList<>());
+
+        loggedInViewModel.setState(currentState);
+        loggedInViewModel.firePropertyChange();
     }
 }
-
