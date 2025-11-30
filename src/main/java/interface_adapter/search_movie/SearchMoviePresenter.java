@@ -26,4 +26,3 @@ public class SearchMoviePresenter implements SearchMovieOutputBoundary {
         loggedInView.showError(errorMessage);
     }
 }
-
