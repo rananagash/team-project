@@ -76,13 +76,26 @@ class RecordWatchHistoryInteractorTest {
             }
 
             @Override
-            public use_case.common.PagedMovieResult searchByTitle(String query, int page) {
-                throw new UnsupportedOperationException("Not implemented in test");
+            public use_case.common.PagedMovieResult searchByTitle(String query, int page)
+                    throws use_case.common.MovieDataAccessException {
+                throw new use_case.common.MovieDataAccessException(
+                        use_case.common.MovieDataAccessException.Type.UNKNOWN,
+                        "Not implemented in test"
+                );
             }
 
             @Override
             public List<Movie> filterByGenres(List<Integer> genreIds) {
                 return List.of();
+            }
+
+            @Override
+            public use_case.common.PagedMovieResult getPopularMovies(int page)
+                    throws use_case.common.MovieDataAccessException {
+                throw new use_case.common.MovieDataAccessException(
+                        use_case.common.MovieDataAccessException.Type.UNKNOWN,
+                        "Not implemented in test"
+                );
             }
         };
 
@@ -176,13 +189,26 @@ class RecordWatchHistoryInteractorTest {
             }
 
             @Override
-            public use_case.common.PagedMovieResult searchByTitle(String query, int page) {
-                throw new UnsupportedOperationException("Not implemented in test");
+            public use_case.common.PagedMovieResult searchByTitle(String query, int page)
+                    throws use_case.common.MovieDataAccessException {
+                throw new use_case.common.MovieDataAccessException(
+                        use_case.common.MovieDataAccessException.Type.UNKNOWN,
+                        "Not implemented in test"
+                );
             }
 
             @Override
             public List<Movie> filterByGenres(List<Integer> genreIds) {
                 return List.of();
+            }
+
+            @Override
+            public use_case.common.PagedMovieResult getPopularMovies(int page)
+                    throws use_case.common.MovieDataAccessException {
+                throw new use_case.common.MovieDataAccessException(
+                        use_case.common.MovieDataAccessException.Type.UNKNOWN,
+                        "Not implemented in test"
+                );
             }
         };
 
@@ -278,13 +304,26 @@ class RecordWatchHistoryInteractorTest {
             }
 
             @Override
-            public use_case.common.PagedMovieResult searchByTitle(String query, int page) {
-                throw new UnsupportedOperationException("Not implemented in test");
+            public use_case.common.PagedMovieResult searchByTitle(String query, int page)
+                    throws use_case.common.MovieDataAccessException {
+                throw new use_case.common.MovieDataAccessException(
+                        use_case.common.MovieDataAccessException.Type.UNKNOWN,
+                        "Not implemented in test"
+                );
             }
 
             @Override
             public List<Movie> filterByGenres(List<Integer> genreIds) {
                 return List.of();
+            }
+
+            @Override
+            public use_case.common.PagedMovieResult getPopularMovies(int page)
+                    throws use_case.common.MovieDataAccessException {
+                throw new use_case.common.MovieDataAccessException(
+                        use_case.common.MovieDataAccessException.Type.UNKNOWN,
+                        "Not implemented in test"
+                );
             }
         };
 
@@ -510,13 +549,26 @@ class RecordWatchHistoryInteractorTest {
             }
 
             @Override
-            public use_case.common.PagedMovieResult searchByTitle(String query, int page) {
-                throw new UnsupportedOperationException("Not implemented in test");
+            public use_case.common.PagedMovieResult searchByTitle(String query, int page)
+                    throws use_case.common.MovieDataAccessException {
+                throw new use_case.common.MovieDataAccessException(
+                        use_case.common.MovieDataAccessException.Type.UNKNOWN,
+                        "Not implemented in test"
+                );
             }
 
             @Override
             public List<Movie> filterByGenres(List<Integer> genreIds) {
                 return List.of();
+            }
+
+            @Override
+            public use_case.common.PagedMovieResult getPopularMovies(int page)
+                    throws use_case.common.MovieDataAccessException {
+                throw new use_case.common.MovieDataAccessException(
+                        use_case.common.MovieDataAccessException.Type.UNKNOWN,
+                        "Not implemented in test"
+                );
             }
         };
 
@@ -596,13 +648,26 @@ class RecordWatchHistoryInteractorTest {
             }
 
             @Override
-            public use_case.common.PagedMovieResult searchByTitle(String query, int page) {
-                throw new UnsupportedOperationException("Not implemented in test");
+            public use_case.common.PagedMovieResult searchByTitle(String query, int page)
+                    throws use_case.common.MovieDataAccessException {
+                throw new use_case.common.MovieDataAccessException(
+                        use_case.common.MovieDataAccessException.Type.UNKNOWN,
+                        "Not implemented in test"
+                );
             }
 
             @Override
             public List<Movie> filterByGenres(List<Integer> genreIds) {
                 return List.of();
+            }
+
+            @Override
+            public use_case.common.PagedMovieResult getPopularMovies(int page)
+                    throws use_case.common.MovieDataAccessException {
+                throw new use_case.common.MovieDataAccessException(
+                        use_case.common.MovieDataAccessException.Type.UNKNOWN,
+                        "Not implemented in test"
+                );
             }
         };
 

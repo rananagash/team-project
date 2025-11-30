@@ -1,5 +1,5 @@
 {
-    "currentUser": "romy",
+    "currentUser": "inba",
     "users": {
         "dummy": {
             "password": "user",
@@ -83,9 +83,9 @@
                             ]
                         }
                     ],
-                    "dateCreated": "2025-11-30T11:29:09.437526600",
+                    "dateCreated": "2025-11-30T14:26:13.394112",
                     "name": "altest's Watch List",
-                    "id": "4974f7bc-2de1-453f-8186-d768ddf6dac0"
+                    "id": "0bcc5c9c-6324-41b0-a930-dd729f3d4264"
                 },
                 {
                     "movies": [{
@@ -102,21 +102,125 @@
                             878
                         ]
                     }],
-                    "dateCreated": "2025-11-30T11:29:09.438522",
+                    "dateCreated": "2025-11-30T14:26:13.394254",
                     "name": "Second Watchlist",
-                    "id": "add27a10-8af3-4a0c-b486-9341afdeea58"
+                    "id": "0c1393bc-b041-45bb-9d5c-8c76f7653ce3"
                 }
             ],
             "username": "altest"
         },
-        "asdf": {
-            "password": "asdf",
+        "inba": {
+            "password": "inba",
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T11:29:09.439542700",
+                "dateCreated": "2025-11-30T14:26:13.394323",
+                "name": "inba's Watch List",
+                "id": "4a60c656-0e0f-4b1e-9a20-ab73a5c5ab9c"
+            }],
+            "username": "inba"
+        },
+        "asdf": {
+            "password": "asdf",
+            "reviews": {
+                "972cd232-eba1-4841-adf4-aa77443e2f1c": {
+                    "createdAt": "2025-11-30T13:34:15.351833500",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/yFSIUVTCvgYrpalUktulvk3Gi5Y.jpg",
+                        "plot": "After the devastating events of Avengers: Infinity War, the universe is in ruins due to the efforts of the Mad Titan, Thanos. With the help of remaining allies, the Avengers must assemble once more in order to undo Thanos' actions and restore order to the universe once and for all, no matter what consequences may be in store.",
+                        "releaseDate": "2019-04-24",
+                        "popularity": 0,
+                        "rating": 8.238,
+                        "id": "299534",
+                        "title": "Avengers: Endgame",
+                        "genreIds": [
+                            12,
+                            878,
+                            28
+                        ]
+                    },
+                    "rating": 5,
+                    "comment": "Hello",
+                    "id": "972cd232-eba1-4841-adf4-aa77443e2f1c"
+                },
+                "72ccabdf-c68e-4f6e-b2f3-f0f614cd50b8": {
+                    "createdAt": "2025-11-30T13:41:03.121909900",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/60bTx5z9zL1AqCjZ0gmWoRMJ6Bb.jpg",
+                        "plot": "Gene, a multi-expressional emoji, sets out on a journey to become a normal emoji.",
+                        "releaseDate": "2017-07-23",
+                        "popularity": 0,
+                        "rating": 5.417,
+                        "id": "378236",
+                        "title": "The Emoji Movie",
+                        "genreIds": [
+                            16,
+                            10751,
+                            35
+                        ]
+                    },
+                    "rating": 1,
+                    "comment": "",
+                    "id": "72ccabdf-c68e-4f6e-b2f3-f0f614cd50b8"
+                },
+                "8ef7afa3-c710-430a-97bd-0236c84fe093": {
+                    "createdAt": "2025-11-30T14:00:19.276152900",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/r8RiuKTIYIJBjczBVsfeP5C00CJ.jpg",
+                        "plot": "In 16th century Japan, peasants Genjuro and Tobei sell their earthenware pots to a group of soldiers in a nearby village, in defiance of a local sage's warning against seeking to profit from warfare. Genjuro's pursuit of both riches and the mysterious Lady Wakasa, as well as Tobei's desire to become a samurai, run the risk of destroying both themselves and their wives, Miyagi and Ohama.",
+                        "releaseDate": "1953-03-26",
+                        "popularity": 0,
+                        "rating": 8,
+                        "id": "14696",
+                        "title": "Ugetsu",
+                        "genreIds": [
+                            14,
+                            18,
+                            9648
+                        ]
+                    },
+                    "rating": 2,
+                    "comment": "asdf",
+                    "id": "8ef7afa3-c710-430a-97bd-0236c84fe093"
+                },
+                "58adaf60-f55e-4b76-b23c-deef66055853": {
+                    "createdAt": "2025-11-30T14:14:09.729862100",
+                    "movie": {
+                        "posterUrl": "",
+                        "plot": "Three teenagers, with completely different lives, meet at a party.",
+                        "releaseDate": "2017-05-06",
+                        "popularity": 0,
+                        "rating": 6,
+                        "id": "496299",
+                        "title": "Se",
+                        "genreIds": [18]
+                    },
+                    "rating": 3,
+                    "comment": "rating",
+                    "id": "58adaf60-f55e-4b76-b23c-deef66055853"
+                },
+                "acd5d9ec-777b-4709-992d-c7c9484edd3d": {
+                    "createdAt": "2025-11-30T14:10:46.552624600",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/70xj3Gy7clXb0jtNpdCb8hvTcKX.jpg",
+                        "plot": "",
+                        "releaseDate": "",
+                        "popularity": 0,
+                        "rating": 8,
+                        "id": "1111724",
+                        "title": "Ja",
+                        "genreIds": []
+                    },
+                    "rating": 2,
+                    "comment": "asdf",
+                    "id": "acd5d9ec-777b-4709-992d-c7c9484edd3d"
+                }
+            },
+            "watchlists": [{
+                "movies": [],
+                "dateCreated": "2025-11-30T14:26:13.394492",
                 "name": "asdf's Watch List",
-                "id": "14614815-3a98-41c3-9e5e-60b4ab1df7d5"
+                "id": "6cf68a30-9b2b-447c-8acb-3f1d247a9154"
             }],
             "username": "asdf"
         },
@@ -137,9 +241,9 @@
                         2
                     ]
                 }],
-                "dateCreated": "2025-11-30T11:29:09.439542700",
+                "dateCreated": "2025-11-30T14:26:13.394521",
                 "name": "dummy-user's Watch List",
-                "id": "e6a63015-8f09-49f4-b936-0098b572a274"
+                "id": "010feda1-2715-4274-b810-720d7652744d"
             }],
             "username": "dummy-user"
         },
@@ -148,9 +252,9 @@
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T11:29:09.440521200",
+                "dateCreated": "2025-11-30T14:26:13.394604",
                 "name": "oliver's Watch List",
-                "id": "4de67350-1ac4-401b-abbe-cd4ce03ad7dd"
+                "id": "e60e666f-ed11-45f3-8f86-a25532c5c7e2"
             }],
             "username": "oliver"
         },
@@ -159,9 +263,9 @@
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T11:29:09.440521200",
+                "dateCreated": "2025-11-30T14:26:13.394652",
                 "name": "romy's Watch List",
-                "id": "89e8024e-7ba6-4838-8780-92922fdd161c"
+                "id": "816108c8-f311-473a-a840-19fdb9079f35"
             }],
             "username": "romy"
         }

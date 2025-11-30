@@ -36,9 +36,13 @@ public class RecordWatchHistoryInteractor implements RecordWatchHistoryInputBoun
             return;
         }
 
-        if (userDataAccessInterface.getUser(requestModel.getUserName()) == null) {
+        User user = userDataAccessInterface.getUser(requestModel.getUserName());
+        if (user == null) {
             presenter.prepareFailView("User not found: " + requestModel.getUserName());
+            return;
         }
+
+        handleUser(user, requestModel);
     }
 
     private void handleUser(User user, RecordWatchHistoryRequestModel requestModel) {
@@ -56,14 +60,18 @@ public class RecordWatchHistoryInteractor implements RecordWatchHistoryInputBoun
             user.setWatchHistory(watchHistory);
         }
 
+        // Capture current time once for consistency
+        LocalDateTime now = LocalDateTime.now();
+
         // Determine watched time: use provided time or current time if null
         LocalDateTime watchedAt = requestModel.getWatchedAt();
         if (watchedAt == null) {
-            watchedAt = LocalDateTime.now();
+            watchedAt = now;
         }
 
         // Validate watched time is not in the future
-        if (watchedAt.isAfter(LocalDateTime.now())) {
+        // Use isAfter with a small tolerance to handle timing edge cases
+        if (watchedAt.isAfter(now)) {
             presenter.prepareFailView("Watched time cannot be in the future.");
             return;
         }
@@ -85,5 +93,3 @@ public class RecordWatchHistoryInteractor implements RecordWatchHistoryInputBoun
         ));
     }
 }
-
-

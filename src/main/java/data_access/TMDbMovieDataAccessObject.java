@@ -4,8 +4,10 @@ import entity.Movie;
 import use_case.common.MovieGateway;
 import use_case.common.PagedMovieResult;
 import use_case.common.MovieDataAccessException;
-
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Optional;
 //Imports for the API call
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -17,15 +19,35 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 public class TMDbMovieDataAccessObject implements MovieGateway {
     private final HttpClient client = HttpClient.newHttpClient();
-
+    private String cachedApiToken = null; // Cache the API token to avoid reloading .env file
 
     // Helper methods for findById
 
+    // Get API token, caching it after first load
+    private String getApiToken() throws Exception {
+        if (cachedApiToken != null) {
+            return cachedApiToken;
+        }
+
+        // Try to load from .env file, fallback to environment variable
+        try {
+            Dotenv dotenv = Dotenv.load();
+            cachedApiToken = dotenv.get("APITOKENKEY");
+        } catch (Exception e) {
+            // If .env file doesn't exist, try environment variable
+            cachedApiToken = System.getenv("APITOKENKEY");
+        }
+
+        if (cachedApiToken == null || cachedApiToken.isEmpty()) {
+            throw new Exception("API token not found. Please create a .env file in the project root with APITOKENKEY=your_token_here, or set the APITOKENKEY environment variable.");
+        }
+
+        return cachedApiToken;
+    }
+
     // makeRequest actually makes the api call
     private String makeRequest(String url) throws Exception {
-        final String apiToken;
-        Dotenv dotenv = Dotenv.load();
-        apiToken = dotenv.get("APITOKENKEY");
+        String apiToken = getApiToken();
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -57,6 +79,7 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
     }
 
     // the genre lists are weird in tmdb, so we need a loop
+    // This method handles the "genres":[{...}] format (single movie endpoint)
     private List<Integer> extractGenreIds(String json) {
         List<Integer> ids = new ArrayList<>();
 
@@ -71,6 +94,35 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
             String num = parts[i].split(",")[0].trim();
             try {
                 ids.add(Integer.parseInt(num));
+            } catch (Exception ignored) {
+            }
+        }
+
+        return ids;
+    }
+
+    // Extract genre_ids from search/discover results (format: "genre_ids":[28,12,878])
+    private List<Integer> extractGenreIdsFromResult(String json) {
+        List<Integer> ids = new ArrayList<>();
+
+        int start = json.indexOf("\"genre_ids\":[");
+        if (start == -1) {
+            // Fallback to the genres format if genre_ids is not found
+            return extractGenreIds(json);
+        }
+
+        start += "\"genre_ids\":[".length();
+        int end = json.indexOf("]", start);
+        if (end == -1) return ids;
+
+        String genreIdsStr = json.substring(start, end).trim();
+        if (genreIdsStr.isEmpty()) return ids;
+
+        // Split by comma and parse each ID
+        String[] parts = genreIdsStr.split(",");
+        for (String part : parts) {
+            try {
+                ids.add(Integer.parseInt(part.trim()));
             } catch (Exception ignored) {
             }
         }
@@ -118,8 +170,8 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
             }
         }
 
-        // Extract genres (list of ints)
-        List<Integer> genreIds = extractGenreIds(json);
+        // Extract genres (list of ints) - use genre_ids format for search results
+        List<Integer> genreIds = extractGenreIdsFromResult(json);
 
         String posterUrl;
         if (posterPath == null) {
@@ -161,9 +213,9 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
 
     @Override
     public List<Movie> searchByTitle(String query) {
-        if (query == null || query.trim().isEmpty()) {
-            return Collections.emptyList();
-        }
+        /*
+         * TODO(Chester Zhao): Hit TMDb search endpoint and return a list of matching movies.
+         */
         return Collections.emptyList();
     }
 
@@ -236,8 +288,8 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
             } catch (Exception ignored) {}
         }
 
-        // Extract genres (list of ints)
-        List<Integer> genreIds = extractGenreIds(json);
+        // Extract genres (list of ints) - use genre_ids format for search results
+        List<Integer> genreIds = extractGenreIdsFromResult(json);
 
         String posterUrl;
         if (posterPath == null || posterPath.equals("null")) {
@@ -260,48 +312,70 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
         return new Movie(id, title, plot, genreIds, releaseDate, rating, popularity, posterUrl);
     }
 
+    // Maximum number of movies to parse from API response to prevent lag
+    private static final int MAX_MOVIES_TO_PARSE = 10;
+
     // Extract all movie objects from the results array in discover/search response
     private List<Movie> parseMoviesFromResults(String json) {
+        return parseMoviesFromResults(json, MAX_MOVIES_TO_PARSE);
+    }
+
+    // Extract movie objects from the results array, limiting to maxMovies
+    // Optimized to stop parsing as soon as we have enough movies
+    // This avoids processing the full JSON response when we only need a few movies
+    private List<Movie> parseMoviesFromResults(String json, int maxMovies) {
         List<Movie> movies = new ArrayList<>();
+        if (maxMovies <= 0) return movies;
 
         // Find the results array
         int resultsStart = json.indexOf("\"results\":[");
         if (resultsStart == -1) return movies;
 
         resultsStart += "\"results\":[".length();
-        int resultsEnd = json.lastIndexOf("]");
-        if (resultsEnd == -1 || resultsEnd <= resultsStart) return movies;
 
-        String resultsArray = json.substring(resultsStart, resultsEnd);
+        // Parse directly from JSON without extracting the entire results array
+        // This is more memory-efficient when we only need a few movies
+        int currentPos = resultsStart;
+        int moviesParsed = 0;
 
-        // Split by movie objects (each starts with {)
-        // We'll find each complete movie object by matching braces
-        int currentPos = 0;
-        while (currentPos < resultsArray.length()) {
-            int movieStart = resultsArray.indexOf("{", currentPos);
-            if (movieStart == -1) break;
+        while (currentPos < json.length() && moviesParsed < maxMovies) {
+            // Find the start of the next movie object
+            int movieStart = json.indexOf("{", currentPos);
+            if (movieStart == -1 || movieStart >= json.length()) break;
 
-            // Find the matching closing brace
+            // Check if we've hit the end of the results array
+            int nextBracket = json.indexOf("]", movieStart);
+            if (nextBracket != -1 && nextBracket < movieStart) break;
+
+            // Find the matching closing brace for this movie object
             int braceCount = 0;
             int movieEnd = movieStart;
-            for (int i = movieStart; i < resultsArray.length(); i++) {
-                char c = resultsArray.charAt(i);
+            boolean foundEnd = false;
+
+            for (int i = movieStart; i < json.length(); i++) {
+                char c = json.charAt(i);
                 if (c == '{') braceCount++;
                 if (c == '}') {
                     braceCount--;
                     if (braceCount == 0) {
                         movieEnd = i + 1;
+                        foundEnd = true;
                         break;
                     }
                 }
             }
 
-            if (movieEnd > movieStart) {
-                String movieJson = resultsArray.substring(movieStart, movieEnd);
+            if (foundEnd && movieEnd > movieStart) {
+                String movieJson = json.substring(movieStart, movieEnd);
                 try {
                     Movie movie = parseMovieFromResult(movieJson);
                     if (movie.getMovieId() != null && movie.getTitle() != null) {
                         movies.add(movie);
+                        moviesParsed++;
+                        // Stop immediately once we have enough movies
+                        if (moviesParsed >= maxMovies) {
+                            break;
+                        }
                     }
                 } catch (Exception e) {
                     // Skip invalid movie entries
@@ -340,6 +414,30 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
         } catch (Exception e) {
             e.printStackTrace();
             return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public PagedMovieResult getPopularMovies(int page) throws MovieDataAccessException {
+        try {
+            // TMDb discover endpoint for popular movies: https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&page=1
+            String url = "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&page=" + page;
+            String json = makeRequest(url);
+
+            // Parse movies from results
+            List<Movie> movies = parseMoviesFromResults(json);
+
+            // Extract pagination info
+            int currentPage = extractPageNumber(json, "\"page\":");
+            int totalPages = extractPageNumber(json, "\"total_pages\":");
+
+            return new PagedMovieResult(movies, currentPage, totalPages);
+        } catch (Exception e) {
+            throw new MovieDataAccessException(
+                    MovieDataAccessException.Type.NETWORK,
+                    "Failed to get popular movies: " + e.getMessage(),
+                    e
+            );
         }
     }
 }
