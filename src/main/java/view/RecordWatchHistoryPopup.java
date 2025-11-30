@@ -113,7 +113,18 @@ public class RecordWatchHistoryPopup extends JDialog implements RecordWatchHisto
         messageLabel.setForeground(new Color(46, 125, 50));
         messageLabel.setVisible(true);
 
+        // Ensure popup is visible and centered
+        pack();
+        // Try to get the actual application frame as parent
+        Window parentWindow = SwingUtilities.getWindowAncestor(getParent());
+        if (parentWindow instanceof JFrame) {
+            setLocationRelativeTo(parentWindow);
+        } else {
+            setLocationRelativeTo(null);
+        }
         setVisible(true);
+        toFront();
+        requestFocus();
     }
 
     @Override
@@ -134,7 +145,18 @@ public class RecordWatchHistoryPopup extends JDialog implements RecordWatchHisto
         errorLabel.setText(errorText);
         errorLabel.setVisible(true);
 
+        // Ensure popup is visible and centered
+        pack();
+        // Try to get the actual application frame as parent
+        Window parentWindow = SwingUtilities.getWindowAncestor(getParent());
+        if (parentWindow instanceof JFrame) {
+            setLocationRelativeTo(parentWindow);
+        } else {
+            setLocationRelativeTo(null);
+        }
         setVisible(true);
+        toFront();
+        requestFocus();
     }
 
     /**

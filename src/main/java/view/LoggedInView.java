@@ -213,25 +213,17 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
             final LoggedInState currentState = loggedInViewModel.getState();
             if (currentState == null) return;
 
-            //Dummy user - real button should get current logged in user
-            User user = new User("dummy-user", "password");
-
-            //Dummy movie
-            Movie movie = new Movie("m1",
-                    "Test Movie",
-                    "A test movie plot happens",
-                    List.of(1, 2),
-                    "2025-01-01",
-                    7.5,
-                    0.0,
-                    "poster-url");
-
-            JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
-
-            // Create popup
-            RecordWatchHistoryPopup popup = new RecordWatchHistoryPopup(parent);
-
-            //TODO:Jiaqi I couldn't quite get your implementation to work
+            if (recordWatchHistoryController != null) {
+                // Use current logged in user's username
+                String username = currentState.getUsername();
+                
+                // Test movie ID (using a real TMDb movie ID for testing)
+                String testMovieId = "299534"; // Avengers: Endgame
+                
+                // Record the movie to watch history
+                // watchedAt is null, so it will use current time
+                recordWatchHistoryController.recordMovie(username, testMovieId);
+            }
         });
 
         rateReviewBtn.addActionListener(e -> {
@@ -585,11 +577,21 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         });
 
         addToHistoryBtn.addActionListener(e -> {
-            // TODO: need to call history Controller
-            addToHistoryBtn.setText("Watched");
-            addToHistoryBtn.setBackground(new Color(22, 163, 74));
-            addToHistoryBtn.setEnabled(false);
-            System.out.println("Add to history: " + movie.getTitle());
+            if (recordWatchHistoryController != null) {
+                final LoggedInState currentState = loggedInViewModel.getState();
+                if (currentState != null) {
+                    String username = currentState.getUsername();
+                    String movieId = movie.getMovieId();
+                    
+                    // Record the movie to watch history
+                    recordWatchHistoryController.recordMovie(username, movieId);
+                    
+                    // Update button appearance
+                    addToHistoryBtn.setText("Watched");
+                    addToHistoryBtn.setBackground(new Color(22, 163, 74));
+                    addToHistoryBtn.setEnabled(false);
+                }
+            }
         });
 
         return card;

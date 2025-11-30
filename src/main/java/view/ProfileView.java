@@ -4,6 +4,7 @@ import interface_adapter.view_profile.ViewProfileController;
 import interface_adapter.view_profile.ViewProfileState;
 import interface_adapter.view_profile.ViewProfileViewModel;
 import interface_adapter.view_watchlists.ViewWatchListsController;
+import interface_adapter.view_watchhistory.ViewWatchHistoryController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,6 +22,7 @@ public class ProfileView extends JPanel implements ActionListener, PropertyChang
     private final ViewProfileViewModel viewProfileViewModel;
     private ViewProfileController viewProfileController;
     private ViewWatchListsController viewWatchListsController;
+    private ViewWatchHistoryController viewWatchHistoryController;
 
     private final JLabel titleLabel = new JLabel(ViewProfileViewModel.TITLE_LABEL);
     private final JLabel usernameLabel = new JLabel();
@@ -53,6 +55,15 @@ public class ProfileView extends JPanel implements ActionListener, PropertyChang
         viewWatchListsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         viewWatchListsButton.addActionListener(this);
 
+        // Button to view Watch History
+        JButton viewWatchHistoryButton = new JButton("View Watch History");
+        viewWatchHistoryButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        viewWatchHistoryButton.addActionListener(e -> {
+            if (viewWatchHistoryController != null && currentUsername != null) {
+                viewWatchHistoryController.loadHistory(currentUsername);
+            }
+        });
+
         add(titleLabel);
         add(Box.createRigidArea(new Dimension(0, 20)));
         add(usernameLabel);
@@ -62,6 +73,8 @@ public class ProfileView extends JPanel implements ActionListener, PropertyChang
 
         add(Box.createRigidArea(new Dimension(0, 20)));
         add(viewWatchListsButton);
+        add(Box.createRigidArea(new Dimension(0, 10)));
+        add(viewWatchHistoryButton);
 
         add(Box.createRigidArea(new Dimension(0, 10)));
         add(errorLabel);
@@ -73,6 +86,10 @@ public class ProfileView extends JPanel implements ActionListener, PropertyChang
 
     public void setViewWatchListsController(ViewWatchListsController controller) {
         this.viewWatchListsController = controller;
+    }
+
+    public void setViewWatchHistoryController(ViewWatchHistoryController controller) {
+        this.viewWatchHistoryController = controller;
     }
 
     /**
