@@ -14,6 +14,8 @@ import interface_adapter.search_movie.SearchMovieController;
 import interface_adapter.view_profile.ViewProfileController;
 import interface_adapter.view_watchlists.ViewWatchListsController;
 import use_case.record_watchhistory.RecordWatchHistoryInteractor;
+import interface_adapter.review_movie.ReviewMovieController;
+import interface_adapter.review_movie.ReviewMovieViewModel;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -25,6 +27,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
 
 /**
  * The View for when the user is logged into the program.
@@ -45,6 +50,8 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private AddWatchListController addWatchListController;
     private RecordWatchHistoryController recordWatchHistoryController;
     private ViewWatchListsController viewWatchListsController;
+
+
 
     // ViewModels
     private interface_adapter.review_movie.ReviewMovieViewModel reviewMovieViewModel;
@@ -554,6 +561,12 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         addToHistoryBtn.setForeground(Color.BLACK);
         addToHistoryBtn.setFocusPainted(false);
 
+        JButton reviewButton = new JButton("Review");
+        reviewButton.setFont(new Font("Helvetica", Font.BOLD, 12));
+        reviewButton.setBackground(new Color(59, 130, 246)); // same blue
+        reviewButton.setForeground(Color.WHITE);
+        reviewButton.setFocusPainted(false);
+
         buttonPanel.add(addToWatchlistBtn);
         buttonPanel.add(addToHistoryBtn);
 
@@ -575,6 +588,45 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
                 System.out.println("Add to watchlist: " + movie.getTitle());
             }
         });
+
+        // review listener
+
+        reviewButton.addActionListener(e -> {
+
+            LoggedInState currentState = loggedInViewModel.getState();
+            if (currentState == null) return;
+
+            String userId = currentState.getUsername();
+            String movieId = movie.getMovieId() + "";
+            String movieTitle = movie.getTitle();
+
+            // Check if user already reviewed the movie
+            if (reviewMovieViewModel.getExistingReview(userId, movieId) != null) {
+                int choice = JOptionPane.showConfirmDialog(
+                        null,
+                        "You already reviewed this. Edit review?",
+                        "Review exists",
+                        JOptionPane.YES_NO_OPTION
+                );
+
+                if (choice != JOptionPane.YES_OPTION) {
+                    return;
+                }
+            }
+
+            AddReviewPopup popup = new AddReviewPopup(
+                    (JFrame) SwingUtilities.getWindowAncestor(this),
+                    reviewMovieController,
+                    reviewMovieViewModel,
+                    userId,
+                    movieId,
+                    movieTitle
+            );
+            popup.setVisible(true);
+        });
+
+        buttonPanel.add(reviewButton);
+
 
         addToHistoryBtn.addActionListener(e -> {
             if (recordWatchHistoryController != null) {
