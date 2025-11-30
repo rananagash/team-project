@@ -1,17 +1,28 @@
 package view;
 
-import interface_adapter.login.LoginController;
-import interface_adapter.login.LoginState;
-import interface_adapter.login.LoginViewModel;
-
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import interface_adapter.ViewManagerModel;
+import interface_adapter.login.LoginController;
+import interface_adapter.login.LoginState;
+import interface_adapter.login.LoginViewModel;
 
 /**
  * The View for when the user is logging into the program.
@@ -19,7 +30,9 @@ import java.beans.PropertyChangeListener;
 public class LoginView extends JPanel implements ActionListener, PropertyChangeListener {
 
     private final String viewName = "log in";
+
     private final LoginViewModel loginViewModel;
+    private final ViewManagerModel viewManagerModel;
 
     private final JTextField usernameInputField = new JTextField(15);
     private final JLabel usernameErrorField = new JLabel();
@@ -28,47 +41,91 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     private final JLabel passwordErrorField = new JLabel();
 
     private final JButton logIn;
+    private final JButton signUp;
     private final JButton cancel;
-    private LoginController loginController = null;
 
-    public LoginView(LoginViewModel loginViewModel) {
+    private LoginController loginController;
 
+    /**
+     * Constructs the LogIn View Panel.
+     *
+     * @param loginViewModel the ViewModel containing the login state
+     * @param viewManagerModel The ViewManagerModel used for changing screens
+     */
+    public LoginView(LoginViewModel loginViewModel, ViewManagerModel viewManagerModel) {
         this.loginViewModel = loginViewModel;
+        this.viewManagerModel = viewManagerModel;
         this.loginViewModel.addPropertyChangeListener(this);
 
+        this.setLayout(new BorderLayout());
+
+        // ---------- TITLE ----------
         final JLabel title = new JLabel("Login Screen");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        // ---------- FORM PANELS ----------
         final LabelTextPanel usernameInfo = new LabelTextPanel(
                 new JLabel("Username"), usernameInputField);
         final LabelTextPanel passwordInfo = new LabelTextPanel(
                 new JLabel("Password"), passwordInputField);
 
-        final JPanel buttons = new JPanel();
-        logIn = new JButton("log in");
-        buttons.add(logIn);
-        cancel = new JButton("cancel");
-        buttons.add(cancel);
+        // ---------- BUTTON PANEL ----------
+        final JPanel buttonPanel = new JPanel();
+        logIn = new JButton("Log In");
+        signUp = new JButton("Sign Up");
+        cancel = new JButton("Cancel");
 
-        logIn.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        if (evt.getSource().equals(logIn)) {
-                            final LoginState currentState = loginViewModel.getState();
+        buttonPanel.add(logIn);
+        buttonPanel.add(signUp);
+        buttonPanel.add(cancel);
 
-                            loginController.execute(
-                                    currentState.getUsername(),
-                                    currentState.getPassword()
-                            );
-                        }
-                    }
-                }
-        );
+        // ---------- CENTER PANEL ----------
+        final JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        centerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+        centerPanel.add(title);
+        centerPanel.add(Box.createVerticalStrut(4));
+        centerPanel.add(usernameInfo);
+        centerPanel.add(usernameErrorField);
+        centerPanel.add(Box.createVerticalStrut(4));
+        centerPanel.add(passwordInfo);
+        centerPanel.add(passwordErrorField);
+        centerPanel.add(Box.createVerticalStrut(4));
+        centerPanel.add(buttonPanel);
+
+        // ---------- ACTION HANDLERS ----------
+
+        // Login button
+        logIn.addActionListener(e -> {
+            final LoginState currentState = loginViewModel.getState();
+            loginController.execute(
+                    currentState.getUsername(),
+                    currentState.getPassword()
+            );
+        });
+
+        // Pressing enter in password field triggers login
+        passwordInputField.addActionListener(e -> {
+            final LoginState currentState = loginViewModel.getState();
+            loginController.execute(
+                    currentState.getUsername(),
+                    currentState.getPassword()
+            );
+        });
+
+        // Sign Up button switches screens
+        signUp.addActionListener(e -> {
+            viewManagerModel.setState("sign up");
+            viewManagerModel.firePropertyChange();
+        });
+
+        // Cancel clears fields
         cancel.addActionListener(this);
 
+        // Username listener
         usernameInputField.getDocument().addDocumentListener(new DocumentListener() {
-
             private void documentListenerHelper() {
                 final LoginState currentState = loginViewModel.getState();
                 currentState.setUsername(usernameInputField.getText());
@@ -91,10 +148,8 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
             }
         });
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
+        // Password listener
         passwordInputField.getDocument().addDocumentListener(new DocumentListener() {
-
             private void documentListenerHelper() {
                 final LoginState currentState = loginViewModel.getState();
                 currentState.setPassword(new String(passwordInputField.getPassword()));
@@ -117,11 +172,10 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
             }
         });
 
-        this.add(title);
-        this.add(usernameInfo);
-        this.add(usernameErrorField);
-        this.add(passwordInfo);
-        this.add(buttons);
+        // Wrapper panel for vertical centering
+        final JPanel wrapper = new JPanel(new GridBagLayout());
+        wrapper.add(centerPanel);
+        this.add(wrapper, BorderLayout.CENTER);
     }
 
     /**
@@ -129,7 +183,15 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
      * @param evt the ActionEvent to react to
      */
     public void actionPerformed(ActionEvent evt) {
-        System.out.println("Click " + evt.getActionCommand());
+        if (evt.getSource() == cancel) {
+            usernameInputField.setText("");
+            passwordInputField.setText("");
+
+            final LoginState currentState = loginViewModel.getState();
+            currentState.setUsername("");
+            currentState.setPassword("");
+            loginViewModel.setState(currentState);
+        }
     }
 
     @Override

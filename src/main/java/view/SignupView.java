@@ -1,41 +1,66 @@
 package view;
 
-import interface_adapter.signup.SignupController;
-import interface_adapter.signup.SignupState;
-import interface_adapter.signup.SignupViewModel;
-
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import interface_adapter.signup.SignupController;
+import interface_adapter.signup.SignupState;
+import interface_adapter.signup.SignupViewModel;
+
 /**
  * The View for the Signup Use Case.
  */
 public class SignupView extends JPanel implements ActionListener, PropertyChangeListener {
+
     private final String viewName = "sign up";
 
     private final SignupViewModel signupViewModel;
+
+    // Fields
     private final JTextField usernameInputField = new JTextField(15);
     private final JPasswordField passwordInputField = new JPasswordField(15);
     private final JPasswordField repeatPasswordInputField = new JPasswordField(15);
-    private SignupController signupController = null;
 
-    private final JButton signUp;
-    private final JButton cancel;
-    private final JButton toLogin;
+    // Buttons
+    private final JButton singUpBtn;
+    private final JButton cancelBtn;
+    private final JButton toLoginBtn;
 
+    // Controller
+    private SignupController signupController;
+
+    /**
+     * Constructs the SingUp View Panel.
+     * @param signupViewModel  the viewmodel containing the singup state
+     */
     public SignupView(SignupViewModel signupViewModel) {
         this.signupViewModel = signupViewModel;
         signupViewModel.addPropertyChangeListener(this);
 
+        this.setLayout(new BorderLayout());
+
+        // ---------- TITLE ----------
         final JLabel title = new JLabel(SignupViewModel.TITLE_LABEL);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        // ---------- FORM PANELS ----------
         final LabelTextPanel usernameInfo = new LabelTextPanel(
                 new JLabel(SignupViewModel.USERNAME_LABEL), usernameInputField);
         final LabelTextPanel passwordInfo = new LabelTextPanel(
@@ -43,52 +68,72 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         final LabelTextPanel repeatPasswordInfo = new LabelTextPanel(
                 new JLabel(SignupViewModel.REPEAT_PASSWORD_LABEL), repeatPasswordInputField);
 
-        final JPanel buttons = new JPanel();
-        toLogin = new JButton(SignupViewModel.TO_LOGIN_BUTTON_LABEL);
-        buttons.add(toLogin);
-        signUp = new JButton(SignupViewModel.SIGNUP_BUTTON_LABEL);
-        buttons.add(signUp);
-        cancel = new JButton(SignupViewModel.CANCEL_BUTTON_LABEL);
-        buttons.add(cancel);
+        // ---------- BUTTON PANEL ----------
+        final JPanel buttonPanel = new JPanel();
+        toLoginBtn = new JButton(SignupViewModel.TO_LOGIN_BUTTON_LABEL);
+        singUpBtn = new JButton(SignupViewModel.SIGNUP_BUTTON_LABEL);
+        cancelBtn = new JButton(SignupViewModel.CANCEL_BUTTON_LABEL);
 
-        signUp.addActionListener(
-                // This creates an anonymous subclass of ActionListener and instantiates it.
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        if (evt.getSource().equals(signUp)) {
-                            final SignupState currentState = signupViewModel.getState();
+        buttonPanel.add(toLoginBtn);
+        buttonPanel.add(singUpBtn);
+        buttonPanel.add(cancelBtn);
 
-                            signupController.execute(
-                                    currentState.getUsername(),
-                                    currentState.getPassword(),
-                                    currentState.getRepeatPassword()
-                            );
-                        }
-                    }
-                }
-        );
+        // ---------- CENTER PANEL ----------
+        final JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        centerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        toLogin.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        signupController.switchToLoginView();
-                    }
-                }
-        );
+        centerPanel.add(title);
+        centerPanel.add(Box.createVerticalStrut(4));
+        centerPanel.add(usernameInfo);
+        centerPanel.add(Box.createVerticalStrut(4));
+        centerPanel.add(passwordInfo);
+        centerPanel.add(Box.createVerticalStrut(4));
+        centerPanel.add(repeatPasswordInfo);
+        centerPanel.add(Box.createVerticalStrut(4));
+        centerPanel.add(buttonPanel);
 
-        cancel.addActionListener(this);
+        // ---------- ACTION HANDLERS ----------
+
+        // Sign Up Button
+        singUpBtn.addActionListener(e -> {
+            final SignupState currentState = signupViewModel.getState();
+
+            signupController.execute(
+                    currentState.getUsername(),
+                    currentState.getPassword(),
+                    currentState.getRepeatPassword()
+            );
+        });
+
+        // To Log In button
+        toLoginBtn.addActionListener(e -> {
+            signupController.switchToLoginView();
+        });
+
+        // Pressing enter in repeat password field triggers Sign up
+        repeatPasswordInputField.addActionListener(e -> {
+            final SignupState currentState = signupViewModel.getState();
+
+            signupController.execute(
+                    currentState.getUsername(),
+                    currentState.getPassword(),
+                    currentState.getRepeatPassword()
+            );
+        });
+
+        // Cancel Button clears fields
+        cancelBtn.addActionListener(this);
 
         addUsernameListener();
         addPasswordListener();
         addRepeatPasswordListener();
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-        this.add(title);
-        this.add(usernameInfo);
-        this.add(passwordInfo);
-        this.add(repeatPasswordInfo);
-        this.add(buttons);
+        // Wrapper panel for vertical centering
+        final JPanel wrapper = new JPanel(new GridBagLayout());
+        wrapper.add(centerPanel);
+        this.add(wrapper, BorderLayout.CENTER);
     }
 
     private void addUsernameListener() {
@@ -171,7 +216,17 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-        JOptionPane.showMessageDialog(this, "Cancel not implemented yet.");
+        if (evt.getSource() == cancelBtn) {
+            usernameInputField.setText("");
+            passwordInputField.setText("");
+            repeatPasswordInputField.setText("");
+
+            final SignupState currentState = signupViewModel.getState();
+            currentState.setUsername("");
+            currentState.setPassword("");
+            currentState.setRepeatPassword("");
+            signupViewModel.setState(currentState);
+        }
     }
 
     @Override

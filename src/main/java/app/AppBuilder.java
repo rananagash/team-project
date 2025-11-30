@@ -111,7 +111,7 @@ public class AppBuilder {
 
     public AppBuilder addLoginView() {
         loginViewModel = new LoginViewModel();
-        loginView = new LoginView(loginViewModel);
+        loginView = new LoginView(loginViewModel, viewManagerModel);
         cardPanel.add(loginView, loginView.getViewName());
         return this;
     }
@@ -323,7 +323,7 @@ public class AppBuilder {
         application.setPreferredSize(new Dimension(900, 600));
         application.setMinimumSize(new Dimension(900, 600));
 
-        viewManagerModel.setState(signupView.getViewName());
+        viewManagerModel.setState(loginView.getViewName());
         viewManagerModel.firePropertyChange();
 
         return application;
