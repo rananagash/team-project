@@ -1,8 +1,11 @@
 package view;
 
+import common.GenreUtils;
 import entity.Movie;
 import entity.User;
 import interface_adapter.add_to_watchlist.AddWatchListController;
+import interface_adapter.filter_movies.FilterMoviesController;
+import interface_adapter.filter_movies.FilterMoviesViewModel;
 import interface_adapter.logged_in.ChangePasswordController;
 import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.logged_in.LoggedInViewModel;
@@ -13,6 +16,8 @@ import interface_adapter.view_watchhistory.ViewWatchHistoryController;
 import interface_adapter.search_movie.SearchMovieController;
 import interface_adapter.view_profile.ViewProfileController;
 import interface_adapter.view_watchlists.ViewWatchListsController;
+import interface_adapter.filter_movies.FilterMoviesController;
+import interface_adapter.filter_movies.FilterMoviesViewModel;
 import use_case.record_watchhistory.RecordWatchHistoryInteractor;
 import interface_adapter.review_movie.ReviewMovieController;
 import interface_adapter.review_movie.ReviewMovieViewModel;
@@ -26,10 +31,9 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-
+import java.util.stream.Collectors;
 
 /**
  * The View for when the user is logged into the program.
@@ -50,11 +54,13 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private AddWatchListController addWatchListController;
     private RecordWatchHistoryController recordWatchHistoryController;
     private ViewWatchListsController viewWatchListsController;
+    private FilterMoviesController filterMoviesController;
 
 
 
     // ViewModels
     private interface_adapter.review_movie.ReviewMovieViewModel reviewMovieViewModel;
+    private FilterMoviesViewModel filterMoviesViewModel;
 
     // UI Components - Top panel
     private JLabel username;
@@ -63,6 +69,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private JButton viewHistoryBtn;
     private JButton profileBtn;
     private JButton reviewBtn;
+    private JButton filterMoviesBtn;
 
     // Middle Panel (testing only)
     //TODO: remove before final version
@@ -79,6 +86,10 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private JPanel movieResultsPanel; // will replace JList
     private JScrollPane movieScrollPane;
 
+    // UI Components - Results panel (using MovieCard components)
+    private JPanel resultsPanel;
+    private JScrollPane resultsScrollPane;
+
     // UI Components - Pagination
     private JButton prevPageButton;
     private JButton nextPageButton;
@@ -93,6 +104,13 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private int totalPages = 1;
     private String lastQuery = "";
 
+    // Store current movies being displayed (for filtering)
+    private List<Movie> currentMovies = new ArrayList<>();
+
+    // Store original movies before filtering (to restore when clearing filter)
+    private List<Movie> originalMovies = new ArrayList<>();
+
+
     public LoggedInView(LoggedInViewModel loggedInViewModel) {
         this.loggedInViewModel = loggedInViewModel;
         this.loggedInViewModel.addPropertyChangeListener(this);
@@ -104,6 +122,8 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
         // ===== Top panel with account buttons =====
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
+        // Make top panel scrollable if needed
+        topPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, 50));
 
         JLabel usernameLabel = new JLabel("Logged in as: ");
         username = new JLabel();
@@ -177,6 +197,25 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         });
         topPanel.add(reviewBtn);
 
+        topPanel.add(new JSeparator(SwingConstants.VERTICAL));
+
+        filterMoviesBtn = new JButton("Filter Movies");
+        filterMoviesBtn.setVisible(true);
+        filterMoviesBtn.setPreferredSize(new Dimension(120, 30)); // Make button more visible
+        filterMoviesBtn.addActionListener(e -> {
+            // Check if we have movies to filter
+            if (currentMovies == null || currentMovies.isEmpty()) {
+                showError("No movies to filter. Please search for movies or load popular movies first.");
+                return;
+            }
+            JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+            FilterMoviesPopup popup = new FilterMoviesPopup(parent, this);
+            popup.setVisible(true);
+        });
+        topPanel.add(filterMoviesBtn);
+        topPanel.revalidate();
+        topPanel.repaint();
+
         // Middle panel buttons for testing only
         //TODO: remove before final version
         middlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
@@ -223,10 +262,10 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
             if (recordWatchHistoryController != null) {
                 // Use current logged in user's username
                 String username = currentState.getUsername();
-                
+
                 // Test movie ID (using a real TMDb movie ID for testing)
                 String testMovieId = "299534"; // Avengers: Endgame
-                
+
                 // Record the movie to watch history
                 // watchedAt is null, so it will use current time
                 recordWatchHistoryController.recordMovie(username, testMovieId);
@@ -385,6 +424,16 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         this.currentPage = currentPage;
         this.totalPages = Math.max(totalPages, 1);
 
+        // Store the current movies for filtering - always update this when showing results
+        if (movies != null && !movies.isEmpty()) {
+            this.currentMovies = new ArrayList<>(movies);
+            // Also store as original movies (before any filtering)
+            this.originalMovies = new ArrayList<>(movies);
+        } else {
+            this.currentMovies = new ArrayList<>();
+            this.originalMovies = new ArrayList<>();
+        }
+
         // clear result
         movieResultsPanel.removeAll();
 
@@ -500,6 +549,116 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         this.viewWatchListsController = controller;
     }
 
+    public void setFilterMoviesController(FilterMoviesController controller) {
+        this.filterMoviesController = controller;
+    }
+
+    public void setFilterMoviesViewModel(FilterMoviesViewModel viewModel) {
+        this.filterMoviesViewModel = viewModel;
+        // Listen to view model changes to update the display when movies are filtered
+        if (viewModel != null) {
+            viewModel.addPropertyChangeListener(evt -> {
+                if (evt.getPropertyName().equals("filteredMovies") ||
+                        evt.getPropertyName().equals("errorMessage")) {
+                    updateFilteredMoviesDisplay();
+                }
+            });
+        }
+    }
+
+    /**
+     * Filters the currently displayed movies by the selected genre IDs.
+     * @return true if movies were found, false otherwise
+     *
+     * @param genreIds the list of genre IDs to filter by
+     */
+    public boolean filterCurrentMoviesAndCheck(List<Integer> genreIds) {
+        return filterCurrentMovies(genreIds);
+    }
+
+    /**
+     * Filters the currently displayed movies by the selected genre IDs.
+     *
+     * @param genreIds the list of genre IDs to filter by
+     * @return true if movies were found, false otherwise
+     */
+    public boolean filterCurrentMovies(List<Integer> genreIds) {
+
+        System.out.println("Filtering " + currentMovies.size() + " movies by genres: " + genreIds);
+
+        // Filter current movies by selected genres
+        List<Movie> filteredMovies = currentMovies.stream()
+                .filter(movie -> {
+                    List<Integer> movieGenres = movie.getGenreIds();
+                    if (movieGenres == null || movieGenres.isEmpty()) {
+                        System.out.println("Movie " + movie.getTitle() + " has no genres");
+                        return false;
+                    }
+                    // Check if movie has at least one of the selected genres
+                    boolean matches = movieGenres.stream().anyMatch(genreIds::contains);
+                    if (matches) {
+                        System.out.println("Movie " + movie.getTitle() + " matches with genres: " + movieGenres);
+                    }
+                    return matches;
+                })
+                .collect(Collectors.toList());
+
+        System.out.println("Filtered to " + filteredMovies.size() + " movies");
+
+        // Display filtered results
+        if (filteredMovies.isEmpty()) {
+            resultsPanel.removeAll();
+            resultsPanel.revalidate();
+            resultsPanel.repaint();
+            List<String> genreNames = GenreUtils.getGenreNames(genreIds);
+            String genreText = String.join(", ", genreNames);
+            setStatus("No movies found matching genres: " + genreText);
+        } else {
+            showResults(filteredMovies, 1, 1);
+            List<String> genreNames = GenreUtils.getGenreNames(genreIds);
+            String genreText = String.join(", ", genreNames);
+            setStatus("Showing " + filteredMovies.size() + " of " + originalMovies.size() + " movies filtered by: " + genreText);
+            return true; // Results found
+        }
+        return false;
+    }
+
+    /**
+     * Clears the current filter and restores the original movies.
+     */
+    public void clearFilter() {
+        if (originalMovies.isEmpty()) {
+            showError("No original movies to restore.");
+            return;
+        }
+        showResults(originalMovies, currentPage, totalPages);
+        setStatus("Filter cleared. Showing all " + originalMovies.size() + " movies.");
+    }
+    private void updateFilteredMoviesDisplay() {
+        if (filterMoviesViewModel == null) {
+            return;
+        }
+
+        if (filterMoviesViewModel.hasError()) {
+            showError(filterMoviesViewModel.getErrorMessage());
+            return;
+        }
+
+        List<Movie> filteredMovies = filterMoviesViewModel.getFilteredMovies();
+        if (filteredMovies != null && !filteredMovies.isEmpty()) {
+            // Display filtered movies
+            showResults(filteredMovies, 1, 1);
+            List<String> genreNames = filterMoviesViewModel.getSelectedGenreNames();
+            String genreText = String.join(", ", genreNames);
+            setStatus("Showing " + filteredMovies.size() + " movies filtered by: " + genreText);
+        } else {
+            // No movies found
+            resultsPanel.removeAll();
+            resultsPanel.revalidate();
+            resultsPanel.repaint();
+            setStatus("No movies found for selected genres.");
+        }
+    }
 
     private JPanel createMovieCard(Movie movie) {
         JPanel card = new JPanel(new BorderLayout(10, 0));
@@ -634,10 +793,10 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
                 if (currentState != null) {
                     String username = currentState.getUsername();
                     String movieId = movie.getMovieId();
-                    
+
                     // Record the movie to watch history
                     recordWatchHistoryController.recordMovie(username, movieId);
-                    
+
                     // Update button appearance
                     addToHistoryBtn.setText("Watched");
                     addToHistoryBtn.setBackground(new Color(22, 163, 74));

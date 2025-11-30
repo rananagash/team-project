@@ -15,5 +15,7 @@ public interface MovieGateway {
             throws MovieDataAccessException;
 
     List<Movie> filterByGenres(List<Integer> genreIds);
+
+    PagedMovieResult getPopularMovies(int page) throws MovieDataAccessException;
 }
 
