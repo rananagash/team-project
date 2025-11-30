@@ -25,6 +25,7 @@ public class ViewWatchHistoryInteractor implements ViewWatchHistoryInputBoundary
 
         if (user.getWatchHistory() == null) {
             presenter.prepareFailView("This user has no watch history yet.");
+            return;
         }
 
         presenter.prepareSuccessView(

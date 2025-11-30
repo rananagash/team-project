@@ -21,9 +21,6 @@ import interface_adapter.review_movie.ReviewMovieViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
-import interface_adapter.view_watchlists.ViewWatchListsController;
-import interface_adapter.view_watchlists.ViewWatchListsPresenter;
-import interface_adapter.view_watchlists.ViewWatchListsViewModel;
 import use_case.add_to_watchlist.AddWatchListInputBoundary;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordOutputBoundary;
@@ -37,9 +34,6 @@ import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
 import use_case.view_profile.ViewProfileInputBoundary;
 import use_case.view_profile.ViewProfileOutputBoundary;
-import use_case.view_watchlists.ViewWatchListsInputBoundary;
-import use_case.view_watchlists.ViewWatchListsInteractor;
-import use_case.view_watchlists.ViewWatchListsOutputBoundary;
 import view.*;
 import interface_adapter.view_profile.ViewProfileController;
 import interface_adapter.view_profile.ViewProfilePresenter;
@@ -50,6 +44,17 @@ import use_case.login.LoginInteractor;
 import use_case.logout.LogoutInteractor;
 import use_case.review_movie.ReviewMovieInteractor;
 import use_case.view_profile.ViewProfileInteractor;
+import interface_adapter.view_watchhistory.ViewWatchHistoryController;
+import interface_adapter.view_watchhistory.ViewWatchHistoryPresenter;
+import use_case.view_watchhistory.ViewWatchHistoryInteractor;
+import use_case.view_watchhistory.ViewWatchHistoryInputBoundary;
+import use_case.view_watchhistory.ViewWatchHistoryOutputBoundary;
+import interface_adapter.record_watchhistory.RecordWatchHistoryController;
+import interface_adapter.record_watchhistory.RecordWatchHistoryPresenter;
+import use_case.record_watchhistory.RecordWatchHistoryInteractor;
+import use_case.record_watchhistory.RecordWatchHistoryInputBoundary;
+import use_case.record_watchhistory.RecordWatchHistoryOutputBoundary;
+import use_case.common.MovieGateway;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,8 +83,6 @@ public class AppBuilder {
     private ViewWatchHistoryPopup viewWatchHistoryPopup;
     private ProfileView profileView;
     private ViewProfileViewModel viewProfileViewModel;
-    private ViewWatchListsView viewWatchListsView;
-    private ViewWatchListsViewModel viewWatchListsViewModel;
 
 
     public AppBuilder() {
@@ -112,13 +115,6 @@ public class AppBuilder {
         viewProfileViewModel = new ViewProfileViewModel();
         profileView = new ProfileView(viewProfileViewModel);
         cardPanel.add(profileView, profileView.getViewName());
-        return this;
-    }
-
-    public AppBuilder addViewWatchListsView() {
-        viewWatchListsViewModel = new ViewWatchListsViewModel(viewManagerModel);
-        viewWatchListsView = new ViewWatchListsView(viewWatchListsViewModel);
-        cardPanel.add(viewWatchListsView, viewWatchListsView.getViewName());
         return this;
     }
 
@@ -189,21 +185,28 @@ public class AppBuilder {
         return this;
     }
 
-    public AppBuilder addViewWatchListsUseCase() {
-        ViewWatchListsOutputBoundary viewWatchListsPresenter = new ViewWatchListsPresenter(viewWatchListsViewModel, viewManagerModel);
-        ViewWatchListsInputBoundary viewWatchListsInteractor = new ViewWatchListsInteractor(userDataAccessObject,
-                viewWatchListsPresenter);
-        ViewWatchListsController viewWatchListsController = new ViewWatchListsController(viewWatchListsInteractor,  viewManagerModel);
-
-        viewWatchListsView.setController(viewWatchListsController);
-        loggedInView.setViewWatchListsController(viewWatchListsController);
-        profileView.setViewWatchListsController(viewWatchListsController);
-
-        return this;
-    }
-
     public AppBuilder addViewWatchHistoryUseCase() {
-        //TODO: Jiaqi
+        // Create ViewWatchHistoryPopup with a temporary parent frame
+        // The popup will be reused and shown/hidden as needed
+        // Note: The parent frame is set to a temporary frame here, but the popup
+        // will be properly positioned when displayed
+        JFrame tempParent = new JFrame();
+        tempParent.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        viewWatchHistoryPopup = new ViewWatchHistoryPopup(tempParent);
+        
+        // Create presenter with the view
+        ViewWatchHistoryOutputBoundary presenter = new ViewWatchHistoryPresenter(viewWatchHistoryPopup);
+        
+        // Create interactor with user data access and presenter
+        ViewWatchHistoryInputBoundary interactor = new ViewWatchHistoryInteractor(userDataAccessObject, presenter);
+        
+        // Create controller with the interactor
+        ViewWatchHistoryController controller = new ViewWatchHistoryController(interactor);
+        
+        // Connect controller to LoggedInView and ProfileView
+        loggedInView.setViewWatchHistoryController(controller);
+        profileView.setViewWatchHistoryController(controller);
+        
         return this;
     }
 
@@ -221,7 +224,30 @@ public class AppBuilder {
     }
 
     public AppBuilder addRecordWatchHistoryPopup() {
-        //TODO: Jiaqi
+        // Create RecordWatchHistoryPopup with a temporary parent frame
+        // The popup will be reused and shown/hidden as needed
+        // Note: The parent frame is set to a temporary frame here, but the popup
+        // will be properly positioned when displayed
+        JFrame tempParent = new JFrame();
+        tempParent.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        recordWatchHistoryPopup = new RecordWatchHistoryPopup(tempParent);
+        
+        // Create MovieGateway for fetching movie data
+        MovieGateway movieGateway = new TMDbMovieDataAccessObject();
+        
+        // Create presenter with the view
+        RecordWatchHistoryOutputBoundary presenter = new RecordWatchHistoryPresenter(recordWatchHistoryPopup);
+        
+        // Create interactor with user data access, movie gateway, and presenter
+        RecordWatchHistoryInputBoundary interactor = new RecordWatchHistoryInteractor(
+                userDataAccessObject, movieGateway, presenter);
+        
+        // Create controller with the interactor
+        RecordWatchHistoryController controller = new RecordWatchHistoryController(interactor);
+        
+        // Connect controller to LoggedInView
+        loggedInView.setRecordWatchHistoryController(controller);
+        
         return this;
     }
 
@@ -239,14 +265,10 @@ public class AppBuilder {
     }
 
     public JFrame build() {
-        final JFrame application = new JFrame("MovieNight");
+        final JFrame application = new JFrame("User Login Example");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         application.add(cardPanel);
-
-        // initial size of app
-        application.setPreferredSize(new Dimension(900, 600));
-        application.setMinimumSize(new Dimension(900, 600));
 
         viewManagerModel.setState(signupView.getViewName());
         viewManagerModel.firePropertyChange();

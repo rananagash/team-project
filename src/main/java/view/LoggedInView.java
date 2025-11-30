@@ -12,7 +12,6 @@ import interface_adapter.record_watchhistory.RecordWatchHistoryPresenter;
 import interface_adapter.view_watchhistory.ViewWatchHistoryController;
 import interface_adapter.search_movie.SearchMovieController;
 import interface_adapter.view_profile.ViewProfileController;
-import interface_adapter.view_watchlists.ViewWatchListsController;
 import use_case.record_watchhistory.RecordWatchHistoryInteractor;
 
 import javax.swing.*;
@@ -43,7 +42,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private ViewProfileController viewProfileController;
     private AddWatchListController addWatchListController;
     private RecordWatchHistoryController recordWatchHistoryController;
-    private ViewWatchListsController viewWatchListsController;
 
     // ViewModels
     private interface_adapter.review_movie.ReviewMovieViewModel reviewMovieViewModel;
@@ -210,25 +208,17 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
             final LoggedInState currentState = loggedInViewModel.getState();
             if (currentState == null) return;
 
-            //Dummy user - real button should get current logged in user
-            User user = new User("dummy-user", "password");
-
-            //Dummy movie
-            Movie movie = new Movie("m1",
-                    "Test Movie",
-                    "A test movie plot happens",
-                    List.of(1, 2),
-                    "2025-01-01",
-                    7.5,
-                    0.0,
-                    "poster-url");
-
-            JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
-
-            // Create popup
-            RecordWatchHistoryPopup popup = new RecordWatchHistoryPopup(parent);
-
-            //TODO:Jiaqi I couldn't quite get your implementation to work
+            if (recordWatchHistoryController != null) {
+                // Use current logged in user's username
+                String username = currentState.getUsername();
+                
+                // Test movie ID (using a real TMDb movie ID for testing)
+                String testMovieId = "299534"; // Avengers: Endgame
+                
+                // Record the movie to watch history
+                // watchedAt is null, so it will use current time
+                recordWatchHistoryController.recordMovie(username, testMovieId);
+            }
         });
 
         rateReviewBtn.addActionListener(e -> {
@@ -466,9 +456,5 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     public void setRecordWatchHistoryController(RecordWatchHistoryController controller) {
         this.recordWatchHistoryController = controller;
-    }
-
-    public void setViewWatchListsController(ViewWatchListsController controller) {
-        this.viewWatchListsController = controller;
     }
 }

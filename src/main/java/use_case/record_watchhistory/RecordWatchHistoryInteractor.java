@@ -36,9 +36,13 @@ public class RecordWatchHistoryInteractor implements RecordWatchHistoryInputBoun
             return;
         }
 
-        if (userDataAccessInterface.getUser(requestModel.getUserName()) == null) {
+        User user = userDataAccessInterface.getUser(requestModel.getUserName());
+        if (user == null) {
             presenter.prepareFailView("User not found: " + requestModel.getUserName());
+            return;
         }
+
+        handleUser(user, requestModel);
     }
 
     private void handleUser(User user, RecordWatchHistoryRequestModel requestModel) {

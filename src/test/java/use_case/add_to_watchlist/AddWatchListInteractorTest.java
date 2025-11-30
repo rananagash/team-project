@@ -1,6 +1,5 @@
 package use_case.add_to_watchlist;
 
-import data_access.CachedUserDataAccessObject;
 import entity.Movie;
 import entity.User;
 import entity.WatchList;
@@ -75,7 +74,7 @@ class AddWatchListInteractorTest {
             }
         };
 
-        AddWatchListInputBoundary interactor = new AddWatchListInteractor(successPresenter, (CachedUserDataAccessObject) userDataAccessInterface);
+        AddWatchListInputBoundary interactor = new AddWatchListInteractor(successPresenter, userDataAccessInterface);
         interactor.execute(inputData);
     }
 
@@ -141,7 +140,7 @@ class AddWatchListInteractorTest {
             }
         };
 
-        AddWatchListInputBoundary interactor = new AddWatchListInteractor(successPresenter, (CachedUserDataAccessObject) userDataAccessInterface);
+        AddWatchListInputBoundary interactor = new AddWatchListInteractor(successPresenter, userDataAccessInterface);
         interactor.execute(inputData);
     }
 }
