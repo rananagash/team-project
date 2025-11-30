@@ -70,7 +70,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private JButton changePasswordBtn;
     private JButton viewHistoryBtn;
     private JButton profileBtn;
-    private JButton reviewBtn;
     private JButton filterMoviesBtn;
 
     // Middle Panel (testing only)
@@ -78,7 +77,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private JPanel middlePanel;
     private JButton addToWatchListBtn;
     private JButton addToHistoryBtn;
-    private JButton rateReviewBtn;
 
     // UI Components - Search panel
     private JTextField queryField;
@@ -178,27 +176,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         });
         topPanel.add(profileBtn);
 
-        reviewBtn = new JButton("Review a movie");
-        reviewBtn.addActionListener(e -> {
-            if (reviewMovieController != null && reviewMovieViewModel != null) {
-                final LoggedInState state = loggedInViewModel.getState();
-                if (state != null) {
-                    String reviewUsername = state.getUsername();
-                    JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
-                    AddReviewPopup popup = new AddReviewPopup(
-                            parent,
-                            reviewMovieController,
-                            reviewMovieViewModel,
-                            reviewUsername,
-                            "299534",  // TODO: Make this configurable instead of hardcoded
-                            "Avengers Endgame"
-                    );
-                    popup.setVisible(true);
-                }
-            }
-        });
-        topPanel.add(reviewBtn);
-
         topPanel.add(new JSeparator(SwingConstants.VERTICAL));
 
         filterMoviesBtn = new JButton("Filter Movies");
@@ -223,11 +200,9 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         middlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
         addToWatchListBtn = new JButton("Add to Watchlist (TEST)");
         addToHistoryBtn = new JButton("Add to History (TEST)");
-        rateReviewBtn = new JButton("Rate & Review (TEST)");
 
         middlePanel.add(addToWatchListBtn);
         middlePanel.add(addToHistoryBtn);
-        middlePanel.add(rateReviewBtn);
 
         addToWatchListBtn.addActionListener(e -> {
             final LoggedInState currentState = loggedInViewModel.getState();
@@ -273,37 +248,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
                 // watchedAt is null, so it will use current time
                 recordWatchHistoryController.recordMovie(username, testMovieId);
             }
-        });
-
-        rateReviewBtn.addActionListener(e -> {
-            final LoggedInState currentState = loggedInViewModel.getState();
-            if (currentState == null) return;
-
-            //Dummy user - real button should get current logged in user
-            User user = new User("dummy-user", "password");
-
-            //Dummy movie
-            Movie movie = new Movie("m1",
-                    "Test Movie",
-                    "A test movie plot happens",
-                    List.of(1, 2),
-                    "2025-01-01",
-                    7.5,
-                    0.0,
-                    "poster-url");
-
-            JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
-
-            // Create popup
-            AddReviewPopup popup = new AddReviewPopup(
-                    parent,
-                    reviewMovieController,
-                    reviewMovieViewModel,
-                    user.getUserName(),
-                    movie.getMovieId(),
-                    movie.getTitle());
-
-            popup.setVisible(true);
         });
 
 //        this.add(topPanel, BorderLayout.NORTH);
