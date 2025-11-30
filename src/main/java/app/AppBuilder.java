@@ -45,6 +45,17 @@ import use_case.view_profile.ViewProfileOutputBoundary;
 import use_case.view_watchlists.ViewWatchListsInputBoundary;
 import use_case.view_watchlists.ViewWatchListsInteractor;
 import use_case.view_watchlists.ViewWatchListsOutputBoundary;
+import interface_adapter.view_watchhistory.ViewWatchHistoryController;
+import interface_adapter.view_watchhistory.ViewWatchHistoryPresenter;
+import use_case.view_watchhistory.ViewWatchHistoryInteractor;
+import use_case.view_watchhistory.ViewWatchHistoryInputBoundary;
+import use_case.view_watchhistory.ViewWatchHistoryOutputBoundary;
+import interface_adapter.record_watchhistory.RecordWatchHistoryController;
+import interface_adapter.record_watchhistory.RecordWatchHistoryPresenter;
+import use_case.record_watchhistory.RecordWatchHistoryInteractor;
+import use_case.record_watchhistory.RecordWatchHistoryInputBoundary;
+import use_case.record_watchhistory.RecordWatchHistoryOutputBoundary;
+import use_case.common.MovieGateway;
 import view.*;
 import interface_adapter.view_profile.ViewProfileController;
 import interface_adapter.view_profile.ViewProfilePresenter;
@@ -224,7 +235,27 @@ public class AppBuilder {
     }
 
     public AppBuilder addViewWatchHistoryUseCase() {
-        //TODO: Jiaqi
+        // Create ViewWatchHistoryPopup with a temporary parent frame
+        // The popup will be reused and shown/hidden as needed
+        // Note: The parent frame is set to a temporary frame here, but the popup
+        // will be properly positioned when displayed
+        JFrame tempParent = new JFrame();
+        tempParent.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        viewWatchHistoryPopup = new ViewWatchHistoryPopup(tempParent);
+        
+        // Create presenter with the view
+        ViewWatchHistoryOutputBoundary presenter = new ViewWatchHistoryPresenter(viewWatchHistoryPopup);
+        
+        // Create interactor with user data access and presenter
+        ViewWatchHistoryInputBoundary interactor = new ViewWatchHistoryInteractor(userDataAccessObject, presenter);
+        
+        // Create controller with the interactor
+        ViewWatchHistoryController controller = new ViewWatchHistoryController(interactor);
+        
+        // Connect controller to LoggedInView and ProfileView
+        loggedInView.setViewWatchHistoryController(controller);
+        profileView.setViewWatchHistoryController(controller);
+        
         return this;
     }
 
@@ -242,7 +273,30 @@ public class AppBuilder {
     }
 
     public AppBuilder addRecordWatchHistoryPopup() {
-        //TODO: Jiaqi
+        // Create RecordWatchHistoryPopup with a temporary parent frame
+        // The popup will be reused and shown/hidden as needed
+        // Note: The parent frame is set to a temporary frame here, but the popup
+        // will be properly positioned when displayed
+        JFrame tempParent = new JFrame();
+        tempParent.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        recordWatchHistoryPopup = new RecordWatchHistoryPopup(tempParent);
+        
+        // Create MovieGateway for fetching movie data
+        MovieGateway movieGateway = new TMDbMovieDataAccessObject();
+        
+        // Create presenter with the view
+        RecordWatchHistoryOutputBoundary presenter = new RecordWatchHistoryPresenter(recordWatchHistoryPopup);
+        
+        // Create interactor with user data access, movie gateway, and presenter
+        RecordWatchHistoryInputBoundary interactor = new RecordWatchHistoryInteractor(
+                userDataAccessObject, movieGateway, presenter);
+        
+        // Create controller with the interactor
+        RecordWatchHistoryController controller = new RecordWatchHistoryController(interactor);
+        
+        // Connect controller to LoggedInView
+        loggedInView.setRecordWatchHistoryController(controller);
+        
         return this;
     }
 

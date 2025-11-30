@@ -1,5 +1,5 @@
 {
-    "currentUser": "asdf",
+    "currentUser": "romy",
     "users": {
         "dummy": {
             "password": "user",
@@ -83,9 +83,9 @@
                             ]
                         }
                     ],
-                    "dateCreated": "2025-11-29T13:52:21.814448",
+                    "dateCreated": "2025-11-30T11:29:09.437526600",
                     "name": "altest's Watch List",
-                    "id": "8a3a4bd7-f91f-4610-8bc3-cbf0f5fa834b"
+                    "id": "4974f7bc-2de1-453f-8186-d768ddf6dac0"
                 },
                 {
                     "movies": [{
@@ -102,9 +102,9 @@
                             878
                         ]
                     }],
-                    "dateCreated": "2025-11-29T13:52:21.814785",
+                    "dateCreated": "2025-11-30T11:29:09.438522",
                     "name": "Second Watchlist",
-                    "id": "e65ed167-39fe-4530-baf9-ae0860d8b146"
+                    "id": "add27a10-8af3-4a0c-b486-9341afdeea58"
                 }
             ],
             "username": "altest"
@@ -114,9 +114,9 @@
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-29T14:36:15.856245300",
+                "dateCreated": "2025-11-30T11:29:09.439542700",
                 "name": "asdf's Watch List",
-                "id": "a6e0d2ca-2c64-47e3-97b3-1f616ca60b81"
+                "id": "14614815-3a98-41c3-9e5e-60b4ab1df7d5"
             }],
             "username": "asdf"
         },
@@ -137,9 +137,9 @@
                         2
                     ]
                 }],
-                "dateCreated": "2025-11-29T14:36:31.296143500",
+                "dateCreated": "2025-11-30T11:29:09.439542700",
                 "name": "dummy-user's Watch List",
-                "id": "4edf0488-f9ba-4de7-88b2-e9f79f1eb230"
+                "id": "e6a63015-8f09-49f4-b936-0098b572a274"
             }],
             "username": "dummy-user"
         },
@@ -148,11 +148,22 @@
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-29T14:36:08.192311700",
+                "dateCreated": "2025-11-30T11:29:09.440521200",
                 "name": "oliver's Watch List",
-                "id": "c01444e1-7104-419f-a4d8-df6d9f824791"
+                "id": "4de67350-1ac4-401b-abbe-cd4ce03ad7dd"
             }],
             "username": "oliver"
+        },
+        "romy": {
+            "password": "111",
+            "reviews": {},
+            "watchlists": [{
+                "movies": [],
+                "dateCreated": "2025-11-30T11:29:09.440521200",
+                "name": "romy's Watch List",
+                "id": "89e8024e-7ba6-4838-8780-92922fdd161c"
+            }],
+            "username": "romy"
         }
     }
 }
