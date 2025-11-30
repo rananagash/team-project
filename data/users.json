@@ -1,5 +1,5 @@
 {
-    "currentUser": "ykk",
+    "currentUser": "asdf",
     "users": {
         "dummy": {
             "password": "user",
@@ -10,19 +10,149 @@
         "altest": {
             "password": "123",
             "reviews": {},
-            "watchlists": [],
+            "watchlists": [
+                {
+                    "movies": [
+                        {
+                            "posterUrl": "https://image.tmdb.org/t/p/w500/yFSIUVTCvgYrpalUktulvk3Gi5Y.jpg",
+                            "plot": "After the devastating events of Avengers: Infinity War, the universe is in ruins due to the efforts of the Mad Titan, Thanos. With the help of remaining allies, the Avengers must assemble once more in order to undo Thanos' actions and restore order to the universe once and for all, no matter what consequences may be in store.",
+                            "releaseDate": "2019-04-24",
+                            "popularity": 0,
+                            "rating": 8.238,
+                            "id": "299534",
+                            "title": "Avengers: Endgame",
+                            "genreIds": [
+                                28,
+                                12,
+                                878
+                            ]
+                        },
+                        {
+                            "posterUrl": "https://image.tmdb.org/t/p/w500/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg",
+                            "plot": "Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible:",
+                            "releaseDate": "2010-07-15",
+                            "popularity": 0,
+                            "rating": 8.371,
+                            "id": "27205",
+                            "title": "Inception",
+                            "genreIds": [
+                                28,
+                                878,
+                                12
+                            ]
+                        },
+                        {
+                            "posterUrl": "https://image.tmdb.org/t/p/w500/qx5x7HRP0MrSBx6N3QJFXpMrbWB.jpg",
+                            "plot": "Young hobbit Frodo Baggins, after inheriting a mysterious ring from his uncle Bilbo, must leave his home in order to keep it from falling into the hands of its evil creator. Along the way, a fellowship is formed to protect the ringbearer and make sure that the ring arrives at its final destination: Mt. Doom, the only place where it can be destroyed.",
+                            "releaseDate": "2001-12-18",
+                            "popularity": 0,
+                            "rating": 8.426,
+                            "id": "120",
+                            "title": "The Lord of the Rings: The Fellowship of the Ring",
+                            "genreIds": [
+                                12,
+                                14,
+                                28
+                            ]
+                        },
+                        {
+                            "posterUrl": "https://image.tmdb.org/t/p/w500/6FfCtAuVAW8XJjZ7eWeLibRLWTw.jpg",
+                            "plot": "Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a Wookiee and two droids to save the galaxy from the Empire's world-destroying battle station.",
+                            "releaseDate": "1977-05-25",
+                            "popularity": 0,
+                            "rating": 8.2,
+                            "id": "11",
+                            "title": "Star Wars: A New Hope",
+                            "genreIds": [
+                                12,
+                                28,
+                                878
+                            ]
+                        },
+                        {
+                            "posterUrl": "https://image.tmdb.org/t/p/w500/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg",
+                            "plot": "Two imprisoned men bond over years, finding solace and eventual redemption through acts of common decency.",
+                            "releaseDate": "1994-09-23",
+                            "popularity": 0,
+                            "rating": 8.7,
+                            "id": "278",
+                            "title": "The Shawshank Redemption",
+                            "genreIds": [
+                                18,
+                                80
+                            ]
+                        }
+                    ],
+                    "dateCreated": "2025-11-29T13:52:21.814448",
+                    "name": "altest's Watch List",
+                    "id": "8a3a4bd7-f91f-4610-8bc3-cbf0f5fa834b"
+                },
+                {
+                    "movies": [{
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/kFWLxUwcSpiLzszZbxUIZT9g6WR.jpg",
+                        "plot": "When an attack on the Empress threatens the peace of the galaxy, the Guardians must step up to defend reality and face their most dangerous challenge yet.",
+                        "releaseDate": "2023-05-05",
+                        "popularity": 0,
+                        "rating": 8.1,
+                        "id": "447365",
+                        "title": "Guardians of the Galaxy Vol. 3",
+                        "genreIds": [
+                            28,
+                            12,
+                            878
+                        ]
+                    }],
+                    "dateCreated": "2025-11-29T13:52:21.814785",
+                    "name": "Second Watchlist",
+                    "id": "e65ed167-39fe-4530-baf9-ae0860d8b146"
+                }
+            ],
             "username": "altest"
         },
-        "ykk": {
-            "password": "ykk101",
+        "asdf": {
+            "password": "asdf",
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-29T17:32:31.100330200",
-                "name": "ykk's Watch List",
-                "id": "03a50272-1eef-467d-b914-c05f57dce65e"
+                "dateCreated": "2025-11-29T14:36:15.856245300",
+                "name": "asdf's Watch List",
+                "id": "a6e0d2ca-2c64-47e3-97b3-1f616ca60b81"
             }],
-            "username": "ykk"
+            "username": "asdf"
+        },
+        "dummy-user": {
+            "password": "password",
+            "reviews": {},
+            "watchlists": [{
+                "movies": [{
+                    "posterUrl": "poster-url",
+                    "plot": "A test movie plot happens",
+                    "releaseDate": "2025-01-01",
+                    "popularity": 0,
+                    "rating": 7.5,
+                    "id": "m1",
+                    "title": "Test Movie",
+                    "genreIds": [
+                        1,
+                        2
+                    ]
+                }],
+                "dateCreated": "2025-11-29T14:36:31.296143500",
+                "name": "dummy-user's Watch List",
+                "id": "4edf0488-f9ba-4de7-88b2-e9f79f1eb230"
+            }],
+            "username": "dummy-user"
+        },
+        "oliver": {
+            "password": "123",
+            "reviews": {},
+            "watchlists": [{
+                "movies": [],
+                "dateCreated": "2025-11-29T14:36:08.192311700",
+                "name": "oliver's Watch List",
+                "id": "c01444e1-7104-419f-a4d8-df6d9f824791"
+            }],
+            "username": "oliver"
         }
     }
 }
