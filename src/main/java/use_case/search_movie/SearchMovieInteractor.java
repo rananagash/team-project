@@ -28,45 +28,50 @@ public class SearchMovieInteractor implements SearchMovieInputBoundary {
             presenter.prepareFailView("Search query cannot be empty.");
             return;
         }
+        if (query.length() < 2) {
+            presenter.prepareFailView("Search query must be at least 2 characters long.");
+            return;
+        }
 
-        /*
-         * TODO(Chester Zhao): Extend search strategy with TMDb pagination, scoring, and network failure handling.
-         */
+        if (query.matches("[^a-zA-Z0-9]+")) {
+            presenter.prepareFailView("Please enter a meaningful movie title.");
+            return;
+        }
+
         int requestedPage = requestModel.getPage() <= 0 ? 1 : requestModel.getPage();
 
         try {
-            // Gateway: get assigned page from TMDB
-            PagedMovieResult pagedResult =
-                    movieGateway.searchByTitle(query, requestedPage);
+            PagedMovieResult pagedResult = movieGateway.searchByTitle(query, requestedPage);
 
-            // scoring
-            List<Movie> scoredAndSorted =
-                    scoreAndSortMovies(pagedResult.getMovies(), query);
+            if (pagedResult.getMovies().isEmpty()) {
+                presenter.prepareFailView("No movies found for: \"" + query + "\". Please try a different search term.");
+                return;
+            }
 
-            // Pagination
-            SearchMovieResponseModel responseModel =
-                    new SearchMovieResponseModel(
-                            query,
-                            scoredAndSorted,
-                            pagedResult.getPage(),
-                            pagedResult.getTotalPages()
-                    );
+            List<Movie> scoredAndSorted = scoreAndSortMovies(pagedResult.getMovies(), query);
+
+            SearchMovieResponseModel responseModel = new SearchMovieResponseModel(
+                    query,
+                    scoredAndSorted,
+                    pagedResult.getPage(),
+                    pagedResult.getTotalPages()
+            );
 
             presenter.prepareSuccessView(responseModel);
 
         } catch (MovieDataAccessException e) {
-            // 4. server errorS
+            String errorMessage;
             switch (e.getType()) {
-                case NETWORK -> presenter.prepareFailView(
-                        "Network error while searching movies. Please check your connection and try again."
-                );
-                case TMDB_ERROR -> presenter.prepareFailView(
-                        "The movie service is currently unavailable. Please try again later."
-                );
-                default -> presenter.prepareFailView(
-                        "Unexpected error while searching movies."
-                );
+                case NETWORK:
+                    errorMessage = "Network error while searching. Please check your internet connection.";
+                    break;
+                case TMDB_ERROR:
+                    errorMessage = "Movie service is temporarily unavailable. Please try again later.";
+                    break;
+                default:
+                    errorMessage = "Search failed due to an unexpected error.";
             }
+            presenter.prepareFailView(errorMessage);
         }
     }
 

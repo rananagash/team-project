@@ -18,6 +18,8 @@ import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.review_movie.ReviewMovieController;
 import interface_adapter.review_movie.ReviewMoviePresenter;
 import interface_adapter.review_movie.ReviewMovieViewModel;
+import interface_adapter.search_movie.SearchMovieController;
+import interface_adapter.search_movie.SearchMoviePresenter;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
@@ -32,6 +34,9 @@ import use_case.login.LoginInputBoundary;
 import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutOutputBoundary;
+import use_case.search_movie.SearchMovieInputBoundary;
+import use_case.search_movie.SearchMovieInteractor;
+import use_case.search_movie.SearchMovieOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
@@ -173,7 +178,23 @@ public class AppBuilder {
     }
 
     public AppBuilder addSearchMoviesUseCase() {
-        //TODO:Chester
+        // 赵
+        final SearchMovieOutputBoundary searchOutputBoundary =
+                new SearchMoviePresenter(loggedInViewModel);
+
+        // 赵
+        final TMDbMovieDataAccessObject movieGateway = new TMDbMovieDataAccessObject();
+
+        // 赵
+        final SearchMovieInputBoundary searchInteractor =
+                new SearchMovieInteractor(movieGateway, searchOutputBoundary);
+
+        // 赵
+        final SearchMovieController searchController = new SearchMovieController(searchInteractor);
+
+        // 赵
+        loggedInView.setController(searchController);
+
         return this;
     }
 
