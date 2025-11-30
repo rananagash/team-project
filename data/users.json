@@ -83,9 +83,9 @@
                             ]
                         }
                     ],
-                    "dateCreated": "2025-11-30T13:33:33.914410400",
+                    "dateCreated": "2025-11-30T14:13:47.626074300",
                     "name": "altest's Watch List",
-                    "id": "cafd73dd-365e-42f9-868b-c3002414ac45"
+                    "id": "d9eea579-34ee-4ca7-a107-f89554e1b32a"
                 },
                 {
                     "movies": [{
@@ -102,40 +102,114 @@
                             878
                         ]
                     }],
-                    "dateCreated": "2025-11-30T13:33:33.914410400",
+                    "dateCreated": "2025-11-30T14:13:47.626074300",
                     "name": "Second Watchlist",
-                    "id": "deb6a8cb-3b3a-4f4f-b172-9a884d125b61"
+                    "id": "1f283cc1-19bd-41c8-ae40-2757378c38bc"
                 }
             ],
             "username": "altest"
         },
         "asdf": {
             "password": "asdf",
-            "reviews": {"972cd232-eba1-4841-adf4-aa77443e2f1c": {
-                "createdAt": "2025-11-30T13:34:15.351833500",
-                "movie": {
-                    "posterUrl": "https://image.tmdb.org/t/p/w500/yFSIUVTCvgYrpalUktulvk3Gi5Y.jpg",
-                    "plot": "After the devastating events of Avengers: Infinity War, the universe is in ruins due to the efforts of the Mad Titan, Thanos. With the help of remaining allies, the Avengers must assemble once more in order to undo Thanos' actions and restore order to the universe once and for all, no matter what consequences may be in store.",
-                    "releaseDate": "2019-04-24",
-                    "popularity": 0,
-                    "rating": 8.238,
-                    "id": "299534",
-                    "title": "Avengers: Endgame",
-                    "genreIds": [
-                        12,
-                        878,
-                        28
-                    ]
+            "reviews": {
+                "972cd232-eba1-4841-adf4-aa77443e2f1c": {
+                    "createdAt": "2025-11-30T13:34:15.351833500",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/yFSIUVTCvgYrpalUktulvk3Gi5Y.jpg",
+                        "plot": "After the devastating events of Avengers: Infinity War, the universe is in ruins due to the efforts of the Mad Titan, Thanos. With the help of remaining allies, the Avengers must assemble once more in order to undo Thanos' actions and restore order to the universe once and for all, no matter what consequences may be in store.",
+                        "releaseDate": "2019-04-24",
+                        "popularity": 0,
+                        "rating": 8.238,
+                        "id": "299534",
+                        "title": "Avengers: Endgame",
+                        "genreIds": [
+                            12,
+                            878,
+                            28
+                        ]
+                    },
+                    "rating": 5,
+                    "comment": "Hello",
+                    "id": "972cd232-eba1-4841-adf4-aa77443e2f1c"
                 },
-                "rating": 5,
-                "comment": "Hello",
-                "id": "972cd232-eba1-4841-adf4-aa77443e2f1c"
-            }},
+                "72ccabdf-c68e-4f6e-b2f3-f0f614cd50b8": {
+                    "createdAt": "2025-11-30T13:41:03.121909900",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/60bTx5z9zL1AqCjZ0gmWoRMJ6Bb.jpg",
+                        "plot": "Gene, a multi-expressional emoji, sets out on a journey to become a normal emoji.",
+                        "releaseDate": "2017-07-23",
+                        "popularity": 0,
+                        "rating": 5.417,
+                        "id": "378236",
+                        "title": "The Emoji Movie",
+                        "genreIds": [
+                            16,
+                            10751,
+                            35
+                        ]
+                    },
+                    "rating": 1,
+                    "comment": "",
+                    "id": "72ccabdf-c68e-4f6e-b2f3-f0f614cd50b8"
+                },
+                "8ef7afa3-c710-430a-97bd-0236c84fe093": {
+                    "createdAt": "2025-11-30T14:00:19.276152900",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/r8RiuKTIYIJBjczBVsfeP5C00CJ.jpg",
+                        "plot": "In 16th century Japan, peasants Genjuro and Tobei sell their earthenware pots to a group of soldiers in a nearby village, in defiance of a local sage's warning against seeking to profit from warfare. Genjuro's pursuit of both riches and the mysterious Lady Wakasa, as well as Tobei's desire to become a samurai, run the risk of destroying both themselves and their wives, Miyagi and Ohama.",
+                        "releaseDate": "1953-03-26",
+                        "popularity": 0,
+                        "rating": 8,
+                        "id": "14696",
+                        "title": "Ugetsu",
+                        "genreIds": [
+                            14,
+                            18,
+                            9648
+                        ]
+                    },
+                    "rating": 2,
+                    "comment": "asdf",
+                    "id": "8ef7afa3-c710-430a-97bd-0236c84fe093"
+                },
+                "58adaf60-f55e-4b76-b23c-deef66055853": {
+                    "createdAt": "2025-11-30T14:14:09.729862100",
+                    "movie": {
+                        "posterUrl": "",
+                        "plot": "Three teenagers, with completely different lives, meet at a party.",
+                        "releaseDate": "2017-05-06",
+                        "popularity": 0,
+                        "rating": 6,
+                        "id": "496299",
+                        "title": "Se",
+                        "genreIds": [18]
+                    },
+                    "rating": 3,
+                    "comment": "rating",
+                    "id": "58adaf60-f55e-4b76-b23c-deef66055853"
+                },
+                "acd5d9ec-777b-4709-992d-c7c9484edd3d": {
+                    "createdAt": "2025-11-30T14:10:46.552624600",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/70xj3Gy7clXb0jtNpdCb8hvTcKX.jpg",
+                        "plot": "",
+                        "releaseDate": "",
+                        "popularity": 0,
+                        "rating": 8,
+                        "id": "1111724",
+                        "title": "Ja",
+                        "genreIds": []
+                    },
+                    "rating": 2,
+                    "comment": "asdf",
+                    "id": "acd5d9ec-777b-4709-992d-c7c9484edd3d"
+                }
+            },
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T13:33:33.914410400",
+                "dateCreated": "2025-11-30T14:13:47.626074300",
                 "name": "asdf's Watch List",
-                "id": "fd85caef-4772-42cd-8e3e-4f62670dc79c"
+                "id": "123c1459-52d6-4480-879b-a428e69e3169"
             }],
             "username": "asdf"
         },
@@ -156,9 +230,9 @@
                         2
                     ]
                 }],
-                "dateCreated": "2025-11-30T13:33:33.917928800",
+                "dateCreated": "2025-11-30T14:13:47.635165400",
                 "name": "dummy-user's Watch List",
-                "id": "76aa509b-ccf7-450f-9327-33aac9929742"
+                "id": "40318ab8-46ca-4b64-b814-fcc8a06df6eb"
             }],
             "username": "dummy-user"
         },
@@ -167,9 +241,9 @@
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T13:33:33.917928800",
+                "dateCreated": "2025-11-30T14:13:47.635165400",
                 "name": "oliver's Watch List",
-                "id": "2391a5d4-184d-4c70-ba34-7e6b32d0b13a"
+                "id": "18938cf3-e6bb-40bb-bf5e-2e405d0987ba"
             }],
             "username": "oliver"
         },
@@ -178,9 +252,9 @@
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T13:33:33.917928800",
+                "dateCreated": "2025-11-30T14:13:47.635165400",
                 "name": "romy's Watch List",
-                "id": "cbdbb529-94a4-43c1-9cd8-2b6cdb55ad91"
+                "id": "b238e589-7c52-4b84-ae24-939aebdc06cd"
             }],
             "username": "romy"
         }

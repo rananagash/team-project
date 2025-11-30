@@ -8,7 +8,7 @@ public class Review {
     private final String reviewId;
     private final User user;
     private final Movie movie;
-    private final int rating; // 1-5 stars?
+    private final int rating;
     private final String comment;
     private final LocalDateTime createdAt;
 

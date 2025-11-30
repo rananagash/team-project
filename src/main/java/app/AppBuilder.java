@@ -438,7 +438,6 @@ public class AppBuilder {
      * @return this builder for chaining
      */
     public AppBuilder addAddReviewPopup() {
-        // TODO: Oliver check this implementation
         reviewMovieViewModel = new ReviewMovieViewModel();
         final ReviewMoviePresenter presenter = new ReviewMoviePresenter(reviewMovieViewModel);
         final TMDbMovieDataAccessObject movieGateway = new TMDbMovieDataAccessObject();

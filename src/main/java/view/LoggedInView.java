@@ -543,14 +543,14 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         infoPanel.add(detailsLabel);
 
         // 2 buttons
-        JPanel buttonPanel = new JPanel(new GridLayout(2, 1, 0, 5));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
         buttonPanel.setOpaque(false);
-        buttonPanel.setPreferredSize(new Dimension(150, 80));
+        buttonPanel.setPreferredSize(new Dimension(260, 40));
 
         // list
         JButton addToWatchlistBtn = new JButton("Add to Watchlist");
         addToWatchlistBtn.setFont(new Font("Helvetica", Font.BOLD, 12));
-        addToWatchlistBtn.setBackground(new Color(37, 99, 235));
+           addToWatchlistBtn.setBackground(new Color(37, 99, 235));
         addToWatchlistBtn.setForeground(Color.BLACK);
         addToWatchlistBtn.setFocusPainted(false);
 
@@ -564,7 +564,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         JButton reviewButton = new JButton("Review");
         reviewButton.setFont(new Font("Helvetica", Font.BOLD, 12));
         reviewButton.setBackground(new Color(59, 130, 246)); // same blue
-        reviewButton.setForeground(Color.WHITE);
+        reviewButton.setForeground(Color.BLACK);
         reviewButton.setFocusPainted(false);
 
         buttonPanel.add(addToWatchlistBtn);
