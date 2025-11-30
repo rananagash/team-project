@@ -1,15 +1,24 @@
 package app;
 
-import data_access.TMDbMovieDataAccessObject;
-import entity.Movie;
+import javax.swing.JFrame;
 
-import javax.swing.*;
-import java.util.Optional;
-
+/**
+ * Application entry point for the MovieNight application.
+ *
+ * <p>This class initializes all views, use cases, and controllers
+ * through {@link AppBuilder}, constructs the application window,
+ * and displays the UI to the user.</p>
+ */
 public class Main {
+
+    /**
+     * Launches the MovieNight application.
+     *
+     * @param args command-line arguments (unused)
+     */
     public static void main(String[] args) {
-        AppBuilder appBuilder = new AppBuilder();
-        JFrame application = appBuilder
+        final AppBuilder appBuilder = new AppBuilder();
+        final JFrame application = appBuilder
                 .addLoginView()
                 .addSignupView()
                 .addLoggedInView()
@@ -31,23 +40,5 @@ public class Main {
         application.pack();
         application.setLocationRelativeTo(null);
         application.setVisible(true);
-
-        // This is just testing out the data access object.
-        // the id of Avengers Endgame is 299534
-        // it prints out
-        TMDbMovieDataAccessObject dao = new TMDbMovieDataAccessObject();
-        Optional<Movie> result = dao.findById("299534"); // Avengers Endgame
-
-        if (result.isPresent()) {
-            Movie m = result.get();
-            System.out.println("Movie fetched successfully:");
-            System.out.println("ID: " + m.getMovieId());
-            System.out.println("Title: " + m.getTitle());
-            System.out.println("Plot: " + m.getPlot());
-            System.out.println("Genres: " + m.getGenreIds());
-            System.out.println("Rating: " + m.getRating());
-        } else {
-            System.out.println("Movie not found or error occurred.");
-        }
     }
 }

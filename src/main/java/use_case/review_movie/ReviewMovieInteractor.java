@@ -50,6 +50,7 @@ public class ReviewMovieInteractor implements ReviewMovieInputBoundary {
                 review.getReviewId(),
                 user.getUserName(),
                 movie.getMovieId(),
+                movie.getTitle(),
                 review.getRating(),
                 review.getComment()));
     }

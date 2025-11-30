@@ -13,9 +13,12 @@ public class ReviewMoviePresenter implements ReviewMovieOutputBoundary {
 
     @Override
     public void prepareSuccessView(ReviewMovieResponseModel responseModel) {
-        String msg = "Review added for movie " + responseModel.getMovieId() +
-                " by user " + responseModel.getUserName() +
-                " with rating " + responseModel.getRating();
+        String msg = "Review added for movie "
+                + responseModel.getMovieName()
+                + " by "
+                + responseModel.getUserName() +
+                " with rating "
+                + responseModel.getRating();
 
         viewModel.setMessage(msg);
         viewModel.firePropertyChange();

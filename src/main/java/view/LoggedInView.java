@@ -19,6 +19,8 @@ import interface_adapter.view_watchlists.ViewWatchListsController;
 import interface_adapter.filter_movies.FilterMoviesController;
 import interface_adapter.filter_movies.FilterMoviesViewModel;
 import use_case.record_watchhistory.RecordWatchHistoryInteractor;
+import interface_adapter.review_movie.ReviewMovieController;
+import interface_adapter.review_movie.ReviewMovieViewModel;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -53,6 +55,8 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private RecordWatchHistoryController recordWatchHistoryController;
     private ViewWatchListsController viewWatchListsController;
     private FilterMoviesController filterMoviesController;
+
+
 
     // ViewModels
     private interface_adapter.review_movie.ReviewMovieViewModel reviewMovieViewModel;
@@ -698,14 +702,14 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         infoPanel.add(detailsLabel);
 
         // 2 buttons
-        JPanel buttonPanel = new JPanel(new GridLayout(2, 1, 0, 5));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
         buttonPanel.setOpaque(false);
-        buttonPanel.setPreferredSize(new Dimension(150, 80));
+        buttonPanel.setPreferredSize(new Dimension(260, 40));
 
         // list
         JButton addToWatchlistBtn = new JButton("Add to Watchlist");
         addToWatchlistBtn.setFont(new Font("Helvetica", Font.BOLD, 12));
-        addToWatchlistBtn.setBackground(new Color(37, 99, 235));
+           addToWatchlistBtn.setBackground(new Color(37, 99, 235));
         addToWatchlistBtn.setForeground(Color.BLACK);
         addToWatchlistBtn.setFocusPainted(false);
 
@@ -715,6 +719,12 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         addToHistoryBtn.setBackground(new Color(147, 51, 234));
         addToHistoryBtn.setForeground(Color.BLACK);
         addToHistoryBtn.setFocusPainted(false);
+
+        JButton reviewButton = new JButton("Review");
+        reviewButton.setFont(new Font("Helvetica", Font.BOLD, 12));
+        reviewButton.setBackground(new Color(59, 130, 246)); // same blue
+        reviewButton.setForeground(Color.BLACK);
+        reviewButton.setFocusPainted(false);
 
         buttonPanel.add(addToWatchlistBtn);
         buttonPanel.add(addToHistoryBtn);
@@ -737,6 +747,45 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
                 System.out.println("Add to watchlist: " + movie.getTitle());
             }
         });
+
+        // review listener
+
+        reviewButton.addActionListener(e -> {
+
+            LoggedInState currentState = loggedInViewModel.getState();
+            if (currentState == null) return;
+
+            String userId = currentState.getUsername();
+            String movieId = movie.getMovieId() + "";
+            String movieTitle = movie.getTitle();
+
+            // Check if user already reviewed the movie
+            if (reviewMovieViewModel.getExistingReview(userId, movieId) != null) {
+                int choice = JOptionPane.showConfirmDialog(
+                        null,
+                        "You already reviewed this. Edit review?",
+                        "Review exists",
+                        JOptionPane.YES_NO_OPTION
+                );
+
+                if (choice != JOptionPane.YES_OPTION) {
+                    return;
+                }
+            }
+
+            AddReviewPopup popup = new AddReviewPopup(
+                    (JFrame) SwingUtilities.getWindowAncestor(this),
+                    reviewMovieController,
+                    reviewMovieViewModel,
+                    userId,
+                    movieId,
+                    movieTitle
+            );
+            popup.setVisible(true);
+        });
+
+        buttonPanel.add(reviewButton);
+
 
         addToHistoryBtn.addActionListener(e -> {
             if (recordWatchHistoryController != null) {
