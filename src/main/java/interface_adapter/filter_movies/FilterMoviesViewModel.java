@@ -2,11 +2,10 @@ package interface_adapter.filter_movies;
 
 import entity.Movie;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * View model for the Filter Movies use case.
@@ -101,10 +100,8 @@ public class FilterMoviesViewModel {
      * Clears the current error message and resets the error flag.
      */
     public void clearError() {
-        String oldValue = this.errorMessage;
         this.errorMessage = null;
         this.hasError = false;
-        support.firePropertyChange("errorMessage", oldValue, this.errorMessage);
     }
 
     /**
@@ -117,10 +114,20 @@ public class FilterMoviesViewModel {
     }
 
     /**
-     * Adds a PropertyChangeListener to this ViewModel.
-     * @param listener The PropertyChangeListener to be added
+     * Adds a PropertyChangeListener to this view model.
+     *
+     * @param listener the listener to add
      */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         support.addPropertyChangeListener(listener);
+    }
+
+    /**
+     * Removes a PropertyChangeListener from this view model.
+     *
+     * @param listener the listener to remove
+     */
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        support.removePropertyChangeListener(listener);
     }
 }

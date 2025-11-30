@@ -26,6 +26,9 @@ import interface_adapter.signup.SignupViewModel;
 import interface_adapter.view_watchlists.ViewWatchListsController;
 import interface_adapter.view_watchlists.ViewWatchListsPresenter;
 import interface_adapter.view_watchlists.ViewWatchListsViewModel;
+import interface_adapter.filter_movies.FilterMoviesController;
+import interface_adapter.filter_movies.FilterMoviesPresenter;
+import interface_adapter.filter_movies.FilterMoviesViewModel;
 import use_case.add_to_watchlist.AddWatchListInputBoundary;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordOutputBoundary;
@@ -54,6 +57,7 @@ import use_case.logout.LogoutInteractor;
 import use_case.review_movie.ReviewMovieInteractor;
 import use_case.search_movie.SearchMovieInteractor;
 import use_case.view_profile.ViewProfileInteractor;
+import use_case.filter_movies.FilterMoviesInteractor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -218,7 +222,15 @@ public class AppBuilder {
     }
 
     public AppBuilder addFilterMoviesUseCase() {
-        //TODO: Inba
+        FilterMoviesViewModel filterMoviesViewModel = new FilterMoviesViewModel();
+        FilterMoviesPresenter filterMoviesPresenter = new FilterMoviesPresenter(filterMoviesViewModel);
+        TMDbMovieDataAccessObject movieGateway = new TMDbMovieDataAccessObject();
+        FilterMoviesInteractor filterMoviesInteractor = new FilterMoviesInteractor(movieGateway, filterMoviesPresenter);
+        FilterMoviesController filterMoviesController = new FilterMoviesController(filterMoviesInteractor);
+
+        loggedInView.setFilterMoviesController(filterMoviesController);
+        loggedInView.setFilterMoviesViewModel(filterMoviesViewModel);
+
         return this;
     }
 
@@ -255,8 +267,8 @@ public class AppBuilder {
         application.add(cardPanel);
 
         // initial size of app
-        application.setPreferredSize(new Dimension(900, 600));
-        application.setMinimumSize(new Dimension(900, 600));
+        application.setPreferredSize(new Dimension(1100, 600));
+        application.setMinimumSize(new Dimension(1100, 600));
 
         viewManagerModel.setState(signupView.getViewName());
         viewManagerModel.firePropertyChange();

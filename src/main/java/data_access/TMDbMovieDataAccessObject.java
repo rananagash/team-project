@@ -79,6 +79,7 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
     }
 
     // the genre lists are weird in tmdb, so we need a loop
+    // This method handles the "genres":[{...}] format (single movie endpoint)
     private List<Integer> extractGenreIds(String json) {
         List<Integer> ids = new ArrayList<>();
 
@@ -93,6 +94,35 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
             String num = parts[i].split(",")[0].trim();
             try {
                 ids.add(Integer.parseInt(num));
+            } catch (Exception ignored) {
+            }
+        }
+
+        return ids;
+    }
+
+    // Extract genre_ids from search/discover results (format: "genre_ids":[28,12,878])
+    private List<Integer> extractGenreIdsFromResult(String json) {
+        List<Integer> ids = new ArrayList<>();
+
+        int start = json.indexOf("\"genre_ids\":[");
+        if (start == -1) {
+            // Fallback to the genres format if genre_ids is not found
+            return extractGenreIds(json);
+        }
+
+        start += "\"genre_ids\":[".length();
+        int end = json.indexOf("]", start);
+        if (end == -1) return ids;
+
+        String genreIdsStr = json.substring(start, end).trim();
+        if (genreIdsStr.isEmpty()) return ids;
+
+        // Split by comma and parse each ID
+        String[] parts = genreIdsStr.split(",");
+        for (String part : parts) {
+            try {
+                ids.add(Integer.parseInt(part.trim()));
             } catch (Exception ignored) {
             }
         }
@@ -140,8 +170,8 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
             }
         }
 
-        // Extract genres (list of ints)
-        List<Integer> genreIds = extractGenreIds(json);
+        // Extract genres (list of ints) - use genre_ids format for search results
+        List<Integer> genreIds = extractGenreIdsFromResult(json);
 
         String posterUrl;
         if (posterPath == null) {
@@ -258,8 +288,8 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
             } catch (Exception ignored) {}
         }
 
-        // Extract genres (list of ints)
-        List<Integer> genreIds = extractGenreIds(json);
+        // Extract genres (list of ints) - use genre_ids format for search results
+        List<Integer> genreIds = extractGenreIdsFromResult(json);
 
         String posterUrl;
         if (posterPath == null || posterPath.equals("null")) {
@@ -282,48 +312,70 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
         return new Movie(id, title, plot, genreIds, releaseDate, rating, popularity, posterUrl);
     }
 
+    // Maximum number of movies to parse from API response to prevent lag
+    private static final int MAX_MOVIES_TO_PARSE = 10;
+
     // Extract all movie objects from the results array in discover/search response
     private List<Movie> parseMoviesFromResults(String json) {
+        return parseMoviesFromResults(json, MAX_MOVIES_TO_PARSE);
+    }
+
+    // Extract movie objects from the results array, limiting to maxMovies
+    // Optimized to stop parsing as soon as we have enough movies
+    // This avoids processing the full JSON response when we only need a few movies
+    private List<Movie> parseMoviesFromResults(String json, int maxMovies) {
         List<Movie> movies = new ArrayList<>();
+        if (maxMovies <= 0) return movies;
 
         // Find the results array
         int resultsStart = json.indexOf("\"results\":[");
         if (resultsStart == -1) return movies;
 
         resultsStart += "\"results\":[".length();
-        int resultsEnd = json.lastIndexOf("]");
-        if (resultsEnd == -1 || resultsEnd <= resultsStart) return movies;
 
-        String resultsArray = json.substring(resultsStart, resultsEnd);
+        // Parse directly from JSON without extracting the entire results array
+        // This is more memory-efficient when we only need a few movies
+        int currentPos = resultsStart;
+        int moviesParsed = 0;
 
-        // Split by movie objects (each starts with {)
-        // We'll find each complete movie object by matching braces
-        int currentPos = 0;
-        while (currentPos < resultsArray.length()) {
-            int movieStart = resultsArray.indexOf("{", currentPos);
-            if (movieStart == -1) break;
+        while (currentPos < json.length() && moviesParsed < maxMovies) {
+            // Find the start of the next movie object
+            int movieStart = json.indexOf("{", currentPos);
+            if (movieStart == -1 || movieStart >= json.length()) break;
 
-            // Find the matching closing brace
+            // Check if we've hit the end of the results array
+            int nextBracket = json.indexOf("]", movieStart);
+            if (nextBracket != -1 && nextBracket < movieStart) break;
+
+            // Find the matching closing brace for this movie object
             int braceCount = 0;
             int movieEnd = movieStart;
-            for (int i = movieStart; i < resultsArray.length(); i++) {
-                char c = resultsArray.charAt(i);
+            boolean foundEnd = false;
+
+            for (int i = movieStart; i < json.length(); i++) {
+                char c = json.charAt(i);
                 if (c == '{') braceCount++;
                 if (c == '}') {
                     braceCount--;
                     if (braceCount == 0) {
                         movieEnd = i + 1;
+                        foundEnd = true;
                         break;
                     }
                 }
             }
 
-            if (movieEnd > movieStart) {
-                String movieJson = resultsArray.substring(movieStart, movieEnd);
+            if (foundEnd && movieEnd > movieStart) {
+                String movieJson = json.substring(movieStart, movieEnd);
                 try {
                     Movie movie = parseMovieFromResult(movieJson);
                     if (movie.getMovieId() != null && movie.getTitle() != null) {
                         movies.add(movie);
+                        moviesParsed++;
+                        // Stop immediately once we have enough movies
+                        if (moviesParsed >= maxMovies) {
+                            break;
+                        }
                     }
                 } catch (Exception e) {
                     // Skip invalid movie entries

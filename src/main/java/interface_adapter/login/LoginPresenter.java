@@ -45,11 +45,11 @@ public class LoginPresenter implements LoginOutputBoundary {
         this.viewManagerModel.firePropertyChange();
 
         // Load popular movies after switching to logged in view
-        // Use a slight delay to ensure the view is fully initialized
+        // Load asynchronously in the background to keep UI responsive
         if (loggedInView != null) {
+            // Use invokeLater to ensure view is ready, but don't delay the actual API call
+            // The API call itself runs in a background thread
             javax.swing.SwingUtilities.invokeLater(() -> {
-                // Try loading immediately, but if gateway isn't set yet,
-                // it will be loaded when setMovieGateway is called
                 loggedInView.loadPopularMovies();
             });
         }

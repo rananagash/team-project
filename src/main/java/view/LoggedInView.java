@@ -21,6 +21,8 @@ import use_case.common.PagedMovieResult;
 import use_case.common.MovieDataAccessException;
 import interface_adapter.MovieViewData;
 import view.components.MovieCard;
+import view.FilterMoviesPopup;
+import common.GenreUtils;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -32,6 +34,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 import java.awt.Color;
 
 /**
@@ -66,6 +69,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private JButton viewHistoryBtn;
     private JButton profileBtn;
     private JButton reviewBtn;
+    private JButton filterMoviesBtn;
 
     // Middle Panel (testing only)
     //TODO: remove before final version
@@ -95,6 +99,9 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private int currentPage = 1;
     private int totalPages = 1;
     private String lastQuery = "";
+
+    // Store current movies being displayed (for filtering)
+    private List<Movie> currentMovies = new ArrayList<>();
 
     // Movie gateway for loading popular movies
     private MovieGateway movieGateway;
@@ -182,6 +189,23 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
             }
         });
         topPanel.add(reviewBtn);
+
+        topPanel.add(new JSeparator(SwingConstants.VERTICAL));
+
+        filterMoviesBtn = new JButton("Filter Movies");
+        filterMoviesBtn.setVisible(true);
+        filterMoviesBtn.addActionListener(e -> {
+            if (currentMovies.isEmpty()) {
+                showError("No movies to filter. Please search for movies first.");
+                return;
+            }
+            JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+            FilterMoviesPopup popup = new FilterMoviesPopup(parent, this);
+            popup.setVisible(true);
+        });
+        topPanel.add(filterMoviesBtn);
+        topPanel.revalidate();
+        topPanel.repaint();
 
         // Middle panel buttons for testing only
         //TODO: remove before final version
@@ -321,23 +345,81 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         JPanel paginationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         prevPageButton = new JButton("Prev");
         prevPageButton.addActionListener(e -> {
-            if (searchController == null || lastQuery.isEmpty()) return;
+            if (currentPage <= 1) return;
 
-            if (currentPage > 1) {
-                currentPage--;
-                setStatus("Loading page " + currentPage + "...");
+            currentPage--;
+            setStatus("Loading page " + currentPage + "...");
+
+            // Handle pagination for search results
+            if (searchController != null && !lastQuery.isEmpty()) {
                 searchController.search(lastQuery, currentPage);
+            }
+            // Handle pagination for popular movies
+            else if (movieGateway != null) {
+                new Thread(() -> {
+                    try {
+                        PagedMovieResult result = movieGateway.getPopularMovies(currentPage);
+                        List<Movie> movies = result.getMovies();
+
+                        if (movies == null || movies.isEmpty()) {
+                            SwingUtilities.invokeLater(() -> {
+                                showError("No movies found on page " + currentPage + ".");
+                                setStatus("No movies to display.");
+                            });
+                            return;
+                        }
+
+                        SwingUtilities.invokeLater(() -> {
+                            showResults(movies, result.getPage(), result.getTotalPages());
+                        });
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        SwingUtilities.invokeLater(() -> {
+                            showError("Error loading page " + currentPage + ": " + ex.getMessage());
+                            setStatus("Failed to load page.");
+                        });
+                    }
+                }).start();
             }
         });
 
         nextPageButton = new JButton("Next");
         nextPageButton.addActionListener(e -> {
-            if (searchController == null || lastQuery.isEmpty()) return;
+            if (currentPage >= totalPages) return;
 
-            if (currentPage < totalPages) {
-                currentPage++;
-                setStatus("Loading page " + currentPage + "...");
+            currentPage++;
+            setStatus("Loading page " + currentPage + "...");
+
+            // Handle pagination for search results
+            if (searchController != null && !lastQuery.isEmpty()) {
                 searchController.search(lastQuery, currentPage);
+            }
+            // Handle pagination for popular movies
+            else if (movieGateway != null) {
+                new Thread(() -> {
+                    try {
+                        PagedMovieResult result = movieGateway.getPopularMovies(currentPage);
+                        List<Movie> movies = result.getMovies();
+
+                        if (movies == null || movies.isEmpty()) {
+                            SwingUtilities.invokeLater(() -> {
+                                showError("No movies found on page " + currentPage + ".");
+                                setStatus("No movies to display.");
+                            });
+                            return;
+                        }
+
+                        SwingUtilities.invokeLater(() -> {
+                            showResults(movies, result.getPage(), result.getTotalPages());
+                        });
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        SwingUtilities.invokeLater(() -> {
+                            showError("Error loading page " + currentPage + ": " + ex.getMessage());
+                            setStatus("Failed to load page.");
+                        });
+                    }
+                }).start();
             }
         });
 
@@ -419,6 +501,9 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         }).start();
     }
 
+    // Maximum number of movies to display at once to prevent UI lag
+    private static final int MAX_MOVIES_TO_DISPLAY = 10;
+
     /**
      * Display search results with pagination using MovieCard components.
      */
@@ -426,11 +511,19 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         this.currentPage = currentPage;
         this.totalPages = Math.max(totalPages, 1);
 
+        // Store the current movies for filtering
+        this.currentMovies = new ArrayList<>(movies);
+
         // Clear previous results
         resultsPanel.removeAll();
 
+        // Limit the number of movies displayed to prevent UI lag
+        List<Movie> moviesToDisplay = movies.size() > MAX_MOVIES_TO_DISPLAY
+                ? movies.subList(0, MAX_MOVIES_TO_DISPLAY)
+                : movies;
+
         // Add MovieCard for each movie
-        for (Movie movie : movies) {
+        for (Movie movie : moviesToDisplay) {
             MovieViewData movieViewData = new MovieViewData(
                     movie.getMovieId(),
                     movie.getTitle(),
@@ -464,7 +557,11 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         });
 
         updatePaginationButtons();
-        setStatus("Found " + movies.size() + " results (page " + currentPage + ").");
+        if (movies.size() > MAX_MOVIES_TO_DISPLAY) {
+            setStatus("Showing " + MAX_MOVIES_TO_DISPLAY + " of " + movies.size() + " results (page " + currentPage + "). Use pagination to see more.");
+        } else {
+            setStatus("Found " + movies.size() + " results (page " + currentPage + ").");
+        }
     }
 
     /**
@@ -564,14 +661,98 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     public void setFilterMoviesViewModel(FilterMoviesViewModel viewModel) {
         this.filterMoviesViewModel = viewModel;
+        // Listen to view model changes to update the display when movies are filtered
+        if (viewModel != null) {
+            viewModel.addPropertyChangeListener(evt -> {
+                if (evt.getPropertyName().equals("filteredMovies") ||
+                        evt.getPropertyName().equals("errorMessage")) {
+                    updateFilteredMoviesDisplay();
+                }
+            });
+        }
+    }
+
+    /**
+     * Filters the currently displayed movies by the selected genre IDs.
+     *
+     * @param genreIds the list of genre IDs to filter by
+     */
+    public void filterCurrentMovies(List<Integer> genreIds) {
+        if (currentMovies.isEmpty()) {
+            showError("No movies to filter.");
+            return;
+        }
+
+        System.out.println("Filtering " + currentMovies.size() + " movies by genres: " + genreIds);
+
+        // Filter current movies by selected genres
+        List<Movie> filteredMovies = currentMovies.stream()
+                .filter(movie -> {
+                    List<Integer> movieGenres = movie.getGenreIds();
+                    if (movieGenres == null || movieGenres.isEmpty()) {
+                        System.out.println("Movie " + movie.getTitle() + " has no genres");
+                        return false;
+                    }
+                    // Check if movie has at least one of the selected genres
+                    boolean matches = movieGenres.stream().anyMatch(genreIds::contains);
+                    if (matches) {
+                        System.out.println("Movie " + movie.getTitle() + " matches with genres: " + movieGenres);
+                    }
+                    return matches;
+                })
+                .collect(Collectors.toList());
+
+        System.out.println("Filtered to " + filteredMovies.size() + " movies");
+
+        // Display filtered results
+        if (filteredMovies.isEmpty()) {
+            resultsPanel.removeAll();
+            resultsPanel.revalidate();
+            resultsPanel.repaint();
+            List<String> genreNames = GenreUtils.getGenreNames(genreIds);
+            String genreText = String.join(", ", genreNames);
+            setStatus("No movies found matching genres: " + genreText);
+        } else {
+            showResults(filteredMovies, 1, 1);
+            List<String> genreNames = GenreUtils.getGenreNames(genreIds);
+            String genreText = String.join(", ", genreNames);
+            setStatus("Showing " + filteredMovies.size() + " of " + currentMovies.size() + " movies filtered by: " + genreText);
+        }
+    }
+
+    /**
+     * Updates the display with filtered movies from the FilterMoviesViewModel.
+     */
+    private void updateFilteredMoviesDisplay() {
+        if (filterMoviesViewModel == null) {
+            return;
+        }
+
+        if (filterMoviesViewModel.hasError()) {
+            showError(filterMoviesViewModel.getErrorMessage());
+            return;
+        }
+
+        List<Movie> filteredMovies = filterMoviesViewModel.getFilteredMovies();
+        if (filteredMovies != null && !filteredMovies.isEmpty()) {
+            // Display filtered movies
+            showResults(filteredMovies, 1, 1);
+            List<String> genreNames = filterMoviesViewModel.getSelectedGenreNames();
+            String genreText = String.join(", ", genreNames);
+            setStatus("Showing " + filteredMovies.size() + " movies filtered by: " + genreText);
+        } else {
+            // No movies found
+            resultsPanel.removeAll();
+            resultsPanel.revalidate();
+            resultsPanel.repaint();
+            setStatus("No movies found for selected genres.");
+        }
     }
 
     public void setMovieGateway(MovieGateway movieGateway) {
         this.movieGateway = movieGateway;
-        // If we're already on the logged in view and no movies are displayed, load popular movies
-        if (movieGateway != null && resultsPanel != null && resultsPanel.getComponentCount() == 0) {
-            loadPopularMovies();
-        }
+        // Don't auto-load movies here - let it be triggered explicitly after login
+        // This prevents lag during app initialization
     }
 
     /**
@@ -588,9 +769,19 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
             return;
         }
 
-        setStatus("Loading popular movies...");
+        // Update status immediately on EDT to show loading state
+        SwingUtilities.invokeLater(() -> {
+            setStatus("Loading popular movies...");
+        });
+
+        // Run API call in background thread with a short delay
+        // This ensures the view transition is complete and UI is responsive
         new Thread(() -> {
             try {
+                // Small delay to let view transition complete smoothly
+                // This prevents perceived lag during login
+                Thread.sleep(200);
+
                 PagedMovieResult result = movieGateway.getPopularMovies(1);
                 List<Movie> movies = result.getMovies();
 
@@ -605,7 +796,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
                 SwingUtilities.invokeLater(() -> {
                     showResults(movies, result.getPage(), result.getTotalPages());
                     lastQuery = ""; // Clear last query since we're showing popular movies
-                    setStatus("Loaded " + movies.size() + " popular movies.");
+                    // Status message is already set by showResults(), no need to override it
                 });
             } catch (MovieDataAccessException e) {
                 e.printStackTrace(); // Print stack trace for debugging
@@ -620,6 +811,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
                     setStatus("Error loading movies.");
                 });
             }
-        }).start();
+        }, "MovieLoader").start();
     }
 }
