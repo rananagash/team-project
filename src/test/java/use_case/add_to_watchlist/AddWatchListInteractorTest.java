@@ -82,6 +82,11 @@ class AddWatchListInteractorTest {
             public List<Movie> filterByGenres(List<Integer> genreIds) {
                 return List.of();
             }
+
+            @Override
+            public PagedMovieResult getPopularMovies(int page) throws MovieDataAccessException {
+                return new PagedMovieResult(List.of(), page, 1);
+            }
         };
 
         // Input Model
@@ -179,6 +184,11 @@ class AddWatchListInteractorTest {
             public List<Movie> filterByGenres(List<Integer> genreIds) {
                 return List.of();
             }
+
+            @Override
+            public PagedMovieResult getPopularMovies(int page) throws MovieDataAccessException {
+                return new PagedMovieResult(List.of(), page, 1);
+            }
         };
 
         // Input
@@ -251,6 +261,11 @@ class AddWatchListInteractorTest {
             public List<Movie> filterByGenres(List<Integer> genreIds) {
                 return List.of();
             }
+
+            @Override
+            public PagedMovieResult getPopularMovies(int page) throws MovieDataAccessException {
+                return new PagedMovieResult(List.of(), page, 1);
+            }
         };
 
         AddWatchListRequestModel inputData = new AddWatchListRequestModel("ghost", "m1", "wl1");
@@ -288,6 +303,9 @@ class AddWatchListInteractorTest {
             @Override public List<Movie> searchByTitle(String q) { return List.of(); }
             @Override public PagedMovieResult searchByTitle(String q, int p) { return null; }
             @Override public List<Movie> filterByGenres(List<Integer> ids) { return List.of(); }
+            @Override public PagedMovieResult getPopularMovies(int page) throws MovieDataAccessException {
+                return new PagedMovieResult(List.of(), page, 1);
+            }
         };
 
         AddWatchListRequestModel request =
@@ -328,6 +346,9 @@ class AddWatchListInteractorTest {
             @Override public List<Movie> searchByTitle(String q) { return List.of(); }
             @Override public PagedMovieResult searchByTitle(String q, int p) { return null; }
             @Override public List<Movie> filterByGenres(List<Integer> ids) { return List.of(); }
+            @Override public PagedMovieResult getPopularMovies(int page) throws MovieDataAccessException {
+                return new PagedMovieResult(List.of(), page, 1);
+            }
         };
 
         AddWatchListRequestModel request =
