@@ -1,10 +1,6 @@
 package interface_adapter.add_to_watchlist;
 
-import entity.Movie;
-import entity.User;
-import entity.WatchList;
 import use_case.add_to_watchlist.AddWatchListInputBoundary;
-import use_case.add_to_watchlist.AddWatchListOutputBoundary;
 import use_case.add_to_watchlist.AddWatchListRequestModel;
 
 /**
@@ -33,12 +29,12 @@ public class AddWatchListController {
     /**
      * Requests to add the specified movie to the given user's watch list.
      *
-     * @param user the user who owns the watch list
-     * @param movie the movie to add
-     * @param watchList the target watch list
+     * @param username the user who owns the watch list
+     * @param movieId the movie to add
+     * @param watchListId the target watch list
      */
-    public void addMovieToWatchList(User user, Movie movie, WatchList watchList) {
-        final AddWatchListRequestModel requestModel = new AddWatchListRequestModel(user, movie, watchList);
+    public void addMovieToWatchList(String username, String movieId, String watchListId) {
+        final AddWatchListRequestModel requestModel = new AddWatchListRequestModel(username, movieId, watchListId);
         interactor.execute(requestModel);
     }
 

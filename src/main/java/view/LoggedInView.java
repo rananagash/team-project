@@ -3,6 +3,7 @@ package view;
 import entity.Movie;
 import entity.User;
 import interface_adapter.add_to_watchlist.AddWatchListController;
+import interface_adapter.add_to_watchlist.AddWatchListPresenter;
 import interface_adapter.logged_in.ChangePasswordController;
 import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.logged_in.LoggedInViewModel;
@@ -43,6 +44,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private interface_adapter.review_movie.ReviewMovieController reviewMovieController;
     private ViewProfileController viewProfileController;
     private AddWatchListController addWatchListController;
+    private AddWatchListPresenter addWatchListPresenter;
     private RecordWatchHistoryController recordWatchHistoryController;
     private ViewWatchListsController viewWatchListsController;
 
@@ -186,7 +188,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
             if (currentState == null) return;
 
             //Dummy user - real button should get current logged in user
-            User user = new User("dummy-user", "password");
+            User user = new User("TestUser", "pw");
 
             //Dummy movie
             Movie movie = new Movie("m1",
@@ -205,7 +207,8 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
                     parent,
                     user,
                     movie,
-                    addWatchListController
+                    addWatchListController,
+                    addWatchListPresenter
             );
         });
 
@@ -483,6 +486,10 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     public void setAddWatchListController(AddWatchListController controller) {
         this.addWatchListController = controller;
+    }
+
+    public void setAddWatchListPresenter(AddWatchListPresenter addWatchListPresenter) {
+        this.addWatchListPresenter = addWatchListPresenter;
     }
 
     public void setRecordWatchHistoryController(RecordWatchHistoryController controller) {

@@ -19,6 +19,7 @@ import entity.Movie;
 import entity.User;
 import entity.WatchList;
 import interface_adapter.add_to_watchlist.AddWatchListController;
+import interface_adapter.add_to_watchlist.AddWatchListPresenter;
 import interface_adapter.add_to_watchlist.AddWatchListView;
 
 /**
@@ -43,6 +44,7 @@ public class AddToWatchListPopup extends JDialog implements AddWatchListView {
     private final User user;
     private final Movie movie;
     private AddWatchListController controller;
+    private AddWatchListPresenter presenter;
 
     /**
      * Constructs the popup UI and displays it immediately.
@@ -51,17 +53,22 @@ public class AddToWatchListPopup extends JDialog implements AddWatchListView {
      * @param user the user who is adding the movie
      * @param movie the movie to be added
      * @param controller the controller handling the add operations
+     * @param presenter the presenter
      */
     public AddToWatchListPopup(JFrame parent,
                                User user,
                                Movie movie,
-                               AddWatchListController controller) {
+                               AddWatchListController controller,
+                               AddWatchListPresenter presenter) {
         super(parent, "Add to Watch List", true);
         this.user = user;
         this.movie = movie;
         this.controller = controller;
+        this.presenter = presenter;
 
-        controller.getPresenter().setView(this);
+        if (this.presenter != null) {
+            this.presenter.setView(this);
+        }
 
         initialState();
 
@@ -116,7 +123,7 @@ public class AddToWatchListPopup extends JDialog implements AddWatchListView {
         else {
             selected = (WatchList) dropdown.getSelectedItem();
         }
-        controller.addMovieToWatchList(user, movie, selected);
+        controller.addMovieToWatchList(user.getUserName(), movie.getMovieId(), selected.getWatchListId());
         // don't close popup; presenter will call showResult to update
     }
 
@@ -160,6 +167,5 @@ public class AddToWatchListPopup extends JDialog implements AddWatchListView {
      */
     public void setController(AddWatchListController controller) {
         this.controller = controller;
-        controller.getPresenter().setView(this);
     }
 }

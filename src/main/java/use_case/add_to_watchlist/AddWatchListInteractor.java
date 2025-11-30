@@ -1,9 +1,10 @@
 package use_case.add_to_watchlist;
 
-import data_access.CachedUserDataAccessObject;
 import entity.Movie;
 import entity.User;
 import entity.WatchList;
+import use_case.common.MovieGateway;
+import use_case.common.UserDataAccessInterface;
 
 /**
  * Interactor for the Add to Watch List use case.
@@ -20,17 +21,21 @@ import entity.WatchList;
 public class AddWatchListInteractor implements AddWatchListInputBoundary {
 
     private final AddWatchListOutputBoundary presenter;
-    private final CachedUserDataAccessObject userDataAccessObject;
+    private final UserDataAccessInterface userDataAccessObject;
+    private final MovieGateway movieDataAccessObject;
 
     /**
      * Constructs an interactor with a presenter that will translate the results.
      * @param presenter the output boundary used to display outcomes
      * @param userDataAccessObject persistence gateway used to save changes
+     * @param movieDataAccessObject the movie gateway
      */
     public AddWatchListInteractor(AddWatchListOutputBoundary presenter,
-                                  CachedUserDataAccessObject userDataAccessObject) {
+                                  UserDataAccessInterface userDataAccessObject,
+                                  MovieGateway movieDataAccessObject) {
         this.presenter = presenter;
         this.userDataAccessObject = userDataAccessObject;
+        this.movieDataAccessObject = movieDataAccessObject;
     }
 
     /**
@@ -48,17 +53,43 @@ public class AddWatchListInteractor implements AddWatchListInputBoundary {
      */
     @Override
     public void execute(AddWatchListRequestModel requestModel) {
-        final User user = requestModel.getUser();
-        final Movie movie = requestModel.getMovie();
-        final WatchList watchList = requestModel.getWatchList();
+        // Retrieve user
+        final String username = requestModel.getUsername();
+        final User user = userDataAccessObject.getUser(username);
+
+        if (user == null) {
+            presenter.prepareFailView("User not found: " + username);
+            return;
+        }
+
+        // Retrieve user's watchlist
+        final String watchListId = requestModel.getWatchListId();
+        final WatchList watchList = user.getWatchListById(watchListId);
+
+        if (watchList == null) {
+            presenter.prepareFailView("WatchList not found: " + watchListId);
+            return;
+        }
+
+        // Retrieve the movie
+        final String movieId = requestModel.getMovieId();
+        final Movie movie = movieDataAccessObject.findById(movieId).orElse(null);
+
+        if (movie == null) {
+            presenter.prepareFailView("Movie not found: " + movieId);
+            return;
+        }
+
+        // Attempt adding to list
+        final boolean added = watchList.addMovie(movie);
 
         final boolean success;
         final String message;
 
-        final boolean added = watchList.addMovie(movie);
-
         if (added) {
+            // Persist updated user
             userDataAccessObject.save(user);
+
             success = true;
             message = movie.getTitle() + " successfully added to " + watchList.getName() + "!";
         }
@@ -76,4 +107,3 @@ public class AddWatchListInteractor implements AddWatchListInputBoundary {
         }
     }
 }
-

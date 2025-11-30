@@ -35,6 +35,9 @@ import interface_adapter.signup.SignupViewModel;
 import interface_adapter.view_profile.ViewProfileController;
 import interface_adapter.view_profile.ViewProfilePresenter;
 import interface_adapter.view_profile.ViewProfileViewModel;
+import interface_adapter.view_profile.ViewProfileController;
+import interface_adapter.view_profile.ViewProfilePresenter;
+import interface_adapter.view_profile.ViewProfileViewModel;
 import interface_adapter.view_watchhistory.ViewWatchHistoryController;
 import interface_adapter.view_watchhistory.ViewWatchHistoryPresenter;
 import interface_adapter.view_watchlists.ViewWatchListsController;
@@ -356,21 +359,21 @@ public class AppBuilder {
         final JFrame tempParent = new JFrame();
         tempParent.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         viewWatchHistoryPopup = new ViewWatchHistoryPopup(tempParent);
-        
+
         // Create presenter with the view
         final ViewWatchHistoryOutputBoundary presenter = new ViewWatchHistoryPresenter(viewWatchHistoryPopup);
-        
+
         // Create interactor with user data access and presenter
         final ViewWatchHistoryInputBoundary interactor =
                 new ViewWatchHistoryInteractor(userDataAccessObject, presenter);
-        
+
         // Create controller with the interactor
         final ViewWatchHistoryController controller = new ViewWatchHistoryController(interactor);
-        
+
         // Connect controller to LoggedInView and ProfileView
         loggedInView.setViewWatchHistoryController(controller);
         profileView.setViewWatchHistoryController(controller);
-        
+
         return this;
     }
 
@@ -390,12 +393,22 @@ public class AppBuilder {
      * @return this builder for chaining
      */
     public AppBuilder addAddToWatchListUseCase() {
-        final AddWatchListPresenter addWatchListOutputBoundary = new AddWatchListPresenter(null);
-        final AddWatchListInputBoundary addWatchListInputBoundary =
-                new AddWatchListInteractor(addWatchListOutputBoundary, userDataAccessObject);
+        // Create presenter (no view yet)
+        final AddWatchListPresenter addWatchListPresenter = new AddWatchListPresenter();
+
+        // Create interactor
+        final AddWatchListInputBoundary addWatchListInputBoundary = new AddWatchListInteractor(
+                addWatchListPresenter,
+                userDataAccessObject,
+                movieDataAccessObject);
+
+        // Create controller
         final AddWatchListController addWatchListController =
-                new AddWatchListController(addWatchListInputBoundary, addWatchListOutputBoundary);
+                new AddWatchListController(addWatchListInputBoundary, addWatchListPresenter);
+
+        // Inject controller & presenter into LoggedInView
         loggedInView.setAddWatchListController(addWatchListController);
+        loggedInView.setAddWatchListPresenter(addWatchListPresenter);
         return this;
     }
 
@@ -412,23 +425,23 @@ public class AppBuilder {
         final JFrame tempParent = new JFrame();
         tempParent.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         recordWatchHistoryPopup = new RecordWatchHistoryPopup(tempParent);
-        
+
         // Create MovieGateway for fetching movie data
         final MovieGateway movieGateway = new TMDbMovieDataAccessObject();
-        
+
         // Create presenter with the view
         final RecordWatchHistoryOutputBoundary presenter = new RecordWatchHistoryPresenter(recordWatchHistoryPopup);
-        
+
         // Create interactor with user data access, movie gateway, and presenter
         final RecordWatchHistoryInputBoundary interactor = new RecordWatchHistoryInteractor(
                 userDataAccessObject, movieGateway, presenter);
-        
+
         // Create controller with the interactor
         final RecordWatchHistoryController controller = new RecordWatchHistoryController(interactor);
-        
+
         // Connect controller to LoggedInView
         loggedInView.setRecordWatchHistoryController(controller);
-        
+
         return this;
     }
 
