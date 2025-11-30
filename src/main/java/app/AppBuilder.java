@@ -35,9 +35,6 @@ import interface_adapter.signup.SignupViewModel;
 import interface_adapter.view_profile.ViewProfileController;
 import interface_adapter.view_profile.ViewProfilePresenter;
 import interface_adapter.view_profile.ViewProfileViewModel;
-import interface_adapter.view_profile.ViewProfileController;
-import interface_adapter.view_profile.ViewProfilePresenter;
-import interface_adapter.view_profile.ViewProfileViewModel;
 import interface_adapter.view_watchhistory.ViewWatchHistoryController;
 import interface_adapter.view_watchhistory.ViewWatchHistoryPresenter;
 import interface_adapter.view_watchlists.ViewWatchListsController;
@@ -76,7 +73,6 @@ import use_case.view_watchlists.ViewWatchListsInputBoundary;
 import use_case.view_watchlists.ViewWatchListsInteractor;
 import use_case.view_watchlists.ViewWatchListsOutputBoundary;
 import view.AddReviewPopup;
-import view.AddToWatchListPopup;
 import view.LoggedInView;
 import view.LoginView;
 import view.ProfileView;
@@ -141,8 +137,6 @@ public class AppBuilder {
 
     private AddReviewPopup addReviewPopup;
     private ReviewMovieViewModel reviewMovieViewModel;
-
-    private AddToWatchListPopup addToWatchListPopup;
 
     private RecordWatchHistoryPopup recordWatchHistoryPopup;
     private ViewWatchHistoryPopup viewWatchHistoryPopup;
@@ -426,15 +420,12 @@ public class AppBuilder {
         tempParent.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         recordWatchHistoryPopup = new RecordWatchHistoryPopup(tempParent);
 
-        // Create MovieGateway for fetching movie data
-        final MovieGateway movieGateway = new TMDbMovieDataAccessObject();
-
         // Create presenter with the view
         final RecordWatchHistoryOutputBoundary presenter = new RecordWatchHistoryPresenter(recordWatchHistoryPopup);
 
         // Create interactor with user data access, movie gateway, and presenter
         final RecordWatchHistoryInputBoundary interactor = new RecordWatchHistoryInteractor(
-                userDataAccessObject, movieGateway, presenter);
+                userDataAccessObject, movieDataAccessObject, presenter);
 
         // Create controller with the interactor
         final RecordWatchHistoryController controller = new RecordWatchHistoryController(interactor);
@@ -454,9 +445,8 @@ public class AppBuilder {
         // TODO: Oliver check this implementation
         reviewMovieViewModel = new ReviewMovieViewModel();
         final ReviewMoviePresenter presenter = new ReviewMoviePresenter(reviewMovieViewModel);
-        final TMDbMovieDataAccessObject movieGateway = new TMDbMovieDataAccessObject();
         final ReviewMovieInteractor interactor =
-                new ReviewMovieInteractor(userDataAccessObject, movieGateway, presenter);
+                new ReviewMovieInteractor(userDataAccessObject, movieDataAccessObject, presenter);
         final ReviewMovieController controller = new ReviewMovieController(interactor);
 
         loggedInView.setReviewMovieController(controller);
