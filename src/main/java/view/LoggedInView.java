@@ -497,6 +497,10 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         this.recordWatchHistoryController = controller;
     }
 
+    public void setViewWatchListsController(ViewWatchListsController controller) {
+        this.viewWatchListsController = controller;
+    }
+
 
     private JPanel createMovieCard(Movie movie) {
         JPanel card = new JPanel(new BorderLayout(10, 0));
@@ -631,9 +635,5 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         posterLabel.setVerticalAlignment(SwingConstants.CENTER);
         posterLabel.setForeground(new Color(156, 163, 175));
         posterLabel.setFont(new Font("Helvetica", Font.PLAIN, 10));
-
-    public void setViewWatchListsController(ViewWatchListsController controller) {
-        this.viewWatchListsController = controller;
-
     }
 }
