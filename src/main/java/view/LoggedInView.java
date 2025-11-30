@@ -8,19 +8,31 @@ import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.record_watchhistory.RecordWatchHistoryController;
+import interface_adapter.record_watchhistory.RecordWatchHistoryPresenter;
 import interface_adapter.view_watchhistory.ViewWatchHistoryController;
 import interface_adapter.search_movie.SearchMovieController;
 import interface_adapter.view_profile.ViewProfileController;
+import interface_adapter.view_watchlists.ViewWatchListsController;
 import interface_adapter.filter_movies.FilterMoviesController;
+import interface_adapter.filter_movies.FilterMoviesViewModel;
+import use_case.record_watchhistory.RecordWatchHistoryInteractor;
+import use_case.common.MovieGateway;
+import use_case.common.PagedMovieResult;
+import use_case.common.MovieDataAccessException;
+import interface_adapter.MovieViewData;
+import view.components.MovieCard;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
+import java.awt.Color;
 
 /**
  * The View for when the user is logged into the program.
@@ -40,11 +52,12 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private ViewProfileController viewProfileController;
     private AddWatchListController addWatchListController;
     private RecordWatchHistoryController recordWatchHistoryController;
+    private ViewWatchListsController viewWatchListsController;
     private FilterMoviesController filterMoviesController;
 
     // ViewModels
     private interface_adapter.review_movie.ReviewMovieViewModel reviewMovieViewModel;
-    private interface_adapter.filter_movies.FilterMoviesViewModel filterMoviesViewModel;
+    private FilterMoviesViewModel filterMoviesViewModel;
 
     // UI Components - Top panel
     private JLabel username;
@@ -53,7 +66,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private JButton viewHistoryBtn;
     private JButton profileBtn;
     private JButton reviewBtn;
-    private JButton filterMoviesBtn;
 
     // Middle Panel (testing only)
     //TODO: remove before final version
@@ -65,8 +77,10 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     // UI Components - Search panel
     private JTextField queryField;
     private JButton searchButton;
-    private JList<String> resultsList;
-    private DefaultListModel<String> listModel;
+
+    // UI Components - Results panel (using MovieCard components)
+    private JPanel resultsPanel;
+    private JScrollPane resultsScrollPane;
 
     // UI Components - Pagination
     private JButton prevPageButton;
@@ -82,21 +96,13 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private int totalPages = 1;
     private String lastQuery = "";
 
+    // Movie gateway for loading popular movies
+    private MovieGateway movieGateway;
+
     public LoggedInView(LoggedInViewModel loggedInViewModel) {
         this.loggedInViewModel = loggedInViewModel;
         this.loggedInViewModel.addPropertyChangeListener(this);
         initComponents();
-    }
-
-    public void setFilterMoviesController(FilterMoviesController controller) {
-        this.filterMoviesController = controller;
-    }
-
-    public void setFilterMoviesViewModel(interface_adapter.filter_movies.FilterMoviesViewModel viewModel) {
-        this.filterMoviesViewModel = viewModel;
-        if (viewModel != null) {
-            viewModel.addPropertyChangeListener(this);
-        }
     }
 
     private void initComponents() {
@@ -278,41 +284,15 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         // ===== Search bar =====
         JPanel searchPanel = new JPanel(new BorderLayout(4, 4));
         queryField = new JTextField();
+
+        // Add Enter key support for search
+        queryField.addActionListener(e -> performSearch());
+
         searchButton = new JButton("Search");
-        searchButton.addActionListener(e -> {
-            if (searchController == null) return;
-
-            String query = queryField.getText().trim();
-            if (query.isEmpty()) {
-                showError("Search query cannot be empty.");
-                return;
-            }
-
-            lastQuery = query;
-            currentPage = 1;
-            setStatus("Searching...");
-            searchController.search(lastQuery, currentPage);
-        });
-
-        filterMoviesBtn = new JButton("Filter Movies");
-        filterMoviesBtn.addActionListener(e -> {
-            if (filterMoviesController != null && filterMoviesViewModel != null) {
-                JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
-                FilterMoviesPopup popup = new FilterMoviesPopup(
-                        parent,
-                        filterMoviesController,
-                        filterMoviesViewModel
-                );
-                popup.setVisible(true);
-            }
-        });
-
-        JPanel searchButtonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
-        searchButtonsPanel.add(searchButton);
-        searchButtonsPanel.add(filterMoviesBtn);
+        searchButton.addActionListener(e -> performSearch());
 
         searchPanel.add(queryField, BorderLayout.CENTER);
-        searchPanel.add(searchButtonsPanel, BorderLayout.EAST);
+        searchPanel.add(searchButton, BorderLayout.EAST);
 //        this.add(searchPanel, BorderLayout.NORTH);
 
         // Wrap two top panels so they can both be in the "NORTH" section of BorderLayout
@@ -323,11 +303,17 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         northWrapper.add(searchPanel, BorderLayout.SOUTH);
         this.add(northWrapper, BorderLayout.NORTH);
 
-        // ===== Result list =====
-        listModel = new DefaultListModel<>();
-        resultsList = new JList<>(listModel);
-        JScrollPane scrollPane = new JScrollPane(resultsList);
-        this.add(scrollPane, BorderLayout.CENTER);
+        // ===== Results panel with MovieCard components =====
+        resultsPanel = new JPanel();
+        resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
+        resultsPanel.setBackground(new Color(245, 245, 245));
+        resultsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        resultsScrollPane = new JScrollPane(resultsPanel);
+        resultsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        resultsScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        resultsScrollPane.setBorder(BorderFactory.createEmptyBorder());
+        this.add(resultsScrollPane, BorderLayout.CENTER);
 
         // ===== Pagination + status =====
         JPanel bottomPanel = new JPanel(new BorderLayout(4, 4));
@@ -399,19 +385,86 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * Display search results with pagination.
+     * Perform a movie search.
      */
-    public void showResults(List<String> movieLines, int currentPage, int totalPages) {
+    private void performSearch() {
+        if (searchController == null) {
+            System.err.println("SearchController is null when performSearch() called");
+            showError("Search functionality not initialized. Please try again.");
+            return;
+        }
+
+        String query = queryField.getText().trim();
+        if (query.isEmpty()) {
+            showError("Search query cannot be empty.");
+            return;
+        }
+
+        System.out.println("Performing search for: " + query);
+        lastQuery = query;
+        currentPage = 1;
+        setStatus("Searching...");
+
+        // Run search in background thread to avoid blocking UI
+        new Thread(() -> {
+            try {
+                searchController.search(lastQuery, currentPage);
+            } catch (Exception e) {
+                e.printStackTrace();
+                SwingUtilities.invokeLater(() -> {
+                    showError("Error performing search: " + e.getMessage());
+                    setStatus("Search failed.");
+                });
+            }
+        }).start();
+    }
+
+    /**
+     * Display search results with pagination using MovieCard components.
+     */
+    public void showResults(List<Movie> movies, int currentPage, int totalPages) {
         this.currentPage = currentPage;
         this.totalPages = Math.max(totalPages, 1);
 
-        listModel.clear();
-        for (String line : movieLines) {
-            listModel.addElement(line);
+        // Clear previous results
+        resultsPanel.removeAll();
+
+        // Add MovieCard for each movie
+        for (Movie movie : movies) {
+            MovieViewData movieViewData = new MovieViewData(
+                    movie.getMovieId(),
+                    movie.getTitle(),
+                    movie.getPlot(),
+                    movie.getGenreIds(),
+                    movie.getReleaseDate(),
+                    movie.getRating(),
+                    movie.getPosterUrl()
+            );
+
+            MovieCard movieCard = new MovieCard(movieViewData);
+            movieCard.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(220, 220, 220)),
+                    BorderFactory.createEmptyBorder(5, 5, 5, 5)
+            ));
+
+            resultsPanel.add(movieCard);
+            resultsPanel.add(Box.createVerticalStrut(10));
         }
 
+        // Add glue to push content to top
+        resultsPanel.add(Box.createVerticalGlue());
+
+        // Refresh the panel
+        resultsPanel.revalidate();
+        resultsPanel.repaint();
+
+        // Scroll to top
+        SwingUtilities.invokeLater(() -> {
+            resultsScrollPane.getVerticalScrollBar().setValue(0);
+        });
+
         updatePaginationButtons();
-        setStatus("Found " + movieLines.size() + " results (page " + currentPage + ").");
+        setStatus("Found " + movies.size() + " results (page " + currentPage + ").");
     }
 
     /**
@@ -453,27 +506,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
                     JOptionPane.showMessageDialog(this, state.getPasswordError());
                 }
             }
-        } else if (evt.getPropertyName().equals("filteredMovies") && filterMoviesViewModel != null) {
-            // Display filtered movies in the results list
-            List<entity.Movie> movies = filterMoviesViewModel.getFilteredMovies();
-            List<String> movieLines = new ArrayList<>();
-            for (entity.Movie movie : movies) {
-                String line = String.format("%s (%.1f) - %s",
-                        movie.getTitle(),
-                        movie.getRating(),
-                        movie.getPlot().length() > 60
-                                ? movie.getPlot().substring(0, 60) + "..."
-                                : movie.getPlot());
-                movieLines.add(line);
-            }
-            showResults(movieLines, 1, 1);
-            if (filterMoviesViewModel.hasError()) {
-                showError(filterMoviesViewModel.getErrorMessage());
-            } else {
-                setStatus("Found " + movies.size() + " filtered movies");
-            }
-        } else if (evt.getPropertyName().equals("errorMessage") && filterMoviesViewModel != null && filterMoviesViewModel.hasError()) {
-            showError(filterMoviesViewModel.getErrorMessage());
         }
     }
 
@@ -483,6 +515,11 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     public void setController(SearchMovieController controller) {
         this.searchController = controller;
+        if (controller == null) {
+            System.err.println("Warning: SearchMovieController is null!");
+        } else {
+            System.out.println("SearchMovieController set successfully");
+        }
     }
 
     public void setChangePasswordController(ChangePasswordController changePasswordController) {
@@ -515,5 +552,74 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     public void setRecordWatchHistoryController(RecordWatchHistoryController controller) {
         this.recordWatchHistoryController = controller;
+    }
+
+    public void setViewWatchListsController(ViewWatchListsController controller) {
+        this.viewWatchListsController = controller;
+    }
+
+    public void setFilterMoviesController(FilterMoviesController controller) {
+        this.filterMoviesController = controller;
+    }
+
+    public void setFilterMoviesViewModel(FilterMoviesViewModel viewModel) {
+        this.filterMoviesViewModel = viewModel;
+    }
+
+    public void setMovieGateway(MovieGateway movieGateway) {
+        this.movieGateway = movieGateway;
+        // If we're already on the logged in view and no movies are displayed, load popular movies
+        if (movieGateway != null && resultsPanel != null && resultsPanel.getComponentCount() == 0) {
+            loadPopularMovies();
+        }
+    }
+
+    /**
+     * Load popular movies from TMDB and display them.
+     */
+    public void loadPopularMovies() {
+        if (movieGateway == null) {
+            showError("Movie gateway not initialized. Cannot load popular movies.");
+            return;
+        }
+
+        if (resultsPanel == null) {
+            showError("Results panel not initialized. Cannot display movies.");
+            return;
+        }
+
+        setStatus("Loading popular movies...");
+        new Thread(() -> {
+            try {
+                PagedMovieResult result = movieGateway.getPopularMovies(1);
+                List<Movie> movies = result.getMovies();
+
+                if (movies == null || movies.isEmpty()) {
+                    SwingUtilities.invokeLater(() -> {
+                        showError("No popular movies found.");
+                        setStatus("No movies to display.");
+                    });
+                    return;
+                }
+
+                SwingUtilities.invokeLater(() -> {
+                    showResults(movies, result.getPage(), result.getTotalPages());
+                    lastQuery = ""; // Clear last query since we're showing popular movies
+                    setStatus("Loaded " + movies.size() + " popular movies.");
+                });
+            } catch (MovieDataAccessException e) {
+                e.printStackTrace(); // Print stack trace for debugging
+                SwingUtilities.invokeLater(() -> {
+                    showError("Failed to load popular movies: " + e.getMessage());
+                    setStatus("Error loading movies.");
+                });
+            } catch (Exception e) {
+                e.printStackTrace(); // Print stack trace for debugging
+                SwingUtilities.invokeLater(() -> {
+                    showError("Unexpected error loading popular movies: " + e.getMessage());
+                    setStatus("Error loading movies.");
+                });
+            }
+        }).start();
     }
 }

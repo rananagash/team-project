@@ -5,6 +5,7 @@ import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.logged_in.LoggedInViewModel;
 import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginOutputData;
+import view.LoggedInView;
 
 
 /**
@@ -15,6 +16,7 @@ public class LoginPresenter implements LoginOutputBoundary {
     private final LoginViewModel loginViewModel;
     private final LoggedInViewModel loggedInViewModel;
     private final ViewManagerModel viewManagerModel;
+    private LoggedInView loggedInView;
 
     public LoginPresenter(ViewManagerModel viewManagerModel,
                           LoggedInViewModel loggedInViewModel,
@@ -22,6 +24,10 @@ public class LoginPresenter implements LoginOutputBoundary {
         this.viewManagerModel = viewManagerModel;
         this.loggedInViewModel = loggedInViewModel;
         this.loginViewModel = loginViewModel;
+    }
+
+    public void setLoggedInView(LoggedInView loggedInView) {
+        this.loggedInView = loggedInView;
     }
 
     @Override
@@ -37,6 +43,16 @@ public class LoginPresenter implements LoginOutputBoundary {
         // switch to the logged in view
         this.viewManagerModel.setState(loggedInViewModel.getViewName());
         this.viewManagerModel.firePropertyChange();
+
+        // Load popular movies after switching to logged in view
+        // Use a slight delay to ensure the view is fully initialized
+        if (loggedInView != null) {
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                // Try loading immediately, but if gateway isn't set yet,
+                // it will be loaded when setMovieGateway is called
+                loggedInView.loadPopularMovies();
+            });
+        }
     }
 
     @Override

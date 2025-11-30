@@ -3,7 +3,9 @@ package use_case.filter_movies;
 import entity.Movie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import use_case.common.MovieDataAccessException;
 import use_case.common.MovieGateway;
+import use_case.common.PagedMovieResult;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -162,22 +164,22 @@ class FilterMoviesInteractorTest {
     @Test
     void testGetGenreName() {
         // Test valid genre IDs
-        assertEquals("Action", FilterMoviesInteractor.getGenreName(28));
-        assertEquals("Comedy", FilterMoviesInteractor.getGenreName(35));
-        assertEquals("Horror", FilterMoviesInteractor.getGenreName(27));
-        assertEquals("Science Fiction", FilterMoviesInteractor.getGenreName(878));
-        assertEquals("Adventure", FilterMoviesInteractor.getGenreName(12));
-        assertEquals("Drama", FilterMoviesInteractor.getGenreName(18));
+        assertEquals("Action", common.GenreUtils.getGenreName(28));
+        assertEquals("Comedy", common.GenreUtils.getGenreName(35));
+        assertEquals("Horror", common.GenreUtils.getGenreName(27));
+        assertEquals("Science Fiction", common.GenreUtils.getGenreName(878));
+        assertEquals("Adventure", common.GenreUtils.getGenreName(12));
+        assertEquals("Drama", common.GenreUtils.getGenreName(18));
 
         // Test invalid genre ID
-        assertNull(FilterMoviesInteractor.getGenreName(999));
-        assertNull(FilterMoviesInteractor.getGenreName(-1));
+        assertNull(common.GenreUtils.getGenreName(999));
+        assertNull(common.GenreUtils.getGenreName(-1));
     }
 
     @Test
     void testGetAllGenres() {
         // Act
-        var allGenres = FilterMoviesInteractor.getAllGenres();
+        var allGenres = common.GenreUtils.getAllGenres();
 
         // Assert
         assertNotNull(allGenres);
@@ -192,8 +194,8 @@ class FilterMoviesInteractorTest {
     @Test
     void testGetAllGenresReturnsCopy() {
         // Act
-        var allGenres1 = FilterMoviesInteractor.getAllGenres();
-        var allGenres2 = FilterMoviesInteractor.getAllGenres();
+        var allGenres1 = common.GenreUtils.getAllGenres();
+        var allGenres2 = common.GenreUtils.getAllGenres();
 
         // Assert - should be different instances
         assertNotSame(allGenres1, allGenres2, "Should return a copy, not the same instance");
@@ -232,6 +234,11 @@ class FilterMoviesInteractorTest {
         public List<Movie> filterByGenres(List<Integer> genreIds) {
             this.lastGenreIdsCalled = genreIds != null ? new ArrayList<>(genreIds) : null;
             return new ArrayList<>(moviesToReturn);
+        }
+
+        @Override
+        public PagedMovieResult getPopularMovies(int page) throws MovieDataAccessException {
+            return null;
         }
     }
 

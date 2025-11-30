@@ -39,15 +39,22 @@ public class User {
      *
      * <p>A default watch list is automatically created with the name "[username]'s Watch List".
      *
-     * @param userName the username (must not be empty)
-     * @param password the password (must not be empty)
+     * @param userName the username (must not be null or empty)
+     * @param password the password (must not be null or empty)
+     * @throws NullPointerException if username or password is null
      * @throws IllegalArgumentException if username or password is empty
      */
     public User(String userName, String password) {
-        if ("".equals(userName)) {
+        if (userName == null) {
+            throw new NullPointerException("Username cannot be null");
+        }
+        if (password == null) {
+            throw new NullPointerException("Password cannot be null");
+        }
+        if (userName.isEmpty()) {
             throw new IllegalArgumentException("Username cannot be empty");
         }
-        if ("".equals(password)) {
+        if (password.isEmpty()) {
             throw new IllegalArgumentException("Password cannot be empty");
         }
         this.userName = userName;

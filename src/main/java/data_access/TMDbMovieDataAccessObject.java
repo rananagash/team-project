@@ -19,15 +19,35 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 public class TMDbMovieDataAccessObject implements MovieGateway {
     private final HttpClient client = HttpClient.newHttpClient();
-
+    private String cachedApiToken = null; // Cache the API token to avoid reloading .env file
 
     // Helper methods for findById
 
+    // Get API token, caching it after first load
+    private String getApiToken() throws Exception {
+        if (cachedApiToken != null) {
+            return cachedApiToken;
+        }
+
+        // Try to load from .env file, fallback to environment variable
+        try {
+            Dotenv dotenv = Dotenv.load();
+            cachedApiToken = dotenv.get("APITOKENKEY");
+        } catch (Exception e) {
+            // If .env file doesn't exist, try environment variable
+            cachedApiToken = System.getenv("APITOKENKEY");
+        }
+
+        if (cachedApiToken == null || cachedApiToken.isEmpty()) {
+            throw new Exception("API token not found. Please create a .env file in the project root with APITOKENKEY=your_token_here, or set the APITOKENKEY environment variable.");
+        }
+
+        return cachedApiToken;
+    }
+
     // makeRequest actually makes the api call
     private String makeRequest(String url) throws Exception {
-        final String apiToken;
-        Dotenv dotenv = Dotenv.load();
-        apiToken = dotenv.get("APITOKENKEY");
+        String apiToken = getApiToken();
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -342,6 +362,30 @@ public class TMDbMovieDataAccessObject implements MovieGateway {
         } catch (Exception e) {
             e.printStackTrace();
             return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public PagedMovieResult getPopularMovies(int page) throws MovieDataAccessException {
+        try {
+            // TMDb discover endpoint for popular movies: https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&page=1
+            String url = "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&page=" + page;
+            String json = makeRequest(url);
+
+            // Parse movies from results
+            List<Movie> movies = parseMoviesFromResults(json);
+
+            // Extract pagination info
+            int currentPage = extractPageNumber(json, "\"page\":");
+            int totalPages = extractPageNumber(json, "\"total_pages\":");
+
+            return new PagedMovieResult(movies, currentPage, totalPages);
+        } catch (Exception e) {
+            throw new MovieDataAccessException(
+                    MovieDataAccessException.Type.NETWORK,
+                    "Failed to get popular movies: " + e.getMessage(),
+                    e
+            );
         }
     }
 }

@@ -18,38 +18,42 @@ import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.review_movie.ReviewMovieController;
 import interface_adapter.review_movie.ReviewMoviePresenter;
 import interface_adapter.review_movie.ReviewMovieViewModel;
+import interface_adapter.search_movie.SearchMovieController;
+import interface_adapter.search_movie.SearchMoviePresenter;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
-import interface_adapter.view_profile.ViewProfileController;
-import interface_adapter.view_profile.ViewProfilePresenter;
-import interface_adapter.view_profile.ViewProfileViewModel;
+import interface_adapter.view_watchlists.ViewWatchListsController;
+import interface_adapter.view_watchlists.ViewWatchListsPresenter;
+import interface_adapter.view_watchlists.ViewWatchListsViewModel;
 import use_case.add_to_watchlist.AddWatchListInputBoundary;
-import use_case.add_to_watchlist.AddWatchListInteractor;
 import use_case.change_password.ChangePasswordInputBoundary;
-import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
 import use_case.common.UserDataAccessInterface;
 import use_case.login.LoginInputBoundary;
-import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
-import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
-import use_case.review_movie.ReviewMovieInteractor;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
 import use_case.view_profile.ViewProfileInputBoundary;
-import use_case.view_profile.ViewProfileInteractor;
 import use_case.view_profile.ViewProfileOutputBoundary;
-import interface_adapter.filter_movies.FilterMoviesController;
-import interface_adapter.filter_movies.FilterMoviesPresenter;
-import interface_adapter.filter_movies.FilterMoviesViewModel;
-import use_case.filter_movies.FilterMoviesInputBoundary;
-import use_case.filter_movies.FilterMoviesInteractor;
-import use_case.filter_movies.FilterMoviesOutputBoundary;
+import use_case.view_watchlists.ViewWatchListsInputBoundary;
+import use_case.view_watchlists.ViewWatchListsInteractor;
+import use_case.view_watchlists.ViewWatchListsOutputBoundary;
 import view.*;
+import view.ViewWatchListsView;
+import interface_adapter.view_profile.ViewProfileController;
+import interface_adapter.view_profile.ViewProfilePresenter;
+import interface_adapter.view_profile.ViewProfileViewModel;
+import use_case.add_to_watchlist.AddWatchListInteractor;
+import use_case.change_password.ChangePasswordInteractor;
+import use_case.login.LoginInteractor;
+import use_case.logout.LogoutInteractor;
+import use_case.review_movie.ReviewMovieInteractor;
+import use_case.search_movie.SearchMovieInteractor;
+import use_case.view_profile.ViewProfileInteractor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,7 +82,9 @@ public class AppBuilder {
     private ViewWatchHistoryPopup viewWatchHistoryPopup;
     private ProfileView profileView;
     private ViewProfileViewModel viewProfileViewModel;
-    private FilterMoviesViewModel filterMoviesViewModel;
+    private ViewWatchListsView viewWatchListsView;
+    private ViewWatchListsViewModel viewWatchListsViewModel;
+
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -113,6 +119,13 @@ public class AppBuilder {
         return this;
     }
 
+    public AppBuilder addViewWatchListsView() {
+        viewWatchListsViewModel = new ViewWatchListsViewModel(viewManagerModel);
+        viewWatchListsView = new ViewWatchListsView(viewWatchListsViewModel);
+        cardPanel.add(viewWatchListsView, viewWatchListsView.getViewName());
+        return this;
+    }
+
     public AppBuilder addSignupUseCase() {
         final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
                 signupViewModel, loginViewModel);
@@ -125,10 +138,11 @@ public class AppBuilder {
     }
 
     public AppBuilder addLoginUseCase() {
-        final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel,
+        final LoginPresenter loginPresenter = new LoginPresenter(viewManagerModel,
                 loggedInViewModel, loginViewModel);
+        loginPresenter.setLoggedInView(loggedInView);
         final LoginInputBoundary loginInteractor = new LoginInteractor(
-                userDataAccessObject, loginOutputBoundary);
+                userDataAccessObject, loginPresenter);
 
         LoginController loginController = new LoginController(loginInteractor);
         loginView.setLoginController(loginController);
@@ -164,7 +178,12 @@ public class AppBuilder {
     }
 
     public AppBuilder addSearchMoviesUseCase() {
-        //TODO:Chester
+        TMDbMovieDataAccessObject movieGateway = new TMDbMovieDataAccessObject();
+        SearchMoviePresenter presenter = new SearchMoviePresenter(loggedInView);
+        SearchMovieInteractor interactor = new SearchMovieInteractor(movieGateway, presenter);
+        SearchMovieController controller = new SearchMovieController(interactor);
+        loggedInView.setController(controller);
+        loggedInView.setMovieGateway(movieGateway);
         return this;
     }
 
@@ -180,20 +199,26 @@ public class AppBuilder {
         return this;
     }
 
+    public AppBuilder addViewWatchListsUseCase() {
+        ViewWatchListsOutputBoundary viewWatchListsPresenter = new ViewWatchListsPresenter(viewWatchListsViewModel, viewManagerModel);
+        ViewWatchListsInputBoundary viewWatchListsInteractor = new ViewWatchListsInteractor(userDataAccessObject,
+                viewWatchListsPresenter);
+        ViewWatchListsController viewWatchListsController = new ViewWatchListsController(viewWatchListsInteractor,  viewManagerModel);
+
+        viewWatchListsView.setController(viewWatchListsController);
+        loggedInView.setViewWatchListsController(viewWatchListsController);
+        profileView.setViewWatchListsController(viewWatchListsController);
+
+        return this;
+    }
+
     public AppBuilder addViewWatchHistoryUseCase() {
         //TODO: Jiaqi
         return this;
     }
 
     public AppBuilder addFilterMoviesUseCase() {
-        filterMoviesViewModel = new FilterMoviesViewModel();
-        FilterMoviesOutputBoundary presenter = new FilterMoviesPresenter(filterMoviesViewModel);
-        TMDbMovieDataAccessObject movieGateway = new TMDbMovieDataAccessObject();
-        FilterMoviesInputBoundary interactor = new FilterMoviesInteractor(movieGateway, presenter);
-        FilterMoviesController controller = new FilterMoviesController(interactor);
-
-        loggedInView.setFilterMoviesController(controller);
-        loggedInView.setFilterMoviesViewModel(filterMoviesViewModel);
+        //TODO: Inba
         return this;
     }
 
@@ -224,10 +249,14 @@ public class AppBuilder {
     }
 
     public JFrame build() {
-        final JFrame application = new JFrame("User Login Example");
+        final JFrame application = new JFrame("MovieNight");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         application.add(cardPanel);
+
+        // initial size of app
+        application.setPreferredSize(new Dimension(900, 600));
+        application.setMinimumSize(new Dimension(900, 600));
 
         viewManagerModel.setState(signupView.getViewName());
         viewManagerModel.firePropertyChange();
