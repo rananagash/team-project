@@ -81,14 +81,13 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     // UI Components - Search panel
     private JTextField queryField;
     private JButton searchButton;
-//    private JList<String> resultsList;
+    //    private JList<String> resultsList;
 //    private DefaultListModel<String> listModel;
     private JPanel movieResultsPanel; // will replace JList
     private JScrollPane movieScrollPane;
 
     // UI Components - Results panel (using MovieCard components)
-    private JPanel resultsPanel;
-    private JScrollPane resultsScrollPane;
+    // Note: movieResultsPanel is used for displaying movie results
 
     // UI Components - Pagination
     private JButton prevPageButton;
@@ -181,6 +180,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         filterMoviesBtn = new JButton("Filter Movies");
         filterMoviesBtn.setVisible(true);
         filterMoviesBtn.setPreferredSize(new Dimension(120, 30)); // Make button more visible
+
         filterMoviesBtn.addActionListener(e -> {
             // Check if we have movies to filter
             if (currentMovies == null || currentMovies.isEmpty()) {
@@ -443,7 +443,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
                 username.setText(state.getUsername());
 
                 if (state.getSearchResults() != null && !state.getSearchResults().isEmpty()) {
-                    System.out.println("Showing " + state.getSearchResults().size() + " search results");
                     showResults(state.getSearchResults(), state.getCurrentPage(), state.getTotalPages());
                 } else if (state.getSearchError() != null) {
                     showError(state.getSearchError());
@@ -535,34 +534,32 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
      */
     public boolean filterCurrentMovies(List<Integer> genreIds) {
 
-        System.out.println("Filtering " + currentMovies.size() + " movies by genres: " + genreIds);
-
         // Filter current movies by selected genres
         List<Movie> filteredMovies = currentMovies.stream()
                 .filter(movie -> {
                     List<Integer> movieGenres = movie.getGenreIds();
                     if (movieGenres == null || movieGenres.isEmpty()) {
-                        System.out.println("Movie " + movie.getTitle() + " has no genres");
                         return false;
                     }
                     // Check if movie has at least one of the selected genres
-                    boolean matches = movieGenres.stream().anyMatch(genreIds::contains);
-                    if (matches) {
-                        System.out.println("Movie " + movie.getTitle() + " matches with genres: " + movieGenres);
-                    }
-                    return matches;
+                    return movieGenres.stream().anyMatch(genreIds::contains);
                 })
                 .collect(Collectors.toList());
 
-        System.out.println("Filtered to " + filteredMovies.size() + " movies");
-
         // Display filtered results
         if (filteredMovies.isEmpty()) {
-            resultsPanel.removeAll();
-            resultsPanel.revalidate();
-            resultsPanel.repaint();
+            // Clear the results panel and show "no movies found" message
+            movieResultsPanel.removeAll();
             List<String> genreNames = GenreUtils.getGenreNames(genreIds);
             String genreText = String.join(", ", genreNames);
+            JLabel noResultsLabel = new JLabel("No movies found matching genres: " + genreText, SwingConstants.CENTER);
+            noResultsLabel.setForeground(new Color(209, 213, 219));
+            noResultsLabel.setFont(new Font("Helvetica", Font.PLAIN, 16));
+            noResultsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            movieResultsPanel.add(noResultsLabel);
+            movieResultsPanel.add(Box.createVerticalGlue());
+            movieResultsPanel.revalidate();
+            movieResultsPanel.repaint();
             setStatus("No movies found matching genres: " + genreText);
         } else {
             showResults(filteredMovies, 1, 1);
@@ -603,10 +600,16 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
             String genreText = String.join(", ", genreNames);
             setStatus("Showing " + filteredMovies.size() + " movies filtered by: " + genreText);
         } else {
-            // No movies found
-            resultsPanel.removeAll();
-            resultsPanel.revalidate();
-            resultsPanel.repaint();
+            // No movies found - clear the results panel and show message
+            movieResultsPanel.removeAll();
+            JLabel noResultsLabel = new JLabel("No movies found for selected genres.", SwingConstants.CENTER);
+            noResultsLabel.setForeground(new Color(209, 213, 219));
+            noResultsLabel.setFont(new Font("Helvetica", Font.PLAIN, 16));
+            noResultsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            movieResultsPanel.add(noResultsLabel);
+            movieResultsPanel.add(Box.createVerticalGlue());
+            movieResultsPanel.revalidate();
+            movieResultsPanel.repaint();
             setStatus("No movies found for selected genres.");
         }
     }
@@ -660,7 +663,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         // list
         JButton addToWatchlistBtn = new JButton("Add to Watchlist");
         addToWatchlistBtn.setFont(new Font("Helvetica", Font.BOLD, 12));
-           addToWatchlistBtn.setBackground(new Color(37, 99, 235));
+        addToWatchlistBtn.setBackground(new Color(37, 99, 235));
         addToWatchlistBtn.setForeground(Color.BLACK);
         addToWatchlistBtn.setFocusPainted(false);
 
@@ -695,7 +698,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
                 addToWatchlistBtn.setEnabled(false);
 
                 // TODO: need to call watch list Controller
-                System.out.println("Add to watchlist: " + movie.getTitle());
             }
         });
 

@@ -1,6 +1,7 @@
 package use_case.filter_movies;
 
 import entity.Movie;
+import common.GenreUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import use_case.common.MovieGateway;
@@ -162,22 +163,22 @@ class FilterMoviesInteractorTest {
     @Test
     void testGetGenreName() {
         // Test valid genre IDs
-        assertEquals("Action", common.GenreUtils.getGenreName(28));
-        assertEquals("Comedy", common.GenreUtils.getGenreName(35));
-        assertEquals("Horror", common.GenreUtils.getGenreName(27));
-        assertEquals("Science Fiction", common.GenreUtils.getGenreName(878));
-        assertEquals("Adventure", common.GenreUtils.getGenreName(12));
-        assertEquals("Drama", common.GenreUtils.getGenreName(18));
+        assertEquals("Action", GenreUtils.getGenreName(28));
+        assertEquals("Comedy", GenreUtils.getGenreName(35));
+        assertEquals("Horror", GenreUtils.getGenreName(27));
+        assertEquals("Science Fiction", GenreUtils.getGenreName(878));
+        assertEquals("Adventure", GenreUtils.getGenreName(12));
+        assertEquals("Drama", GenreUtils.getGenreName(18));
 
         // Test invalid genre ID
-        assertNull(common.GenreUtils.getGenreName(999));
-        assertNull(common.GenreUtils.getGenreName(-1));
+        assertNull(GenreUtils.getGenreName(999));
+        assertNull(GenreUtils.getGenreName(-1));
     }
 
     @Test
     void testGetAllGenres() {
         // Act
-        var allGenres = common.GenreUtils.getAllGenres();
+        var allGenres = GenreUtils.getAllGenres();
 
         // Assert
         assertNotNull(allGenres);
@@ -192,8 +193,8 @@ class FilterMoviesInteractorTest {
     @Test
     void testGetAllGenresReturnsCopy() {
         // Act
-        var allGenres1 = common.GenreUtils.getAllGenres();
-        var allGenres2 = common.GenreUtils.getAllGenres();
+        var allGenres1 = GenreUtils.getAllGenres();
+        var allGenres2 = GenreUtils.getAllGenres();
 
         // Assert - should be different instances
         assertNotSame(allGenres1, allGenres2, "Should return a copy, not the same instance");
