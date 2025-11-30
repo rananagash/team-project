@@ -1,5 +1,5 @@
 {
-    "currentUser": "romy",
+    "currentUser": "asdf",
     "users": {
         "dummy": {
             "password": "user",
@@ -83,9 +83,9 @@
                             ]
                         }
                     ],
-                    "dateCreated": "2025-11-30T11:29:09.437526600",
+                    "dateCreated": "2025-11-30T13:33:33.914410400",
                     "name": "altest's Watch List",
-                    "id": "4974f7bc-2de1-453f-8186-d768ddf6dac0"
+                    "id": "cafd73dd-365e-42f9-868b-c3002414ac45"
                 },
                 {
                     "movies": [{
@@ -102,21 +102,40 @@
                             878
                         ]
                     }],
-                    "dateCreated": "2025-11-30T11:29:09.438522",
+                    "dateCreated": "2025-11-30T13:33:33.914410400",
                     "name": "Second Watchlist",
-                    "id": "add27a10-8af3-4a0c-b486-9341afdeea58"
+                    "id": "deb6a8cb-3b3a-4f4f-b172-9a884d125b61"
                 }
             ],
             "username": "altest"
         },
         "asdf": {
             "password": "asdf",
-            "reviews": {},
+            "reviews": {"972cd232-eba1-4841-adf4-aa77443e2f1c": {
+                "createdAt": "2025-11-30T13:34:15.351833500",
+                "movie": {
+                    "posterUrl": "https://image.tmdb.org/t/p/w500/yFSIUVTCvgYrpalUktulvk3Gi5Y.jpg",
+                    "plot": "After the devastating events of Avengers: Infinity War, the universe is in ruins due to the efforts of the Mad Titan, Thanos. With the help of remaining allies, the Avengers must assemble once more in order to undo Thanos' actions and restore order to the universe once and for all, no matter what consequences may be in store.",
+                    "releaseDate": "2019-04-24",
+                    "popularity": 0,
+                    "rating": 8.238,
+                    "id": "299534",
+                    "title": "Avengers: Endgame",
+                    "genreIds": [
+                        12,
+                        878,
+                        28
+                    ]
+                },
+                "rating": 5,
+                "comment": "Hello",
+                "id": "972cd232-eba1-4841-adf4-aa77443e2f1c"
+            }},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T11:29:09.439542700",
+                "dateCreated": "2025-11-30T13:33:33.914410400",
                 "name": "asdf's Watch List",
-                "id": "14614815-3a98-41c3-9e5e-60b4ab1df7d5"
+                "id": "fd85caef-4772-42cd-8e3e-4f62670dc79c"
             }],
             "username": "asdf"
         },
@@ -137,9 +156,9 @@
                         2
                     ]
                 }],
-                "dateCreated": "2025-11-30T11:29:09.439542700",
+                "dateCreated": "2025-11-30T13:33:33.917928800",
                 "name": "dummy-user's Watch List",
-                "id": "e6a63015-8f09-49f4-b936-0098b572a274"
+                "id": "76aa509b-ccf7-450f-9327-33aac9929742"
             }],
             "username": "dummy-user"
         },
@@ -148,9 +167,9 @@
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T11:29:09.440521200",
+                "dateCreated": "2025-11-30T13:33:33.917928800",
                 "name": "oliver's Watch List",
-                "id": "4de67350-1ac4-401b-abbe-cd4ce03ad7dd"
+                "id": "2391a5d4-184d-4c70-ba34-7e6b32d0b13a"
             }],
             "username": "oliver"
         },
@@ -159,9 +178,9 @@
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T11:29:09.440521200",
+                "dateCreated": "2025-11-30T13:33:33.917928800",
                 "name": "romy's Watch List",
-                "id": "89e8024e-7ba6-4838-8780-92922fdd161c"
+                "id": "cbdbb529-94a4-43c1-9cd8-2b6cdb55ad91"
             }],
             "username": "romy"
         }
