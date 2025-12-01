@@ -230,7 +230,7 @@ public class ViewWatchHistoryPopup extends JDialog implements ViewWatchHistoryVi
             ratingLabel.setForeground(new Color(150, 150, 150));
         }
         ratingLabel.setFont(new Font("Arial", Font.PLAIN, 12));
-        ratingLabel.setBorder(new EmptyBorder(3, 0, 0, 0));
+            ratingLabel.setBorder(new EmptyBorder(3, 0, 0, 0));
 
         // User's review text
         JLabel reviewLabel = new JLabel();
@@ -251,7 +251,7 @@ public class ViewWatchHistoryPopup extends JDialog implements ViewWatchHistoryVi
 
         infoPanel.add(titleLabel);
         infoPanel.add(dateLabel);
-        infoPanel.add(ratingLabel);
+            infoPanel.add(ratingLabel);
         infoPanel.add(reviewLabel);
         infoPanel.add(Box.createVerticalGlue());
 
@@ -269,6 +269,9 @@ public class ViewWatchHistoryPopup extends JDialog implements ViewWatchHistoryVi
         detailsButton.setPreferredSize(new Dimension(85, 30));
         detailsButton.setBackground(new Color(0, 123, 255)); // Blue
         detailsButton.setForeground(Color.WHITE);
+        detailsButton.setOpaque(true);
+        detailsButton.setContentAreaFilled(true);
+        detailsButton.setBorderPainted(false);
         detailsButton.setFocusPainted(false);
         detailsButton.addActionListener(e -> openEditDialog(movie));
 
@@ -277,6 +280,9 @@ public class ViewWatchHistoryPopup extends JDialog implements ViewWatchHistoryVi
         deleteButton.setPreferredSize(new Dimension(85, 30));
         deleteButton.setBackground(new Color(220, 53, 69)); // Red
         deleteButton.setForeground(Color.WHITE);
+        deleteButton.setOpaque(true);
+        deleteButton.setContentAreaFilled(true);
+        deleteButton.setBorderPainted(false);
         deleteButton.setFocusPainted(false);
         deleteButton.addActionListener(e -> deleteMovie(movie));
 

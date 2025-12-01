@@ -248,6 +248,9 @@ public class MovieDetailEditPopup extends JDialog implements EditWatchedMovieVie
         saveButton.setPreferredSize(new Dimension(100, 35));
         saveButton.setBackground(new Color(40, 167, 69)); // Green
         saveButton.setForeground(Color.WHITE);
+        saveButton.setOpaque(true);
+        saveButton.setContentAreaFilled(true);
+        saveButton.setBorderPainted(false);
         saveButton.setFocusPainted(false);
         saveButton.addActionListener(e -> saveChanges());
 
@@ -255,6 +258,9 @@ public class MovieDetailEditPopup extends JDialog implements EditWatchedMovieVie
         deleteButton.setPreferredSize(new Dimension(100, 35));
         deleteButton.setBackground(new Color(220, 53, 69)); // Red
         deleteButton.setForeground(Color.WHITE);
+        deleteButton.setOpaque(true);
+        deleteButton.setContentAreaFilled(true);
+        deleteButton.setBorderPainted(false);
         deleteButton.setFocusPainted(false);
         deleteButton.addActionListener(e -> deleteMovie());
 

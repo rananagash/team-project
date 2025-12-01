@@ -35,6 +35,9 @@ public class DeleteConfirmationPopup extends JDialog {
         JButton confirmButton = new JButton("Delete");
         confirmButton.setForeground(Color.WHITE);
         confirmButton.setBackground(new Color(220, 53, 69)); // Red color
+        confirmButton.setOpaque(true);
+        confirmButton.setContentAreaFilled(true);
+        confirmButton.setBorderPainted(false);
         confirmButton.setFocusPainted(false);
         confirmButton.addActionListener(e -> {
             confirmed = true;
@@ -42,6 +45,9 @@ public class DeleteConfirmationPopup extends JDialog {
         });
 
         JButton cancelButton = new JButton("Cancel");
+        cancelButton.setOpaque(true);
+        cancelButton.setContentAreaFilled(true);
+        cancelButton.setBorderPainted(true);
         cancelButton.setFocusPainted(false);
         cancelButton.addActionListener(e -> {
             confirmed = false;
