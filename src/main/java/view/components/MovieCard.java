@@ -7,7 +7,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
-import java.net.MalformedURLException;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -44,6 +43,7 @@ public class MovieCard extends JPanel {
 
     private static final int POSTER_WIDTH = 120;
     private static final int POSTER_HEIGHT = 180;
+    private static final String NO_IMAGE_TEXT = "No Image";
 
     /**
      * Creates a MovieCard displaying the given movie's data with no action buttons.
@@ -83,18 +83,47 @@ public class MovieCard extends JPanel {
     private JLabel createPoster(String posterUrl) {
         final JLabel label = new JLabel();
         label.setPreferredSize(new Dimension(POSTER_WIDTH, POSTER_HEIGHT));
+        label.setOpaque(true);
 
-        if (posterUrl != null && !posterUrl.isBlank()) {
-            try {
+        // light grey placeholder for before the image is loaded
+        label.setBackground(new Color(230, 230, 230));
+
+        label.setHorizontalAlignment(JLabel.CENTER);
+        label.setText("Loading...");
+
+        if (posterUrl == null || posterUrl.isBlank()) {
+            label.setText(NO_IMAGE_TEXT);
+            return label;
+        }
+
+        // Lazy load images on a background thread
+        new javax.swing.SwingWorker<ImageIcon, Void>() {
+            @Override
+            protected ImageIcon doInBackground() throws Exception {
                 final ImageIcon raw = new ImageIcon(new java.net.URL(posterUrl));
                 final Image scaled = raw.getImage().getScaledInstance(
-                        POSTER_WIDTH, POSTER_HEIGHT, Image.SCALE_SMOOTH);
-                label.setIcon(new ImageIcon(scaled));
+                        POSTER_WIDTH, POSTER_HEIGHT, Image.SCALE_SMOOTH
+                );
+                return new ImageIcon(scaled);
             }
-            catch (MalformedURLException e) {
-                label.setText("No Image");
+
+            @Override
+            protected void done() {
+                try {
+                    label.setIcon(get());
+                    label.setText("");
+                    label.setBackground(Color.WHITE);
+                    label.setOpaque(false);
+                }
+                catch (InterruptedException e) {
+                    label.setText(NO_IMAGE_TEXT);
+                }
+                catch (java.util.concurrent.ExecutionException e) {
+                    label.setText(NO_IMAGE_TEXT);
+                }
             }
-        }
+        }.execute();
+
         return label;
     }
 
