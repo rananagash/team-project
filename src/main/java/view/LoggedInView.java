@@ -4,6 +4,7 @@ import entity.Movie;
 import entity.User;
 import interface_adapter.add_to_watchlist.AddWatchListController;
 import interface_adapter.add_to_watchlist.AddWatchListPresenter;
+import interface_adapter.add_to_watchlist.WatchListOption;
 import interface_adapter.filter_movies.FilterMoviesController;
 import interface_adapter.filter_movies.FilterMoviesViewModel;
 import interface_adapter.logged_in.ChangePasswordController;
@@ -205,31 +206,11 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         middlePanel.add(addToHistoryBtn);
 
         addToWatchListBtn.addActionListener(e -> {
-            final LoggedInState currentState = loggedInViewModel.getState();
-            if (currentState == null) return;
-
-            //Dummy user - real button should get current logged in user
-            User user = new User("TestUser", "pw");
-
-            //Dummy movie
-            Movie movie = new Movie("m1",
-                    "Test Movie",
-                    "A test movie plot happens",
-                    List.of(1, 2),
-                    "2025-01-01",
-                    7.5,
-                    0.0,
-                    "poster-url");
-
-            JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
-
-            // Create popup
-            new AddToWatchListPopup(
-                    parent,
-                    user,
-                    movie,
-                    addWatchListController,
-                    addWatchListPresenter
+            JOptionPane.showMessageDialog(
+                    this,
+                    "This is a test button.\nUse the real 'Add to Watchlist' button on a movie card.",
+                    "Add to Watchlist (Test)",
+                    JOptionPane.INFORMATION_MESSAGE
             );
         });
 
@@ -702,15 +683,31 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
         // listners
         addToWatchlistBtn.addActionListener(e -> {
-            if (addWatchListController != null) {
-                // may need AddWatchListController
-                // only update the look for now
-                addToWatchlistBtn.setText("In Watchlist");
-                addToWatchlistBtn.setBackground(new Color(22, 163, 74));
-                addToWatchlistBtn.setEnabled(false);
-
-                // TODO: need to call watch list Controller
+            LoggedInState currentState = loggedInViewModel.getState();
+            if (currentState == null) {
+                return;
             }
+
+            String username = currentState.getUsername();
+            String movieId = movie.getMovieId();
+            String movieTitle = movie.getTitle();
+
+//            addWatchListPresenter.loadWatchListsForUser(username);
+
+            List<WatchListOption> options = addWatchListPresenter.getViewModel().getWatchListOptions();
+
+            // Build popup
+            JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+            new AddToWatchListPopup(
+                    parent,
+                    username,
+                    movieId,
+                    movieTitle,
+                    options,
+                    addWatchListController,
+                    addWatchListPresenter
+            );
         });
 
         // review listener

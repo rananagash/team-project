@@ -81,6 +81,20 @@
                                 18,
                                 80
                             ]
+                        },
+                        {
+                            "posterUrl": "https://image.tmdb.org/t/p/w500/hEDYGyk7soq1DiyeTGecR4xvQEb.jpg",
+                            "plot": "A young Peruvian bear travels to London in search of a home. Finding himself lost and alone at Paddington Station, he meets the kindly Brown family, who offer him a temporary haven.",
+                            "releaseDate": "2014-11-24",
+                            "popularity": 0,
+                            "rating": 7.114,
+                            "id": "116149",
+                            "title": "Paddington",
+                            "genreIds": [
+                                35,
+                                12,
+                                10751
+                            ]
                         }
                     ],
                     "dateCreated": "2025-12-01T00:49:19.359271100",

@@ -1,6 +1,9 @@
 package use_case.login;
 
+import java.util.List;
+
 import entity.User;
+import entity.WatchList;
 import use_case.common.UserDataAccessInterface;
 
 /**
@@ -20,6 +23,7 @@ public class LoginInteractor implements LoginInputBoundary {
     public void execute(LoginInputData loginInputData) {
         final String username = loginInputData.getUsername();
         final String password = loginInputData.getPassword();
+
         if (!userDataAccessObject.existsByName(username)) {
             loginPresenter.prepareFailView(username + ": Account does not exist.");
         }
@@ -34,7 +38,18 @@ public class LoginInteractor implements LoginInputBoundary {
 
                 userDataAccessObject.setCurrentUsername(username);
 
-                final LoginOutputData loginOutputData = new LoginOutputData(user.getUserName());
+                final List<String> watchlistIds = user.getWatchLists().stream()
+                        .map(WatchList::getWatchListId)
+                        .toList();
+
+                final List<String> watchlistNames = user.getWatchLists().stream()
+                        .map(WatchList::getName)
+                        .toList();
+
+                final LoginOutputData loginOutputData = new LoginOutputData(
+                        user.getUserName(),
+                        watchlistIds,
+                        watchlistNames);
                 loginPresenter.prepareSuccessView(loginOutputData);
             }
         }
