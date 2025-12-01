@@ -35,7 +35,9 @@ public class ReviewMovieResponseModel {
         return movieId;
     }
 
-    public String getMovieName() {  return movieName;}
+    public String getMovieName() {
+        return movieName;
+    }
 
     public int getRating() {
         return rating;
