@@ -28,12 +28,13 @@ public class FilterMoviesController {
     /**
      * Filters movies by the provided genre IDs.
      * <p>
-     * Wraps the genre IDs in a request model and passes it to the interactor.
+     * Wraps the genre IDs and movies in a request model and passes it to the interactor.
      *
      * @param genreIds the list of genre IDs to filter movies by
+     * @param moviesToFilter the list of movies to filter
      */
-    public void filterByGenres(List<Integer> genreIds) {
-        FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(genreIds);
+    public void filterByGenres(List<Integer> genreIds, List<entity.Movie> moviesToFilter) {
+        FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(genreIds, moviesToFilter);
         interactor.execute(requestModel);
     }
 }

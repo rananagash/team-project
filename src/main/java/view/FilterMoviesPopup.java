@@ -1,14 +1,16 @@
 package view;
 
-import common.GenreUtils;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.swing.*;
+
+import common.GenreUtils;
+import entity.Movie;
 
 /**
  * Popup dialog for filtering movies by genre.
@@ -117,19 +119,31 @@ public class FilterMoviesPopup extends JDialog {
                 return;
             }
 
-            // Filter movies and check if any were found
-            boolean hasResults = loggedInView.filterCurrentMoviesAndCheck(selectedGenreIds);
+            // Get current movies from LoggedInView and filter using controller
+            List<Movie> currentMovies = loggedInView.getCurrentMovies();
+            if (currentMovies == null || currentMovies.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "No movies to filter.",
+                        "No Movies",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
-            // If no results found, keep dialog open so user can try different genres
-            // If results found, close dialog to show results
-            if (hasResults) {
+            // Use controller to filter movies (Clean Architecture)
+            if (loggedInView.getFilterMoviesController() != null) {
+                loggedInView.getFilterMoviesController().filterByGenres(selectedGenreIds, currentMovies);
                 dispose();
             } else {
-                // Show message but keep dialog open
-                JOptionPane.showMessageDialog(this,
-                        "No movies found matching the selected genres. Please try different genres.",
-                        "No Results",
-                        JOptionPane.INFORMATION_MESSAGE);
+                // Fallback to direct filtering if controller not set
+                boolean hasResults = loggedInView.filterCurrentMoviesAndCheck(selectedGenreIds);
+                if (hasResults) {
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "No movies found matching the selected genres. Please try different genres.",
+                            "No Results",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
             }
         });
 

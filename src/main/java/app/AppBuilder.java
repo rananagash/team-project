@@ -40,6 +40,9 @@ import interface_adapter.view_watchhistory.ViewWatchHistoryPresenter;
 import interface_adapter.view_watchlists.ViewWatchListsController;
 import interface_adapter.view_watchlists.ViewWatchListsPresenter;
 import interface_adapter.view_watchlists.ViewWatchListsViewModel;
+import interface_adapter.filter_movies.FilterMoviesController;
+import interface_adapter.filter_movies.FilterMoviesPresenter;
+import interface_adapter.filter_movies.FilterMoviesViewModel;
 import use_case.add_to_watchlist.AddWatchListInputBoundary;
 import use_case.add_to_watchlist.AddWatchListInteractor;
 import use_case.change_password.ChangePasswordInputBoundary;
@@ -72,6 +75,9 @@ import use_case.view_watchhistory.ViewWatchHistoryOutputBoundary;
 import use_case.view_watchlists.ViewWatchListsInputBoundary;
 import use_case.view_watchlists.ViewWatchListsInteractor;
 import use_case.view_watchlists.ViewWatchListsOutputBoundary;
+import use_case.filter_movies.FilterMoviesInputBoundary;
+import use_case.filter_movies.FilterMoviesInteractor;
+import use_case.filter_movies.FilterMoviesOutputBoundary;
 import view.AddReviewPopup;
 import view.LoggedInView;
 import view.LoginView;
@@ -329,7 +335,7 @@ public class AppBuilder {
                 new ViewWatchListsPresenter(viewWatchListsViewModel, viewManagerModel);
         final ViewWatchListsInputBoundary viewWatchListsInteractor =
                 new ViewWatchListsInteractor(userDataAccessObject,
-                viewWatchListsPresenter);
+                        viewWatchListsPresenter);
         final ViewWatchListsController viewWatchListsController =
                 new ViewWatchListsController(viewWatchListsInteractor, viewManagerModel);
 
@@ -377,7 +383,20 @@ public class AppBuilder {
      * @return this builder for chaining
      */
     public AppBuilder addFilterMoviesUseCase() {
-        // TODO: Inba
+        final FilterMoviesViewModel filterMoviesViewModel = new FilterMoviesViewModel();
+
+        final FilterMoviesOutputBoundary filterMoviesOutputBoundary =
+                new FilterMoviesPresenter(filterMoviesViewModel);
+
+        final FilterMoviesInputBoundary filterMoviesInteractor =
+                new FilterMoviesInteractor(movieDataAccessObject, filterMoviesOutputBoundary);
+
+        final FilterMoviesController filterMoviesController =
+                new FilterMoviesController(filterMoviesInteractor);
+
+        loggedInView.setFilterMoviesController(filterMoviesController);
+        loggedInView.setFilterMoviesViewModel(filterMoviesViewModel);
+
         return this;
     }
 

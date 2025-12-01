@@ -503,6 +503,14 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         this.filterMoviesController = controller;
     }
 
+    public FilterMoviesController getFilterMoviesController() {
+        return filterMoviesController;
+    }
+
+    public List<Movie> getCurrentMovies() {
+        return new ArrayList<>(currentMovies);
+    }
+
     public void setFilterMoviesViewModel(FilterMoviesViewModel viewModel) {
         this.filterMoviesViewModel = viewModel;
         // Listen to view model changes to update the display when movies are filtered
@@ -588,21 +596,58 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         }
 
         if (filterMoviesViewModel.hasError()) {
-            showError(filterMoviesViewModel.getErrorMessage());
+            String errorMessage = filterMoviesViewModel.getErrorMessage();
+            if (errorMessage != null && !errorMessage.isEmpty()) {
+                // Check if it's an informational message (no movies found)
+                if (errorMessage.contains("No movies found")) {
+                    List<Movie> filteredMovies = filterMoviesViewModel.getFilteredMovies();
+                    if (filteredMovies != null && filteredMovies.isEmpty()) {
+                        // No movies found - clear the results panel and show message
+                        movieResultsPanel.removeAll();
+                        List<String> genreNames = filterMoviesViewModel.getSelectedGenreNames();
+                        String genreText = genreNames != null && !genreNames.isEmpty()
+                                ? String.join(", ", genreNames)
+                                : "selected genres";
+                        JLabel noResultsLabel = new JLabel("No movies found matching genres: " + genreText,
+                                SwingConstants.CENTER);
+                        noResultsLabel.setForeground(new Color(209, 213, 219));
+                        noResultsLabel.setFont(new Font("Helvetica", Font.PLAIN, 16));
+                        noResultsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                        movieResultsPanel.add(noResultsLabel);
+                        movieResultsPanel.add(Box.createVerticalGlue());
+                        movieResultsPanel.revalidate();
+                        movieResultsPanel.repaint();
+                        setStatus("No movies found matching genres: " + genreText);
+                        return;
+                    }
+                }
+                showError(errorMessage);
+            }
             return;
         }
 
         List<Movie> filteredMovies = filterMoviesViewModel.getFilteredMovies();
         if (filteredMovies != null && !filteredMovies.isEmpty()) {
+            // Update currentMovies to reflect filtered results
+            this.currentMovies = new ArrayList<>(filteredMovies);
+
             // Display filtered movies
             showResults(filteredMovies, 1, 1);
             List<String> genreNames = filterMoviesViewModel.getSelectedGenreNames();
-            String genreText = String.join(", ", genreNames);
-            setStatus("Showing " + filteredMovies.size() + " movies filtered by: " + genreText);
+            String genreText = genreNames != null && !genreNames.isEmpty()
+                    ? String.join(", ", genreNames)
+                    : "selected genres";
+            setStatus("Showing " + filteredMovies.size() + " of " + originalMovies.size()
+                    + " movies filtered by: " + genreText);
         } else {
             // No movies found - clear the results panel and show message
             movieResultsPanel.removeAll();
-            JLabel noResultsLabel = new JLabel("No movies found for selected genres.", SwingConstants.CENTER);
+            List<String> genreNames = filterMoviesViewModel.getSelectedGenreNames();
+            String genreText = genreNames != null && !genreNames.isEmpty()
+                    ? String.join(", ", genreNames)
+                    : "selected genres";
+            JLabel noResultsLabel = new JLabel("No movies found matching genres: " + genreText,
+                    SwingConstants.CENTER);
             noResultsLabel.setForeground(new Color(209, 213, 219));
             noResultsLabel.setFont(new Font("Helvetica", Font.PLAIN, 16));
             noResultsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -610,7 +655,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
             movieResultsPanel.add(Box.createVerticalGlue());
             movieResultsPanel.revalidate();
             movieResultsPanel.repaint();
-            setStatus("No movies found for selected genres.");
+            setStatus("No movies found matching genres: " + genreText);
         }
     }
 

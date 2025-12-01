@@ -83,9 +83,9 @@
                             ]
                         }
                     ],
-                    "dateCreated": "2025-11-30T16:01:03.706225",
+                    "dateCreated": "2025-11-30T22:05:21.932627",
                     "name": "altest's Watch List",
-                    "id": "6fc56e29-e9f8-4065-afd8-ff0b0e1281b9"
+                    "id": "4fbf9632-eac8-4127-b551-e442708ec0e6"
                 },
                 {
                     "movies": [{
@@ -102,9 +102,9 @@
                             878
                         ]
                     }],
-                    "dateCreated": "2025-11-30T16:01:03.707420",
+                    "dateCreated": "2025-11-30T22:05:21.932754",
                     "name": "Second Watchlist",
-                    "id": "b1818a65-1954-4b40-941d-85374c3fd571"
+                    "id": "f3d486f2-7a1a-4c41-b12d-23845dbf37b7"
                 }
             ],
             "username": "altest"
@@ -114,10 +114,24 @@
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T16:01:03.707521",
+                "dateCreated": "2025-11-30T22:05:21.932790",
                 "name": "inba's Watch List",
-                "id": "f7fe949e-ac36-4335-835a-0b420a3b45b8"
+                "id": "201dfc45-667a-4d43-a836-4c1e185a9641"
             }],
+            "watchHistory": {
+                "movies": [{
+                    "posterUrl": "",
+                    "plot": "Jim Carson, a young farmer, loves the school teacher, Helen Dale, and they expect to be married. His father unexpectedly marries a widow who has a son, Arthur Vaughn, an actor. Arthur creates havoc with Helen's heart and the plans of Jim are disarranged.",
+                    "releaseDate": "1914-09-16",
+                    "popularity": 0,
+                    "rating": 8,
+                    "id": "1130528",
+                    "title": "Jim",
+                    "genreIds": [18],
+                    "watchedAt": "2025-11-30T19:09:18.214589"
+                }],
+                "id": "b8de04a9-a5e1-4e59-9c99-64ab24a17092"
+            },
             "username": "inba"
         },
         "asdf": {
@@ -163,6 +177,22 @@
                     "comment": "",
                     "id": "72ccabdf-c68e-4f6e-b2f3-f0f614cd50b8"
                 },
+                "58adaf60-f55e-4b76-b23c-deef66055853": {
+                    "createdAt": "2025-11-30T14:14:09.729862100",
+                    "movie": {
+                        "posterUrl": "",
+                        "plot": "Three teenagers, with completely different lives, meet at a party.",
+                        "releaseDate": "2017-05-06",
+                        "popularity": 0,
+                        "rating": 6,
+                        "id": "496299",
+                        "title": "Se",
+                        "genreIds": [18]
+                    },
+                    "rating": 3,
+                    "comment": "rating",
+                    "id": "58adaf60-f55e-4b76-b23c-deef66055853"
+                },
                 "8ef7afa3-c710-430a-97bd-0236c84fe093": {
                     "createdAt": "2025-11-30T14:00:19.276152900",
                     "movie": {
@@ -182,22 +212,6 @@
                     "rating": 2,
                     "comment": "asdf",
                     "id": "8ef7afa3-c710-430a-97bd-0236c84fe093"
-                },
-                "58adaf60-f55e-4b76-b23c-deef66055853": {
-                    "createdAt": "2025-11-30T14:14:09.729862100",
-                    "movie": {
-                        "posterUrl": "",
-                        "plot": "Three teenagers, with completely different lives, meet at a party.",
-                        "releaseDate": "2017-05-06",
-                        "popularity": 0,
-                        "rating": 6,
-                        "id": "496299",
-                        "title": "Se",
-                        "genreIds": [18]
-                    },
-                    "rating": 3,
-                    "comment": "rating",
-                    "id": "58adaf60-f55e-4b76-b23c-deef66055853"
                 },
                 "acd5d9ec-777b-4709-992d-c7c9484edd3d": {
                     "createdAt": "2025-11-30T14:10:46.552624600",
@@ -238,9 +252,9 @@
             },
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T16:01:03.707717",
+                "dateCreated": "2025-11-30T22:05:21.939594",
                 "name": "asdf's Watch List",
-                "id": "e61276b1-aec4-48bc-8bd1-6f94b24bbcd5"
+                "id": "e9064de4-0712-4643-9458-fb706fb6cb2f"
             }],
             "username": "asdf"
         },
@@ -261,9 +275,9 @@
                         2
                     ]
                 }],
-                "dateCreated": "2025-11-30T16:01:03.729624",
+                "dateCreated": "2025-11-30T22:05:21.940676",
                 "name": "dummy-user's Watch List",
-                "id": "7d415b95-ae98-48ee-a455-5b4cb4670b4d"
+                "id": "393b79e5-8323-4d53-8c2d-564a56e299ee"
             }],
             "username": "dummy-user"
         },
@@ -272,9 +286,9 @@
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T16:01:03.729743",
+                "dateCreated": "2025-11-30T22:05:21.940719",
                 "name": "oliver's Watch List",
-                "id": "75be593d-387b-4756-a06d-1e375b766054"
+                "id": "3bb6f2f7-8839-43ae-8548-6a7012afce31"
             }],
             "username": "oliver"
         },
@@ -283,9 +297,9 @@
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T16:01:03.729950",
+                "dateCreated": "2025-11-30T22:05:21.940754",
                 "name": "romy's Watch List",
-                "id": "1a0c30cf-52d7-48b7-a5c5-068c587088f5"
+                "id": "0686ee10-f86e-4631-8a96-91a472f90831"
             }],
             "username": "romy"
         }
