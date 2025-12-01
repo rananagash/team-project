@@ -1,5 +1,5 @@
 {
-    "currentUser": "altest",
+    "currentUser": "romy",
     "users": {
         "dummy": {
             "password": "user",
@@ -97,9 +97,9 @@
                             ]
                         }
                     ],
-                    "dateCreated": "2025-11-30T19:43:34.599386",
+                    "dateCreated": "2025-12-01T00:49:19.359271100",
                     "name": "altest's Watch List",
-                    "id": "64f1d094-5135-409f-855c-8193a5961698"
+                    "id": "3d61d02f-f75d-4252-a9ff-78483e54559c"
                 },
                 {
                     "movies": [{
@@ -116,22 +116,55 @@
                             878
                         ]
                     }],
-                    "dateCreated": "2025-11-30T19:43:34.599636",
+                    "dateCreated": "2025-12-01T00:49:19.359271100",
                     "name": "Second Watchlist",
-                    "id": "01afb5c7-b6b8-40f4-8db7-150f7980e64f"
+                    "id": "d7a65d37-3fe9-47f0-ba73-d89a9eb3ce7c"
                 }
             ],
             "username": "altest"
         },
         "inba": {
             "password": "inba",
-            "reviews": {},
+            "reviews": {"5e74e9e7-1800-4a8e-814c-4a263406bdc4": {
+                "createdAt": "2025-12-01T00:34:20.067713",
+                "movie": {
+                    "posterUrl": "",
+                    "plot": "Jim Carson, a young farmer, loves the school teacher, Helen Dale, and they expect to be married. His father unexpectedly marries a widow who has a son, Arthur Vaughn, an actor. Arthur creates havoc with Helen's heart and the plans of Jim are disarranged.",
+                    "releaseDate": "1914-09-16",
+                    "popularity": 0,
+                    "rating": 8,
+                    "id": "1130528",
+                    "title": "Jim",
+                    "genreIds": [18]
+                },
+                "rating": 5,
+                "comment": "",
+                "id": "5e74e9e7-1800-4a8e-814c-4a263406bdc4"
+            }},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T19:43:34.599762",
+                "dateCreated": "2025-12-01T00:49:19.359271100",
                 "name": "inba's Watch List",
-                "id": "fc30121c-97bc-487e-9dfa-2ebaa7ad2601"
+                "id": "dd1fdccd-0eb8-4a4f-a32e-ddfee0791502"
             }],
+            "watchHistory": {
+                "movies": [{
+                    "posterUrl": "https://image.tmdb.org/t/p/w500/yFSIUVTCvgYrpalUktulvk3Gi5Y.jpg",
+                    "plot": "After the devastating events of Avengers: Infinity War, the universe is in ruins due to the efforts of the Mad Titan, Thanos. With the help of remaining allies, the Avengers must assemble once more in order to undo Thanos' actions and restore order to the universe once and for all, no matter what consequences may be in store.",
+                    "releaseDate": "2019-04-24",
+                    "popularity": 0,
+                    "rating": 8.238,
+                    "id": "299534",
+                    "title": "Avengers: Endgame",
+                    "genreIds": [
+                        12,
+                        878,
+                        28
+                    ],
+                    "watchedAt": "2025-12-01T00:33:58.557483"
+                }],
+                "id": "b8de04a9-a5e1-4e59-9c99-64ab24a17092"
+            },
             "username": "inba"
         },
         "asdf": {
@@ -252,9 +285,9 @@
             },
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T19:43:34.599921",
+                "dateCreated": "2025-12-01T00:49:19.372551200",
                 "name": "asdf's Watch List",
-                "id": "5edb2d1a-8df4-4293-93b0-bcfb31579365"
+                "id": "6d70987b-841f-4dc5-9e61-3cd0726f305e"
             }],
             "username": "asdf"
         },
@@ -275,9 +308,9 @@
                         2
                     ]
                 }],
-                "dateCreated": "2025-11-30T19:43:34.606127",
+                "dateCreated": "2025-12-01T00:49:19.372551200",
                 "name": "dummy-user's Watch List",
-                "id": "3dc7bfd6-173e-4edb-b666-b4a7801e4327"
+                "id": "1b6f72b5-6380-4ae7-a9cf-8436c65862bc"
             }],
             "username": "dummy-user"
         },
@@ -286,21 +319,95 @@
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T19:43:34.606304",
+                "dateCreated": "2025-12-01T00:49:19.372551200",
                 "name": "oliver's Watch List",
-                "id": "c1887a03-daef-4fc3-9804-bcde3832916f"
+                "id": "735626a2-2a6e-4da9-95cc-e5b2a3d090f9"
             }],
             "username": "oliver"
         },
         "romy": {
             "password": "111",
-            "reviews": {},
+            "reviews": {
+                "15a34260-27a9-4ea8-aefc-6e5a7d61ec34": {
+                    "createdAt": "2025-12-01T00:18:21.922441800",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/31SwN5tZuJNsWTLx6DNNyQSAXdx.jpg",
+                        "plot": "Having witnessed his parents' brutal murder as a child, millionaire philanthropist Bruce Wayne fights crime in Gotham City disguised as Batman, a costumed hero who strikes fear into the hearts of villains. But when a deformed madman known as 'The Joker' seizes control of Gotham's criminal underworld, Batman must face his most ruthless nemesis ever while protecting both his identity and his love interest, reporter Vicki Vale.",
+                        "releaseDate": "1989-06-21",
+                        "popularity": 0,
+                        "rating": 7.236,
+                        "id": "268",
+                        "title": "Batman",
+                        "genreIds": [
+                            14,
+                            28,
+                            80
+                        ]
+                    },
+                    "rating": 4,
+                    "comment": "",
+                    "id": "15a34260-27a9-4ea8-aefc-6e5a7d61ec34"
+                },
+                "6fcc44b3-dc28-4036-a452-1b95d73f2c0c": {
+                    "createdAt": "2025-12-01T00:18:28.643274900",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/6zDYFigohwncqFL00MKbFV01dWb.jpg",
+                        "plot": "When Juli meets Bryce in the second grade, she knows it's true love. After spending six years trying to convince Bryce the same, she's ready to give up - until he starts to reconsider.",
+                        "releaseDate": "2010-08-06",
+                        "popularity": 0,
+                        "rating": 8.009,
+                        "id": "43949",
+                        "title": "Flipped",
+                        "genreIds": [
+                            10749,
+                            18
+                        ]
+                    },
+                    "rating": 4,
+                    "comment": "",
+                    "id": "6fcc44b3-dc28-4036-a452-1b95d73f2c0c"
+                }
+            },
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T19:43:34.606442",
+                "dateCreated": "2025-12-01T00:49:19.372551200",
                 "name": "romy's Watch List",
-                "id": "13a2e6b2-1aee-4fbc-b42e-1093d9ebb65d"
+                "id": "0c1dde1d-f8f1-47de-be73-c09bc353a18b"
             }],
+            "watchHistory": {
+                "movies": [
+                    {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/31SwN5tZuJNsWTLx6DNNyQSAXdx.jpg",
+                        "plot": "Having witnessed his parents' brutal murder as a child, millionaire philanthropist Bruce Wayne fights crime in Gotham City disguised as Batman, a costumed hero who strikes fear into the hearts of villains. But when a deformed madman known as 'The Joker' seizes control of Gotham's criminal underworld, Batman must face his most ruthless nemesis ever while protecting both his identity and his love interest, reporter Vicki Vale.",
+                        "releaseDate": "1989-06-21",
+                        "popularity": 0,
+                        "rating": 7.236,
+                        "id": "268",
+                        "title": "Batman",
+                        "genreIds": [
+                            14,
+                            28,
+                            80
+                        ],
+                        "watchedAt": "2025-12-01T00:17"
+                    },
+                    {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/6zDYFigohwncqFL00MKbFV01dWb.jpg",
+                        "plot": "When Juli meets Bryce in the second grade, she knows it's true love. After spending six years trying to convince Bryce the same, she's ready to give up - until he starts to reconsider.",
+                        "releaseDate": "2010-08-06",
+                        "popularity": 0,
+                        "rating": 8.009,
+                        "id": "43949",
+                        "title": "Flipped",
+                        "genreIds": [
+                            10749,
+                            18
+                        ],
+                        "watchedAt": "2025-12-01T00:18"
+                    }
+                ],
+                "id": "9456c9fd-a32a-4060-969e-67b017e0854a"
+            },
             "username": "romy"
         }
     }

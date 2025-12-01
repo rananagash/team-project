@@ -31,6 +31,7 @@ public class Main {
                 .addSearchMoviesUseCase()
                 .addChangePasswordUseCase()
                 .addViewProfileUseCase()
+                .addFilterMoviesUseCase()
                 .addViewWatchHistoryUseCase()
                 .addRecordWatchHistoryPopup()
                 .addAddReviewPopup()

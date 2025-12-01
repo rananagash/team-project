@@ -9,8 +9,6 @@ import java.awt.Font;
 import java.awt.Image;
 import java.net.MalformedURLException;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -21,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import common.GenreUtils;
 import interface_adapter.MovieViewData;
 
 /**
@@ -119,9 +118,9 @@ public class MovieCard extends JPanel {
                 + "     |     Rating: " + movie.getRating());
         dateRating.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // TODO: update this to convert to genre strings when that util is available
-        final String genresText = movie.getGenreIds().stream().map(Objects::toString).collect(Collectors.joining(", "));
+        final String genresText = GenreUtils.getGenreNamesAsString(movie.getGenreIds());
         final JLabel genres = new JLabel(genresText);
+        genres.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         final JTextArea plot = new JTextArea(movie.getPlot());
         plot.setLineWrap(true);
