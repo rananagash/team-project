@@ -1,5 +1,5 @@
 {
-    "currentUser": "inba",
+    "currentUser": "romy",
     "users": {
         "dummy": {
             "password": "user",
@@ -83,9 +83,9 @@
                             ]
                         }
                     ],
-                    "dateCreated": "2025-12-01T00:37:16.729853",
+                    "dateCreated": "2025-12-01T00:49:19.359271100",
                     "name": "altest's Watch List",
-                    "id": "7f05bc4d-a02b-4182-9225-bfbf750c9cc2"
+                    "id": "3d61d02f-f75d-4252-a9ff-78483e54559c"
                 },
                 {
                     "movies": [{
@@ -102,9 +102,9 @@
                             878
                         ]
                     }],
-                    "dateCreated": "2025-12-01T00:37:16.729954",
+                    "dateCreated": "2025-12-01T00:49:19.359271100",
                     "name": "Second Watchlist",
-                    "id": "77184721-f246-45b4-9300-7c3c0bf4a756"
+                    "id": "d7a65d37-3fe9-47f0-ba73-d89a9eb3ce7c"
                 }
             ],
             "username": "altest"
@@ -129,9 +129,9 @@
             }},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-12-01T00:37:16.729986",
+                "dateCreated": "2025-12-01T00:49:19.359271100",
                 "name": "inba's Watch List",
-                "id": "35f7dcac-57a0-409f-90c6-f1cc72489864"
+                "id": "dd1fdccd-0eb8-4a4f-a32e-ddfee0791502"
             }],
             "watchHistory": {
                 "movies": [{
@@ -196,22 +196,6 @@
                     "comment": "",
                     "id": "72ccabdf-c68e-4f6e-b2f3-f0f614cd50b8"
                 },
-                "58adaf60-f55e-4b76-b23c-deef66055853": {
-                    "createdAt": "2025-11-30T14:14:09.729862100",
-                    "movie": {
-                        "posterUrl": "",
-                        "plot": "Three teenagers, with completely different lives, meet at a party.",
-                        "releaseDate": "2017-05-06",
-                        "popularity": 0,
-                        "rating": 6,
-                        "id": "496299",
-                        "title": "Se",
-                        "genreIds": [18]
-                    },
-                    "rating": 3,
-                    "comment": "rating",
-                    "id": "58adaf60-f55e-4b76-b23c-deef66055853"
-                },
                 "8ef7afa3-c710-430a-97bd-0236c84fe093": {
                     "createdAt": "2025-11-30T14:00:19.276152900",
                     "movie": {
@@ -231,6 +215,22 @@
                     "rating": 2,
                     "comment": "asdf",
                     "id": "8ef7afa3-c710-430a-97bd-0236c84fe093"
+                },
+                "58adaf60-f55e-4b76-b23c-deef66055853": {
+                    "createdAt": "2025-11-30T14:14:09.729862100",
+                    "movie": {
+                        "posterUrl": "",
+                        "plot": "Three teenagers, with completely different lives, meet at a party.",
+                        "releaseDate": "2017-05-06",
+                        "popularity": 0,
+                        "rating": 6,
+                        "id": "496299",
+                        "title": "Se",
+                        "genreIds": [18]
+                    },
+                    "rating": 3,
+                    "comment": "rating",
+                    "id": "58adaf60-f55e-4b76-b23c-deef66055853"
                 },
                 "acd5d9ec-777b-4709-992d-c7c9484edd3d": {
                     "createdAt": "2025-11-30T14:10:46.552624600",
@@ -271,9 +271,9 @@
             },
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-12-01T00:37:16.731870",
+                "dateCreated": "2025-12-01T00:49:19.372551200",
                 "name": "asdf's Watch List",
-                "id": "f0687816-bd84-4858-9b3b-4410960f8fb1"
+                "id": "6d70987b-841f-4dc5-9e61-3cd0726f305e"
             }],
             "username": "asdf"
         },
@@ -294,9 +294,9 @@
                         2
                     ]
                 }],
-                "dateCreated": "2025-12-01T00:37:16.732067",
+                "dateCreated": "2025-12-01T00:49:19.372551200",
                 "name": "dummy-user's Watch List",
-                "id": "4a4212b9-3e1b-49a1-99ce-16f857dc86bc"
+                "id": "1b6f72b5-6380-4ae7-a9cf-8436c65862bc"
             }],
             "username": "dummy-user"
         },
@@ -305,9 +305,9 @@
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-12-01T00:37:16.732109",
+                "dateCreated": "2025-12-01T00:49:19.372551200",
                 "name": "oliver's Watch List",
-                "id": "e2a06ed6-ae39-4724-a0fa-3e10e0355d7d"
+                "id": "735626a2-2a6e-4da9-95cc-e5b2a3d090f9"
             }],
             "username": "oliver"
         },
@@ -356,9 +356,9 @@
             },
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-12-01T00:37:16.732144",
+                "dateCreated": "2025-12-01T00:49:19.372551200",
                 "name": "romy's Watch List",
-                "id": "1a161c52-f072-4d89-b44d-d1e2d8f35c3c"
+                "id": "0c1dde1d-f8f1-47de-be73-c09bc353a18b"
             }],
             "watchHistory": {
                 "movies": [
