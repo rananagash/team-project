@@ -157,4 +157,102 @@ class ReviewMovieInteractorTest {
         assertNull(presenter.success);
         assertEquals("Rating must be between 1 and 5.", presenter.failure);
     }
+
+    @Test
+    void failInvalidRatingTooLow() {
+
+        FakeUserDAO userDAO = new FakeUserDAO();
+        FakeMovieGateway movieGateway = new FakeMovieGateway();
+        FakePresenter presenter = new FakePresenter();
+
+        ReviewMovieInteractor interactor = new ReviewMovieInteractor(userDAO, movieGateway, presenter);
+
+        ReviewMovieRequestModel request = new ReviewMovieRequestModel(
+                "john",
+                "M001",
+                0,
+                "bad"
+        );
+
+        interactor.execute(request);
+
+        assertNull(presenter.success);
+        assertEquals("Rating must be between 1 and 5.", presenter.failure);
+    }
+
+    @Test
+    void failUserNotFound() {
+
+        FakeUserDAO userDAO = new FakeUserDAO();
+        FakeMovieGateway movieGateway = new FakeMovieGateway();
+        FakePresenter presenter = new FakePresenter();
+
+        // userDAO.storedUser stays null
+
+        movieGateway.movie = Optional.of(
+                new Movie("M001", "Test", "Plot", List.of(1), "2025", 1.0, 0.0, "poster")
+        );
+
+        ReviewMovieInteractor interactor = new ReviewMovieInteractor(userDAO, movieGateway, presenter);
+
+        ReviewMovieRequestModel request = new ReviewMovieRequestModel(
+                "ghost",
+                "M001",
+                3,
+                "ok"
+        );
+
+        interactor.execute(request);
+
+        assertNull(presenter.success);
+        assertEquals("User not found: ghost", presenter.failure);
+    }
+
+    @Test
+    void failMovieNotFound() {
+
+        FakeUserDAO userDAO = new FakeUserDAO();
+        FakeMovieGateway movieGateway = new FakeMovieGateway();
+        FakePresenter presenter = new FakePresenter();
+
+        userDAO.storedUser = new User("john", "1234");
+
+        movieGateway.movie = Optional.empty();
+
+        ReviewMovieInteractor interactor = new ReviewMovieInteractor(userDAO, movieGateway, presenter);
+
+        ReviewMovieRequestModel request = new ReviewMovieRequestModel(
+                "john",
+                "M001",
+                3,
+                "ok"
+        );
+
+        interactor.execute(request);
+
+        assertNull(presenter.success);
+        assertEquals("Movie not found: M001", presenter.failure);
+    }
+
+    @Test
+    void responseModelAllGetters() {
+
+        ReviewMovieResponseModel model = new ReviewMovieResponseModel(
+                "R123",
+                "john",
+                "M001",
+                "Test Movie",
+                5,
+                "Nice"
+        );
+
+        assertEquals("R123", model.getReviewId());
+        assertEquals("john", model.getUserName());
+        assertEquals("M001", model.getMovieId());
+        assertEquals("Test Movie", model.getMovieName());
+        assertEquals(5, model.getRating());
+        assertEquals("Nice", model.getComment());
+    }
+
+
 }
