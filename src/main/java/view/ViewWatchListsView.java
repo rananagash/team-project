@@ -6,17 +6,9 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import interface_adapter.MovieViewData;
 import interface_adapter.view_watchlists.ViewWatchListsController;
@@ -64,11 +56,11 @@ public class ViewWatchListsView extends JPanel implements PropertyChangeListener
 
         // ---------- NAV BAR ----------
         final JPanel navBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        backButton = new JButton("Back to Profile");
+        backButton = new JButton("← Back");
         logoutButton = new JButton("Logout");
 
         navBar.add(backButton);
-        navBar.add(logoutButton);
+//        navBar.add(logoutButton);
         add(navBar, BorderLayout.NORTH);
 
         backButton.addActionListener(e -> {
@@ -173,7 +165,7 @@ public class ViewWatchListsView extends JPanel implements PropertyChangeListener
                     movie.getPosterUrl()
             );
 
-            moviePanel.add(new MovieCard(movieView));
+            moviePanel.add(new MovieCard(movieView, createMovieButtons(movieView)));
             moviePanel.add(Box.createRigidArea(new Dimension(0, 5)));
         }
 
@@ -191,5 +183,30 @@ public class ViewWatchListsView extends JPanel implements PropertyChangeListener
      */
     public String getViewName() {
         return viewName;
+    }
+
+    public List<JButton> createMovieButtons(MovieViewData movie) {
+
+        final JButton watchedButton = new JButton("✓ Mark as Watched");
+        final JButton reviewButton = new JButton("Review");
+
+        watchedButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "\"Mark as Watched\" is not yet implemented in this view.",
+                    "Not Implemented",
+                    JOptionPane.WARNING_MESSAGE
+            );
+        });
+
+        reviewButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "\"Review\" is not yet implemented in this view.",
+                    "Not Implemented",
+                    JOptionPane.WARNING_MESSAGE
+            );
+        });
+        return List.of(watchedButton, reviewButton);
     }
 }
