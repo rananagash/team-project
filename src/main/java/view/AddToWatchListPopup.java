@@ -15,12 +15,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import entity.Movie;
-import entity.User;
-import entity.WatchList;
 import interface_adapter.add_to_watchlist.AddWatchListController;
 import interface_adapter.add_to_watchlist.AddWatchListPresenter;
 import interface_adapter.add_to_watchlist.AddWatchListView;
+import interface_adapter.add_to_watchlist.WatchListOption;
 
 /**
  * Swing-based popup dialog for adding a movie to a user's watch list.
@@ -39,10 +37,13 @@ public class AddToWatchListPopup extends JDialog implements AddWatchListView {
 
     private JLabel messageLabel;
     private JPanel buttonPanel;
-    private JComboBox<WatchList> dropdown;
+    private JComboBox<WatchListOption> dropdown;
 
-    private final User user;
-    private final Movie movie;
+    private final String username;
+    private final String movieId;
+    private final String movieTitle;
+    private final List<WatchListOption> watchListOptions;
+
     private AddWatchListController controller;
     private AddWatchListPresenter presenter;
 
@@ -50,19 +51,25 @@ public class AddToWatchListPopup extends JDialog implements AddWatchListView {
      * Constructs the popup UI and displays it immediately.
      *
      * @param parent the parent Swing frame
-     * @param user the user who is adding the movie
-     * @param movie the movie to be added
+     * @param username the username of the user who is adding the movie
+     * @param movieId the movieId of the movie to be added
+     * @param movieTitle the title of the movie to be addded
+     * @param watchListOptions UI ready watchlist data (id + name)
      * @param controller the controller handling the add operations
      * @param presenter the presenter
      */
     public AddToWatchListPopup(JFrame parent,
-                               User user,
-                               Movie movie,
+                               String username,
+                               String movieId,
+                               String movieTitle,
+                               List<WatchListOption> watchListOptions,
                                AddWatchListController controller,
                                AddWatchListPresenter presenter) {
         super(parent, "Add to Watch List", true);
-        this.user = user;
-        this.movie = movie;
+        this.username = username;
+        this.movieId = movieId;
+        this.movieTitle = movieTitle;
+        this.watchListOptions = watchListOptions;
         this.controller = controller;
         this.presenter = presenter;
 
@@ -79,23 +86,24 @@ public class AddToWatchListPopup extends JDialog implements AddWatchListView {
     }
 
     private void initialState() {
-        final List<WatchList> watchLists = user.getWatchLists();
 
         messageLabel = new JLabel();
         buttonPanel = new JPanel();
 
-        if (watchLists.size() == 1) {
-            messageLabel = new JLabel("Add " + movie.getTitle() + " to "
-                    + watchLists.get(0).getName() + "?");
+        if (watchListOptions.size() == 1) {
+            final WatchListOption onlyList = watchListOptions.get(0);
+            messageLabel = new JLabel("Add " + movieTitle + " to "
+                    + onlyList.getName() + "?");
         }
         else {
-            messageLabel = new JLabel("Add " + movie.getTitle() + " to:");
-            dropdown = new JComboBox<>(watchLists.toArray(new WatchList[0]));
+            messageLabel = new JLabel("Add " + movieTitle + " to:");
+            dropdown = new JComboBox<>(watchListOptions.toArray(new WatchListOption[0]));
         }
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         final JButton addButton = new JButton("Add");
         final JButton cancelButton = new JButton("Cancel");
+
         buttonPanel.add(addButton);
         buttonPanel.add(cancelButton);
 
@@ -116,14 +124,15 @@ public class AddToWatchListPopup extends JDialog implements AddWatchListView {
     }
 
     private void handleAdd() {
-        final WatchList selected;
+        final WatchListOption selected;
+
         if (dropdown == null) {
-            selected = user.getWatchLists().get(0);
+            selected = watchListOptions.get(0);
         }
         else {
-            selected = (WatchList) dropdown.getSelectedItem();
+            selected = (WatchListOption) dropdown.getSelectedItem();
         }
-        controller.addMovieToWatchList(user.getUserName(), movie.getMovieId(), selected.getWatchListId());
+        controller.addMovieToWatchList(username, movieId, selected.getWatchListId());
         // don't close popup; presenter will call showResult to update
     }
 

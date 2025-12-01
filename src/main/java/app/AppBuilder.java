@@ -14,6 +14,7 @@ import entity.factories.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.add_to_watchlist.AddWatchListController;
 import interface_adapter.add_to_watchlist.AddWatchListPresenter;
+import interface_adapter.add_to_watchlist.AddWatchListViewModel;
 import interface_adapter.logged_in.ChangePasswordController;
 import interface_adapter.logged_in.ChangePasswordPresenter;
 import interface_adapter.logged_in.LoggedInViewModel;
@@ -73,6 +74,7 @@ import use_case.view_watchlists.ViewWatchListsInputBoundary;
 import use_case.view_watchlists.ViewWatchListsInteractor;
 import use_case.view_watchlists.ViewWatchListsOutputBoundary;
 import view.AddReviewPopup;
+import view.AddToWatchListPopup;
 import view.LoggedInView;
 import view.LoginView;
 import view.ProfileView;
@@ -134,6 +136,9 @@ public class AppBuilder {
 
     private ViewWatchListsView viewWatchListsView;
     private ViewWatchListsViewModel viewWatchListsViewModel;
+
+    private AddToWatchListPopup addToWatchListPopup;
+    private AddWatchListViewModel addWatchListViewModel;
 
     private AddReviewPopup addReviewPopup;
     private ReviewMovieViewModel reviewMovieViewModel;
@@ -235,7 +240,7 @@ public class AppBuilder {
      */
     public AppBuilder addLoginUseCase() {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel,
-                loggedInViewModel, loginViewModel);
+                loggedInViewModel, loginViewModel, addWatchListViewModel);
         final LoginInputBoundary loginInteractor = new LoginInteractor(
                 userDataAccessObject, loginOutputBoundary);
 
@@ -387,8 +392,9 @@ public class AppBuilder {
      * @return this builder for chaining
      */
     public AppBuilder addAddToWatchListUseCase() {
+        addWatchListViewModel = new AddWatchListViewModel();
         // Create presenter (no view yet)
-        final AddWatchListPresenter addWatchListPresenter = new AddWatchListPresenter();
+        final AddWatchListPresenter addWatchListPresenter = new AddWatchListPresenter(addWatchListViewModel);
 
         // Create interactor
         final AddWatchListInputBoundary addWatchListInputBoundary = new AddWatchListInteractor(
