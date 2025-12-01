@@ -5,6 +5,7 @@ import entity.Movie;
 import entity.User;
 import interface_adapter.add_to_watchlist.AddWatchListController;
 import interface_adapter.add_to_watchlist.AddWatchListPresenter;
+import interface_adapter.add_to_watchlist.WatchListOption;
 import interface_adapter.filter_movies.FilterMoviesController;
 import interface_adapter.filter_movies.FilterMoviesViewModel;
 import interface_adapter.logged_in.ChangePasswordController;

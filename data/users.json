@@ -1,5 +1,5 @@
 {
-    "currentUser": "inba",
+    "currentUser": "altest",
     "users": {
         "dummy": {
             "password": "user",
@@ -81,11 +81,25 @@
                                 18,
                                 80
                             ]
+                        },
+                        {
+                            "posterUrl": "https://image.tmdb.org/t/p/w500/hEDYGyk7soq1DiyeTGecR4xvQEb.jpg",
+                            "plot": "A young Peruvian bear travels to London in search of a home. Finding himself lost and alone at Paddington Station, he meets the kindly Brown family, who offer him a temporary haven.",
+                            "releaseDate": "2014-11-24",
+                            "popularity": 0,
+                            "rating": 7.114,
+                            "id": "116149",
+                            "title": "Paddington",
+                            "genreIds": [
+                                35,
+                                12,
+                                10751
+                            ]
                         }
                     ],
-                    "dateCreated": "2025-11-30T16:01:03.706225",
+                    "dateCreated": "2025-11-30T19:43:34.599386",
                     "name": "altest's Watch List",
-                    "id": "6fc56e29-e9f8-4065-afd8-ff0b0e1281b9"
+                    "id": "64f1d094-5135-409f-855c-8193a5961698"
                 },
                 {
                     "movies": [{
@@ -102,9 +116,9 @@
                             878
                         ]
                     }],
-                    "dateCreated": "2025-11-30T16:01:03.707420",
+                    "dateCreated": "2025-11-30T19:43:34.599636",
                     "name": "Second Watchlist",
-                    "id": "b1818a65-1954-4b40-941d-85374c3fd571"
+                    "id": "01afb5c7-b6b8-40f4-8db7-150f7980e64f"
                 }
             ],
             "username": "altest"
@@ -114,9 +128,9 @@
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T16:01:03.707521",
+                "dateCreated": "2025-11-30T19:43:34.599762",
                 "name": "inba's Watch List",
-                "id": "f7fe949e-ac36-4335-835a-0b420a3b45b8"
+                "id": "fc30121c-97bc-487e-9dfa-2ebaa7ad2601"
             }],
             "username": "inba"
         },
@@ -238,9 +252,9 @@
             },
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T16:01:03.707717",
+                "dateCreated": "2025-11-30T19:43:34.599921",
                 "name": "asdf's Watch List",
-                "id": "e61276b1-aec4-48bc-8bd1-6f94b24bbcd5"
+                "id": "5edb2d1a-8df4-4293-93b0-bcfb31579365"
             }],
             "username": "asdf"
         },
@@ -261,9 +275,9 @@
                         2
                     ]
                 }],
-                "dateCreated": "2025-11-30T16:01:03.729624",
+                "dateCreated": "2025-11-30T19:43:34.606127",
                 "name": "dummy-user's Watch List",
-                "id": "7d415b95-ae98-48ee-a455-5b4cb4670b4d"
+                "id": "3dc7bfd6-173e-4edb-b666-b4a7801e4327"
             }],
             "username": "dummy-user"
         },
@@ -272,9 +286,9 @@
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T16:01:03.729743",
+                "dateCreated": "2025-11-30T19:43:34.606304",
                 "name": "oliver's Watch List",
-                "id": "75be593d-387b-4756-a06d-1e375b766054"
+                "id": "c1887a03-daef-4fc3-9804-bcde3832916f"
             }],
             "username": "oliver"
         },
@@ -283,9 +297,9 @@
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T16:01:03.729950",
+                "dateCreated": "2025-11-30T19:43:34.606442",
                 "name": "romy's Watch List",
-                "id": "1a0c30cf-52d7-48b7-a5c5-068c587088f5"
+                "id": "13a2e6b2-1aee-4fbc-b42e-1093d9ebb65d"
             }],
             "username": "romy"
         }
