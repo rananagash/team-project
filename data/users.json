@@ -1,5 +1,5 @@
 {
-    "currentUser": "rananagash",
+    "currentUser": "asdf",
     "users": {
         "dummy": {
             "password": "user",
@@ -81,11 +81,25 @@
                                 18,
                                 80
                             ]
+                        },
+                        {
+                            "posterUrl": "https://image.tmdb.org/t/p/w500/hEDYGyk7soq1DiyeTGecR4xvQEb.jpg",
+                            "plot": "A young Peruvian bear travels to London in search of a home. Finding himself lost and alone at Paddington Station, he meets the kindly Brown family, who offer him a temporary haven.",
+                            "releaseDate": "2014-11-24",
+                            "popularity": 0,
+                            "rating": 7.114,
+                            "id": "116149",
+                            "title": "Paddington",
+                            "genreIds": [
+                                35,
+                                12,
+                                10751
+                            ]
                         }
                     ],
-                    "dateCreated": "2025-12-01T08:53:30.865114",
+                    "dateCreated": "2025-12-01T12:51:26.159058800",
                     "name": "altest's Watch List",
-                    "id": "0ab3c6a0-e3e0-4816-87e1-53025c7655a6"
+                    "id": "dd4896a8-6a38-4816-830b-8ed8a36befa4"
                 },
                 {
                     "movies": [{
@@ -102,9 +116,9 @@
                             878
                         ]
                     }],
-                    "dateCreated": "2025-12-01T08:53:30.865491",
+                    "dateCreated": "2025-12-01T12:51:26.159058800",
                     "name": "Second Watchlist",
-                    "id": "0f6d6d30-bc21-4549-b4a9-87e2b1dfdca2"
+                    "id": "decb32c4-7004-4d3c-b376-8e9ef9ad0a73"
                 }
             ],
             "username": "altest"
@@ -129,9 +143,9 @@
             }},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-12-01T08:53:30.865667",
+                "dateCreated": "2025-12-01T12:51:26.159058800",
                 "name": "inba's Watch List",
-                "id": "74517164-49a2-45c4-8d55-4d09ad7f50af"
+                "id": "09ba61c7-dbe9-4701-a321-033fedeb1350"
             }],
             "watchHistory": {
                 "movies": [{
@@ -207,6 +221,22 @@
                     "comment": "",
                     "id": "72ccabdf-c68e-4f6e-b2f3-f0f614cd50b8"
                 },
+                "58adaf60-f55e-4b76-b23c-deef66055853": {
+                    "createdAt": "2025-11-30T14:14:09.729862100",
+                    "movie": {
+                        "posterUrl": "",
+                        "plot": "Three teenagers, with completely different lives, meet at a party.",
+                        "releaseDate": "2017-05-06",
+                        "popularity": 0,
+                        "rating": 6,
+                        "id": "496299",
+                        "title": "Se",
+                        "genreIds": [18]
+                    },
+                    "rating": 3,
+                    "comment": "rating",
+                    "id": "58adaf60-f55e-4b76-b23c-deef66055853"
+                },
                 "8ef7afa3-c710-430a-97bd-0236c84fe093": {
                     "createdAt": "2025-11-30T14:00:19.276152900",
                     "movie": {
@@ -227,22 +257,6 @@
                     "comment": "asdf",
                     "id": "8ef7afa3-c710-430a-97bd-0236c84fe093"
                 },
-                "58adaf60-f55e-4b76-b23c-deef66055853": {
-                    "createdAt": "2025-11-30T14:14:09.729862100",
-                    "movie": {
-                        "posterUrl": "",
-                        "plot": "Three teenagers, with completely different lives, meet at a party.",
-                        "releaseDate": "2017-05-06",
-                        "popularity": 0,
-                        "rating": 6,
-                        "id": "496299",
-                        "title": "Se",
-                        "genreIds": [18]
-                    },
-                    "rating": 3,
-                    "comment": "rating",
-                    "id": "58adaf60-f55e-4b76-b23c-deef66055853"
-                },
                 "acd5d9ec-777b-4709-992d-c7c9484edd3d": {
                     "createdAt": "2025-11-30T14:10:46.552624600",
                     "movie": {
@@ -258,6 +272,25 @@
                     "rating": 2,
                     "comment": "asdf",
                     "id": "acd5d9ec-777b-4709-992d-c7c9484edd3d"
+                },
+                "384ce0ee-77c9-4acb-ad74-75e931e9809d": {
+                    "createdAt": "2025-12-01T12:51:50.709517400",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/oYiXeIFJNCekixjRda4GC5Kcquc.jpg",
+                        "plot": "Based on a popular joke. This joke was popularized from a scene in \\",
+                        "releaseDate": "2011-01-01",
+                        "popularity": 0,
+                        "rating": 0,
+                        "id": "891924",
+                        "title": "Chester",
+                        "genreIds": [
+                            35,
+                            27
+                        ]
+                    },
+                    "rating": 2,
+                    "comment": "Hello chester",
+                    "id": "384ce0ee-77c9-4acb-ad74-75e931e9809d"
                 },
                 "316672f4-4390-4357-87ce-370acbff693d": {
                     "createdAt": "2025-11-30T15:40:38.777646400",
@@ -282,10 +315,27 @@
             },
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-12-01T08:53:30.872843",
+                "dateCreated": "2025-12-01T12:51:26.159058800",
                 "name": "asdf's Watch List",
-                "id": "03676ed9-01e4-4e47-bbd5-6763c125a4ee"
+                "id": "409eee43-02f5-48c3-b9f6-a91a405a24dd"
             }],
+            "watchHistory": {
+                "movies": [{
+                    "posterUrl": "https://image.tmdb.org/t/p/w500/oYiXeIFJNCekixjRda4GC5Kcquc.jpg",
+                    "plot": "Based on a popular joke. This joke was popularized from a scene in \\",
+                    "releaseDate": "2011-01-01",
+                    "popularity": 0,
+                    "rating": 0,
+                    "id": "891924",
+                    "title": "Chester",
+                    "genreIds": [
+                        35,
+                        27
+                    ],
+                    "watchedAt": "2025-12-01T12:51:40.851097"
+                }],
+                "id": "f3798ff5-9986-48e0-bb83-b8a580d8d107"
+            },
             "username": "asdf"
         },
         "dummy-user": {
@@ -305,9 +355,9 @@
                         2
                     ]
                 }],
-                "dateCreated": "2025-12-01T08:53:30.873849",
+                "dateCreated": "2025-12-01T12:51:26.173335200",
                 "name": "dummy-user's Watch List",
-                "id": "724e2745-bfa4-4e50-8116-97204b8aeab1"
+                "id": "52630123-8162-467c-8693-7460cc965f37"
             }],
             "username": "dummy-user"
         },
@@ -316,9 +366,9 @@
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-12-01T08:53:30.873968",
+                "dateCreated": "2025-12-01T12:51:26.173335200",
                 "name": "oliver's Watch List",
-                "id": "506c83ee-79cd-40f4-a7b5-a141d51c8b97"
+                "id": "e5bb2fea-438e-4d17-ad5e-89f6d9cf4131"
             }],
             "username": "oliver"
         },
@@ -367,9 +417,9 @@
             },
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-12-01T08:53:30.874153",
+                "dateCreated": "2025-12-01T12:51:26.173335200",
                 "name": "romy's Watch List",
-                "id": "504663f9-398e-43a8-a9d8-cbeff5beb96d"
+                "id": "51bda41a-97e2-4abd-ad60-d95a752b50e3"
             }],
             "watchHistory": {
                 "movies": [

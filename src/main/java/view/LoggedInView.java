@@ -4,6 +4,7 @@ import entity.Movie;
 import entity.User;
 import interface_adapter.add_to_watchlist.AddWatchListController;
 import interface_adapter.add_to_watchlist.AddWatchListPresenter;
+import interface_adapter.add_to_watchlist.WatchListOption;
 import interface_adapter.filter_movies.FilterMoviesController;
 import interface_adapter.filter_movies.FilterMoviesViewModel;
 import interface_adapter.logged_in.ChangePasswordController;
@@ -73,10 +74,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private JButton filterMoviesBtn;
 
     // Middle Panel (testing only)
-    //TODO: remove before final version
-    private JPanel middlePanel;
-    private JButton addToWatchListBtn;
-    private JButton addToHistoryBtn;
 
     // UI Components - Search panel
     private JTextField queryField;
@@ -195,60 +192,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         topPanel.revalidate();
         topPanel.repaint();
 
-        // Middle panel buttons for testing only
-        //TODO: remove before final version
-        middlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        addToWatchListBtn = new JButton("Add to Watchlist (TEST)");
-        addToHistoryBtn = new JButton("Add to History (TEST)");
 
-        middlePanel.add(addToWatchListBtn);
-        middlePanel.add(addToHistoryBtn);
-
-        addToWatchListBtn.addActionListener(e -> {
-            final LoggedInState currentState = loggedInViewModel.getState();
-            if (currentState == null) return;
-
-            //Dummy user - real button should get current logged in user
-            User user = new User("TestUser", "pw");
-
-            //Dummy movie
-            Movie movie = new Movie("m1",
-                    "Test Movie",
-                    "A test movie plot happens",
-                    List.of(1, 2),
-                    "2025-01-01",
-                    7.5,
-                    0.0,
-                    "poster-url");
-
-            JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
-
-            // Create popup
-            new AddToWatchListPopup(
-                    parent,
-                    user,
-                    movie,
-                    addWatchListController,
-                    addWatchListPresenter
-            );
-        });
-
-        addToHistoryBtn.addActionListener(e -> {
-            final LoggedInState currentState = loggedInViewModel.getState();
-            if (currentState == null) return;
-
-            if (recordWatchHistoryController != null) {
-                // Use current logged in user's username
-                String username = currentState.getUsername();
-
-                // Test movie ID (using a real TMDb movie ID for testing)
-                String testMovieId = "299534"; // Avengers: Endgame
-
-                // Record the movie to watch history
-                // watchedAt is null, so it will use current time
-                recordWatchHistoryController.recordMovie(username, testMovieId);
-            }
-        });
 
 //        this.add(topPanel, BorderLayout.NORTH);
 
@@ -279,7 +223,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         JPanel northWrapper = new JPanel();
         northWrapper.setLayout(new BorderLayout());
         northWrapper.add(topPanel, BorderLayout.NORTH);
-        northWrapper.add(middlePanel, BorderLayout.CENTER); //TODO: just for testing
         northWrapper.add(searchPanel, BorderLayout.SOUTH);
         this.add(northWrapper, BorderLayout.NORTH);
 
@@ -702,15 +645,31 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
         // listners
         addToWatchlistBtn.addActionListener(e -> {
-            if (addWatchListController != null) {
-                // may need AddWatchListController
-                // only update the look for now
-                addToWatchlistBtn.setText("In Watchlist");
-                addToWatchlistBtn.setBackground(new Color(22, 163, 74));
-                addToWatchlistBtn.setEnabled(false);
-
-                // TODO: need to call watch list Controller
+            LoggedInState currentState = loggedInViewModel.getState();
+            if (currentState == null) {
+                return;
             }
+
+            String username = currentState.getUsername();
+            String movieId = movie.getMovieId();
+            String movieTitle = movie.getTitle();
+
+//            addWatchListPresenter.loadWatchListsForUser(username);
+
+            List<WatchListOption> options = addWatchListPresenter.getViewModel().getWatchListOptions();
+
+            // Build popup
+            JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+            new AddToWatchListPopup(
+                    parent,
+                    username,
+                    movieId,
+                    movieTitle,
+                    options,
+                    addWatchListController,
+                    addWatchListPresenter
+            );
         });
 
         // review listener

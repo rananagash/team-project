@@ -1,6 +1,7 @@
 package interface_adapter.add_to_watchlist;
 
 import use_case.add_to_watchlist.AddWatchListInputBoundary;
+import use_case.add_to_watchlist.AddWatchListOutputBoundary;
 import use_case.add_to_watchlist.AddWatchListRequestModel;
 
 /**
@@ -12,7 +13,7 @@ import use_case.add_to_watchlist.AddWatchListRequestModel;
 public class AddWatchListController {
 
     private final AddWatchListInputBoundary interactor;
-    private final AddWatchListPresenter presenter;
+    private final AddWatchListOutputBoundary presenter;
 
     /**
      * Creates a controller for the Add to Watch List use case.
@@ -21,7 +22,7 @@ public class AddWatchListController {
      * @param presenter the presenter used for output
      */
     public AddWatchListController(AddWatchListInputBoundary interactor,
-                                  AddWatchListPresenter presenter) {
+                                  AddWatchListOutputBoundary presenter) {
         this.interactor = interactor;
         this.presenter = presenter;
     }
@@ -34,7 +35,11 @@ public class AddWatchListController {
      * @param watchListId the target watch list
      */
     public void addMovieToWatchList(String username, String movieId, String watchListId) {
-        final AddWatchListRequestModel requestModel = new AddWatchListRequestModel(username, movieId, watchListId);
+        final AddWatchListRequestModel requestModel = new AddWatchListRequestModel(
+                username,
+                movieId,
+                watchListId
+        );
         interactor.execute(requestModel);
     }
 
@@ -42,7 +47,7 @@ public class AddWatchListController {
      * Exposes the presenter so a view can register itself.
      * @return presenter
      */
-    public AddWatchListPresenter getPresenter() {
+    public AddWatchListOutputBoundary getPresenter() {
         return presenter;
     }
 }
