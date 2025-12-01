@@ -8,7 +8,7 @@ public class SearchMovieRequestModel {
     public SearchMovieRequestModel(String query,  int page) {
 
         this.query = query;
-        this.page = 1;
+        this.page = page;
     }
 
     public String getQuery() {
