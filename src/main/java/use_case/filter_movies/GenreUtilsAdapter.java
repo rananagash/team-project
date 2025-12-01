@@ -1,6 +1,6 @@
-package common;
+package use_case.filter_movies;
 
-import use_case.filter_movies.GenreConverter;
+import common.GenreUtils;
 
 import java.util.List;
 

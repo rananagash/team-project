@@ -35,6 +35,11 @@ import interface_adapter.signup.SignupViewModel;
 import interface_adapter.view_profile.ViewProfileController;
 import interface_adapter.view_profile.ViewProfilePresenter;
 import interface_adapter.view_profile.ViewProfileViewModel;
+import interface_adapter.delete_watchedmovie.DeleteWatchedMovieController;
+import interface_adapter.delete_watchedmovie.DeleteWatchedMoviePresenter;
+import interface_adapter.delete_watchedmovie.DeleteWatchedMovieView;
+import interface_adapter.edit_watchedmovie.EditWatchedMovieController;
+import interface_adapter.edit_watchedmovie.EditWatchedMoviePresenter;
 import interface_adapter.view_watchhistory.ViewWatchHistoryController;
 import interface_adapter.view_watchhistory.ViewWatchHistoryPresenter;
 import interface_adapter.view_watchlists.ViewWatchListsController;
@@ -69,6 +74,12 @@ import use_case.signup.SignupOutputBoundary;
 import use_case.view_profile.ViewProfileInputBoundary;
 import use_case.view_profile.ViewProfileInteractor;
 import use_case.view_profile.ViewProfileOutputBoundary;
+import use_case.delete_watchedmovie.DeleteWatchedMovieInputBoundary;
+import use_case.delete_watchedmovie.DeleteWatchedMovieInteractor;
+import use_case.delete_watchedmovie.DeleteWatchedMovieOutputBoundary;
+import use_case.edit_watchedmovie.EditWatchedMovieInputBoundary;
+import use_case.edit_watchedmovie.EditWatchedMovieInteractor;
+import use_case.edit_watchedmovie.EditWatchedMovieOutputBoundary;
 import use_case.view_watchhistory.ViewWatchHistoryInputBoundary;
 import use_case.view_watchhistory.ViewWatchHistoryInteractor;
 import use_case.view_watchhistory.ViewWatchHistoryOutputBoundary;
@@ -370,6 +381,30 @@ public class AppBuilder {
         // Create controller with the interactor
         final ViewWatchHistoryController controller = new ViewWatchHistoryController(interactor);
 
+        // Create Delete Watched Movie use case
+        final DeleteWatchedMovieView deleteView = viewWatchHistoryPopup;
+        final DeleteWatchedMovieOutputBoundary deletePresenter = new DeleteWatchedMoviePresenter(deleteView);
+        final DeleteWatchedMovieInputBoundary deleteInteractor =
+                new DeleteWatchedMovieInteractor(userDataAccessObject, deletePresenter);
+        final DeleteWatchedMovieController deleteController = new DeleteWatchedMovieController(deleteInteractor);
+
+        // Create Edit Watched Movie use case
+        // Note: EditWatchedMovieView will be implemented by MovieDetailEditPopup instances created at runtime
+        // We create a placeholder presenter that will be updated when MovieDetailEditPopup is created
+        final EditWatchedMovieOutputBoundary editPresenter = new EditWatchedMoviePresenter(null);
+        final EditWatchedMovieInputBoundary editInteractor =
+                new EditWatchedMovieInteractor(userDataAccessObject, movieDataAccessObject, editPresenter);
+        final EditWatchedMovieController editController = new EditWatchedMovieController(editInteractor);
+
+        // Connect controllers to ViewWatchHistoryPopup
+        viewWatchHistoryPopup.setViewHistoryController(controller);
+        viewWatchHistoryPopup.setDeleteController(deleteController);
+        viewWatchHistoryPopup.setEditController(editController);
+        viewWatchHistoryPopup.setMovieGateway(movieDataAccessObject);
+        viewWatchHistoryPopup.setUserDataAccess(userDataAccessObject);
+        // Store the presenter so MovieDetailEditPopup can use it
+        viewWatchHistoryPopup.setEditPresenter((EditWatchedMoviePresenter) editPresenter);
+
         // Connect controller to LoggedInView and ProfileView
         loggedInView.setViewWatchHistoryController(controller);
         profileView.setViewWatchHistoryController(controller);
@@ -393,7 +428,7 @@ public class AppBuilder {
                 new use_case.filter_movies.FilterMoviesValidator();
         final use_case.filter_movies.MovieFilterStrategy filterStrategy =
                 new use_case.filter_movies.GenreMatchFilterStrategy();
-        final common.GenreUtilsAdapter genreConverter = new common.GenreUtilsAdapter();
+        final use_case.filter_movies.GenreUtilsAdapter genreConverter = new use_case.filter_movies.GenreUtilsAdapter();
 
         final FilterMoviesInputBoundary filterMoviesInteractor =
                 new FilterMoviesInteractor(
