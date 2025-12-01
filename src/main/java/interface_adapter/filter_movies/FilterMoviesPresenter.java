@@ -4,7 +4,6 @@ import use_case.filter_movies.FilterMoviesOutputBoundary;
 import use_case.filter_movies.FilterMoviesResponseModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Presenter for the Filter Movies use case. This class receives the output

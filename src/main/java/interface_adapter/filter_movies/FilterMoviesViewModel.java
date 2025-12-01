@@ -1,11 +1,11 @@
 package interface_adapter.filter_movies;
 
-import entity.Movie;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
+
+import entity.Movie;
 
 /**
  * View model for the Filter Movies use case.

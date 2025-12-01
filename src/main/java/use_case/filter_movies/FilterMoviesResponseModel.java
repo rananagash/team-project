@@ -1,7 +1,8 @@
 package use_case.filter_movies;
 
-import entity.Movie;
 import java.util.List;
+
+import entity.Movie;
 
 /**
  * Response model for the Filter Movies use case. This class contains the

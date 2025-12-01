@@ -2,6 +2,7 @@ package use_case.filter_movies;
 
 import entity.Movie;
 import common.GenreUtils;
+import common.GenreUtilsAdapter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import use_case.common.MovieGateway;
@@ -18,18 +19,33 @@ class FilterMoviesInteractorTest {
     private FilterMoviesInteractor interactor;
     private MockMovieGateway mockMovieGateway;
     private MockFilterMoviesOutputBoundary mockPresenter;
+    private FilterMoviesValidator validator;
+    private MovieFilterStrategy filterStrategy;
+    private GenreConverter genreConverter;
 
     @BeforeEach
     void setUp() {
         mockMovieGateway = new MockMovieGateway();
         mockPresenter = new MockFilterMoviesOutputBoundary();
-        interactor = new FilterMoviesInteractor(mockMovieGateway, mockPresenter);
+        validator = new FilterMoviesValidator();
+        filterStrategy = new GenreMatchFilterStrategy();
+        genreConverter = new GenreUtilsAdapter();
+        interactor = new FilterMoviesInteractor(
+                mockMovieGateway,
+                mockPresenter,
+                validator,
+                filterStrategy,
+                genreConverter
+        );
     }
 
     @Test
     void testExecuteWithNullGenreIds() {
         // Arrange
-        FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(null);
+        List<Movie> movies = Arrays.asList(
+                new Movie("1", "Movie 1", "Plot", Arrays.asList(28), "2023-01-01", 7.5, 0.0, "poster")
+        );
+        FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(null, movies);
 
         // Act
         interactor.execute(requestModel);
@@ -44,7 +60,10 @@ class FilterMoviesInteractorTest {
     @Test
     void testExecuteWithEmptyGenreIds() {
         // Arrange
-        FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(Collections.emptyList());
+        List<Movie> movies = Arrays.asList(
+                new Movie("1", "Movie 1", "Plot", Arrays.asList(28), "2023-01-01", 7.5, 0.0, "poster")
+        );
+        FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(Collections.emptyList(), movies);
 
         // Act
         interactor.execute(requestModel);
@@ -56,17 +75,47 @@ class FilterMoviesInteractorTest {
     }
 
     @Test
+    void testExecuteWithNullMovies() {
+        // Arrange
+        List<Integer> genreIds = Arrays.asList(28, 12);
+        FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(genreIds, null);
+
+        // Act
+        interactor.execute(requestModel);
+
+        // Assert
+        assertTrue(mockPresenter.failViewCalled, "Fail view should be called");
+        assertEquals("No movies to filter.", mockPresenter.errorMessage);
+        assertFalse(mockPresenter.successViewCalled, "Success view should not be called");
+    }
+
+    @Test
+    void testExecuteWithEmptyMovies() {
+        // Arrange
+        List<Integer> genreIds = Arrays.asList(28, 12);
+        FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(genreIds, Collections.emptyList());
+
+        // Act
+        interactor.execute(requestModel);
+
+        // Assert
+        assertTrue(mockPresenter.failViewCalled, "Fail view should be called");
+        assertEquals("No movies to filter.", mockPresenter.errorMessage);
+        assertFalse(mockPresenter.successViewCalled, "Success view should not be called");
+    }
+
+    @Test
     void testExecuteWithValidGenreIds() {
         // Arrange
         List<Integer> genreIds = Arrays.asList(28, 12); // Action, Adventure
-        FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(genreIds);
-
         Movie movie1 = new Movie("1", "Test Movie 1", "Plot 1",
                 Arrays.asList(28, 12), "2023-01-01", 8.5, 0.0, "poster1.jpg");
         Movie movie2 = new Movie("2", "Test Movie 2", "Plot 2",
                 Arrays.asList(28), "2023-02-01", 7.5, 0.0, "poster2.jpg");
-        List<Movie> expectedMovies = Arrays.asList(movie1, movie2);
-        mockMovieGateway.setMoviesToReturn(expectedMovies);
+        Movie movie3 = new Movie("3", "Test Movie 3", "Plot 3",
+                Arrays.asList(35), "2023-03-01", 6.5, 0.0, "poster3.jpg");
+        List<Movie> moviesToFilter = Arrays.asList(movie1, movie2, movie3);
+        FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(genreIds, moviesToFilter);
 
         // Act
         interactor.execute(requestModel);
@@ -76,20 +125,24 @@ class FilterMoviesInteractorTest {
         assertFalse(mockPresenter.failViewCalled, "Fail view should not be called");
         assertNotNull(mockPresenter.responseModel, "Response model should not be null");
         assertEquals(genreIds, mockPresenter.responseModel.getRequestedGenres());
-        assertEquals(expectedMovies, mockPresenter.responseModel.getMovies());
+        // Should only contain movies with genres 28 or 12 (movie1 and movie2, not movie3)
+        assertEquals(2, mockPresenter.responseModel.getMovies().size());
+        assertTrue(mockPresenter.responseModel.getMovies().contains(movie1));
+        assertTrue(mockPresenter.responseModel.getMovies().contains(movie2));
+        assertFalse(mockPresenter.responseModel.getMovies().contains(movie3));
         assertEquals(Arrays.asList("Action", "Adventure"), mockPresenter.responseModel.getRequestedGenreNames());
-        assertEquals(genreIds, mockMovieGateway.getLastGenreIdsCalled());
     }
 
     @Test
     void testExecuteWithSingleGenreId() {
         // Arrange
         List<Integer> genreIds = Collections.singletonList(35); // Comedy
-        FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(genreIds);
-
         Movie movie = new Movie("3", "Comedy Movie", "Funny plot",
                 Collections.singletonList(35), "2023-03-01", 9.0, 0.0, "poster3.jpg");
-        mockMovieGateway.setMoviesToReturn(Collections.singletonList(movie));
+        Movie otherMovie = new Movie("4", "Action Movie", "Action plot",
+                Collections.singletonList(28), "2023-04-01", 8.0, 0.0, "poster4.jpg");
+        List<Movie> moviesToFilter = Arrays.asList(movie, otherMovie);
+        FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(genreIds, moviesToFilter);
 
         // Act
         interactor.execute(requestModel);
@@ -106,32 +159,42 @@ class FilterMoviesInteractorTest {
     void testExecuteWithMultipleGenreIds() {
         // Arrange
         List<Integer> genreIds = Arrays.asList(28, 12, 16); // Action, Adventure, Animation
-        FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(genreIds);
-
-        List<Movie> movies = new ArrayList<>();
-        mockMovieGateway.setMoviesToReturn(movies);
+        Movie movie1 = new Movie("1", "Action Movie", "Plot",
+                Arrays.asList(28), "2023-01-01", 7.5, 0.0, "poster1.jpg");
+        Movie movie2 = new Movie("2", "Adventure Movie", "Plot",
+                Arrays.asList(12), "2023-02-01", 8.0, 0.0, "poster2.jpg");
+        Movie movie3 = new Movie("3", "Animation Movie", "Plot",
+                Arrays.asList(16), "2023-03-01", 8.5, 0.0, "poster3.jpg");
+        Movie movie4 = new Movie("4", "Other Movie", "Plot",
+                Arrays.asList(35), "2023-04-01", 6.5, 0.0, "poster4.jpg");
+        List<Movie> movies = Arrays.asList(movie1, movie2, movie3, movie4);
+        FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(genreIds, movies);
 
         // Act
         interactor.execute(requestModel);
 
         // Assert
         assertTrue(mockPresenter.successViewCalled);
+        assertFalse(mockPresenter.failViewCalled);
         assertEquals(genreIds, mockPresenter.responseModel.getRequestedGenres());
         assertEquals(Arrays.asList("Action", "Adventure", "Animation"),
                 mockPresenter.responseModel.getRequestedGenreNames());
-        assertEquals(movies, mockPresenter.responseModel.getMovies());
-        assertEquals(genreIds, mockMovieGateway.getLastGenreIdsCalled());
+        // Should contain movies 1, 2, 3 (with genres 28, 12, 16) but not movie4 (genre 35)
+        assertEquals(3, mockPresenter.responseModel.getMovies().size());
+        assertTrue(mockPresenter.responseModel.getMovies().contains(movie1));
+        assertTrue(mockPresenter.responseModel.getMovies().contains(movie2));
+        assertTrue(mockPresenter.responseModel.getMovies().contains(movie3));
+        assertFalse(mockPresenter.responseModel.getMovies().contains(movie4));
     }
 
     @Test
     void testExecuteWithUnknownGenreId() {
         // Arrange
         List<Integer> genreIds = Arrays.asList(28, 999); // Action and unknown genre
-        FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(genreIds);
-
         Movie movie = new Movie("1", "Test Movie", "Plot",
                 Arrays.asList(28), "2023-01-01", 8.0, 0.0, "poster.jpg");
-        mockMovieGateway.setMoviesToReturn(Collections.singletonList(movie));
+        List<Movie> moviesToFilter = Collections.singletonList(movie);
+        FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(genreIds, moviesToFilter);
 
         // Act
         interactor.execute(requestModel);
@@ -142,21 +205,30 @@ class FilterMoviesInteractorTest {
         assertEquals(2, genreNames.size());
         assertEquals("Action", genreNames.get(0));
         assertEquals("Unknown Genre (999)", genreNames.get(1));
+        // Movie should be included because it has genre 28
+        assertEquals(1, mockPresenter.responseModel.getMovies().size());
+        assertEquals(movie, mockPresenter.responseModel.getMovies().get(0));
     }
 
     @Test
     void testExecuteWithEmptyMovieList() {
         // Arrange
         List<Integer> genreIds = Collections.singletonList(27); // Horror
-        FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(genreIds);
-        mockMovieGateway.setMoviesToReturn(Collections.emptyList());
+        // Movies that don't match the Horror genre (27)
+        Movie movie1 = new Movie("1", "Action Movie", "Plot",
+                Arrays.asList(28), "2023-01-01", 7.5, 0.0, "poster1.jpg");
+        Movie movie2 = new Movie("2", "Comedy Movie", "Plot",
+                Arrays.asList(35), "2023-02-01", 8.0, 0.0, "poster2.jpg");
+        List<Movie> moviesToFilter = Arrays.asList(movie1, movie2);
+        FilterMoviesRequestModel requestModel = new FilterMoviesRequestModel(genreIds, moviesToFilter);
 
         // Act
         interactor.execute(requestModel);
 
         // Assert
-        assertTrue(mockPresenter.successViewCalled);
-        assertTrue(mockPresenter.responseModel.getMovies().isEmpty());
+        assertTrue(mockPresenter.successViewCalled, "Success view should be called even with empty filtered results");
+        assertFalse(mockPresenter.failViewCalled, "Fail view should not be called");
+        assertTrue(mockPresenter.responseModel.getMovies().isEmpty(), "Filtered movies should be empty");
         assertEquals(Collections.singletonList("Horror"), mockPresenter.responseModel.getRequestedGenreNames());
     }
 
