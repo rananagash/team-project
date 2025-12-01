@@ -1,6 +1,5 @@
 package view;
 
-import common.GenreUtils;
 import entity.Movie;
 import entity.User;
 import interface_adapter.add_to_watchlist.AddWatchListController;
@@ -34,7 +33,6 @@ import java.beans.PropertyChangeListener;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The View for when the user is logged into the program.
@@ -526,55 +524,22 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     /**
      * Filters the currently displayed movies by the selected genre IDs.
-     * @return true if movies were found, false otherwise
+     * <p>
+     * This method delegates to the FilterMoviesController if available,
+     * following the Single Responsibility Principle by keeping business
+     * logic out of the view layer.
      *
      * @param genreIds the list of genre IDs to filter by
+     * @return true if movies were found, false otherwise
+     * @deprecated This method is kept for backward compatibility.
+     *             Prefer using FilterMoviesController directly.
      */
+    @Deprecated
     public boolean filterCurrentMoviesAndCheck(List<Integer> genreIds) {
-        return filterCurrentMovies(genreIds);
-    }
-
-    /**
-     * Filters the currently displayed movies by the selected genre IDs.
-     *
-     * @param genreIds the list of genre IDs to filter by
-     * @return true if movies were found, false otherwise
-     */
-    public boolean filterCurrentMovies(List<Integer> genreIds) {
-
-        // Filter current movies by selected genres
-        List<Movie> filteredMovies = currentMovies.stream()
-                .filter(movie -> {
-                    List<Integer> movieGenres = movie.getGenreIds();
-                    if (movieGenres == null || movieGenres.isEmpty()) {
-                        return false;
-                    }
-                    // Check if movie has at least one of the selected genres
-                    return movieGenres.stream().anyMatch(genreIds::contains);
-                })
-                .collect(Collectors.toList());
-
-        // Display filtered results
-        if (filteredMovies.isEmpty()) {
-            // Clear the results panel and show "no movies found" message
-            movieResultsPanel.removeAll();
-            List<String> genreNames = GenreUtils.getGenreNames(genreIds);
-            String genreText = String.join(", ", genreNames);
-            JLabel noResultsLabel = new JLabel("No movies found matching genres: " + genreText, SwingConstants.CENTER);
-            noResultsLabel.setForeground(new Color(209, 213, 219));
-            noResultsLabel.setFont(new Font("Helvetica", Font.PLAIN, 16));
-            noResultsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            movieResultsPanel.add(noResultsLabel);
-            movieResultsPanel.add(Box.createVerticalGlue());
-            movieResultsPanel.revalidate();
-            movieResultsPanel.repaint();
-            setStatus("No movies found matching genres: " + genreText);
-        } else {
-            showResults(filteredMovies, 1, 1);
-            List<String> genreNames = GenreUtils.getGenreNames(genreIds);
-            String genreText = String.join(", ", genreNames);
-            setStatus("Showing " + filteredMovies.size() + " of " + originalMovies.size() + " movies filtered by: " + genreText);
-            return true; // Results found
+        // Delegate to controller if available (SOLID: SRP - view shouldn't have business logic)
+        if (filterMoviesController != null && !currentMovies.isEmpty()) {
+            filterMoviesController.filterByGenres(genreIds, currentMovies);
+            return true; // Controller will handle the result via ViewModel
         }
         return false;
     }

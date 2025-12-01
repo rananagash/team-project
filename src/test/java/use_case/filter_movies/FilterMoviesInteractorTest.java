@@ -2,6 +2,7 @@ package use_case.filter_movies;
 
 import entity.Movie;
 import common.GenreUtils;
+import common.GenreUtilsAdapter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import use_case.common.MovieGateway;
@@ -18,12 +19,24 @@ class FilterMoviesInteractorTest {
     private FilterMoviesInteractor interactor;
     private MockMovieGateway mockMovieGateway;
     private MockFilterMoviesOutputBoundary mockPresenter;
+    private FilterMoviesValidator validator;
+    private MovieFilterStrategy filterStrategy;
+    private GenreConverter genreConverter;
 
     @BeforeEach
     void setUp() {
         mockMovieGateway = new MockMovieGateway();
         mockPresenter = new MockFilterMoviesOutputBoundary();
-        interactor = new FilterMoviesInteractor(mockMovieGateway, mockPresenter);
+        validator = new FilterMoviesValidator();
+        filterStrategy = new GenreMatchFilterStrategy();
+        genreConverter = new GenreUtilsAdapter();
+        interactor = new FilterMoviesInteractor(
+                mockMovieGateway,
+                mockPresenter,
+                validator,
+                filterStrategy,
+                genreConverter
+        );
     }
 
     @Test

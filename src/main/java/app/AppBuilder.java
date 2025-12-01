@@ -388,8 +388,20 @@ public class AppBuilder {
         final FilterMoviesOutputBoundary filterMoviesOutputBoundary =
                 new FilterMoviesPresenter(filterMoviesViewModel);
 
+        // Create SOLID-compliant components
+        final use_case.filter_movies.FilterMoviesValidator validator =
+                new use_case.filter_movies.FilterMoviesValidator();
+        final use_case.filter_movies.MovieFilterStrategy filterStrategy =
+                new use_case.filter_movies.GenreMatchFilterStrategy();
+        final common.GenreUtilsAdapter genreConverter = new common.GenreUtilsAdapter();
+
         final FilterMoviesInputBoundary filterMoviesInteractor =
-                new FilterMoviesInteractor(movieDataAccessObject, filterMoviesOutputBoundary);
+                new FilterMoviesInteractor(
+                        movieDataAccessObject,
+                        filterMoviesOutputBoundary,
+                        validator,
+                        filterStrategy,
+                        genreConverter);
 
         final FilterMoviesController filterMoviesController =
                 new FilterMoviesController(filterMoviesInteractor);
