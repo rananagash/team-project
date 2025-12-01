@@ -74,10 +74,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private JButton filterMoviesBtn;
 
     // Middle Panel (testing only)
-    //TODO: remove before final version
-    private JPanel middlePanel;
-    private JButton addToWatchListBtn;
-    private JButton addToHistoryBtn;
 
     // UI Components - Search panel
     private JTextField queryField;
@@ -196,40 +192,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         topPanel.revalidate();
         topPanel.repaint();
 
-        // Middle panel buttons for testing only
-        //TODO: remove before final version
-        middlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        addToWatchListBtn = new JButton("Add to Watchlist (TEST)");
-        addToHistoryBtn = new JButton("Add to History (TEST)");
 
-        middlePanel.add(addToWatchListBtn);
-        middlePanel.add(addToHistoryBtn);
-
-        addToWatchListBtn.addActionListener(e -> {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "This is a test button.\nUse the real 'Add to Watchlist' button on a movie card.",
-                    "Add to Watchlist (Test)",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
-        });
-
-        addToHistoryBtn.addActionListener(e -> {
-            final LoggedInState currentState = loggedInViewModel.getState();
-            if (currentState == null) return;
-
-            if (recordWatchHistoryController != null) {
-                // Use current logged in user's username
-                String username = currentState.getUsername();
-
-                // Test movie ID (using a real TMDb movie ID for testing)
-                String testMovieId = "299534"; // Avengers: Endgame
-
-                // Record the movie to watch history
-                // watchedAt is null, so it will use current time
-                recordWatchHistoryController.recordMovie(username, testMovieId);
-            }
-        });
 
 //        this.add(topPanel, BorderLayout.NORTH);
 
@@ -260,7 +223,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         JPanel northWrapper = new JPanel();
         northWrapper.setLayout(new BorderLayout());
         northWrapper.add(topPanel, BorderLayout.NORTH);
-        northWrapper.add(middlePanel, BorderLayout.CENTER); //TODO: just for testing
         northWrapper.add(searchPanel, BorderLayout.SOUTH);
         this.add(northWrapper, BorderLayout.NORTH);
 
