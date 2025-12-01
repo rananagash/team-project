@@ -1,5 +1,5 @@
 {
-    "currentUser": "inba",
+    "currentUser": "romy",
     "users": {
         "dummy": {
             "password": "user",
@@ -83,9 +83,9 @@
                             ]
                         }
                     ],
-                    "dateCreated": "2025-11-30T23:17:44.996815",
+                    "dateCreated": "2025-12-01T00:17:24.024746700",
                     "name": "altest's Watch List",
-                    "id": "55662da8-7780-4939-aa69-88b3a0acd644"
+                    "id": "895685b3-5ef1-4680-b549-146ada05ec07"
                 },
                 {
                     "movies": [{
@@ -102,9 +102,9 @@
                             878
                         ]
                     }],
-                    "dateCreated": "2025-11-30T23:17:44.996950",
+                    "dateCreated": "2025-12-01T00:17:24.025737400",
                     "name": "Second Watchlist",
-                    "id": "22532452-7913-4b52-b8c4-fc18793e8934"
+                    "id": "223a2cc5-740f-402e-9ed0-2d71a4f834d8"
                 }
             ],
             "username": "altest"
@@ -114,9 +114,9 @@
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T23:17:44.996989",
+                "dateCreated": "2025-12-01T00:17:24.026740200",
                 "name": "inba's Watch List",
-                "id": "3c91ffd0-4eb9-4350-9726-fa876ed2d7dd"
+                "id": "fd50d448-c894-49dc-be1e-7b7c7e6b54af"
             }],
             "watchHistory": {
                 "movies": [{
@@ -177,22 +177,6 @@
                     "comment": "",
                     "id": "72ccabdf-c68e-4f6e-b2f3-f0f614cd50b8"
                 },
-                "58adaf60-f55e-4b76-b23c-deef66055853": {
-                    "createdAt": "2025-11-30T14:14:09.729862100",
-                    "movie": {
-                        "posterUrl": "",
-                        "plot": "Three teenagers, with completely different lives, meet at a party.",
-                        "releaseDate": "2017-05-06",
-                        "popularity": 0,
-                        "rating": 6,
-                        "id": "496299",
-                        "title": "Se",
-                        "genreIds": [18]
-                    },
-                    "rating": 3,
-                    "comment": "rating",
-                    "id": "58adaf60-f55e-4b76-b23c-deef66055853"
-                },
                 "8ef7afa3-c710-430a-97bd-0236c84fe093": {
                     "createdAt": "2025-11-30T14:00:19.276152900",
                     "movie": {
@@ -212,6 +196,22 @@
                     "rating": 2,
                     "comment": "asdf",
                     "id": "8ef7afa3-c710-430a-97bd-0236c84fe093"
+                },
+                "58adaf60-f55e-4b76-b23c-deef66055853": {
+                    "createdAt": "2025-11-30T14:14:09.729862100",
+                    "movie": {
+                        "posterUrl": "",
+                        "plot": "Three teenagers, with completely different lives, meet at a party.",
+                        "releaseDate": "2017-05-06",
+                        "popularity": 0,
+                        "rating": 6,
+                        "id": "496299",
+                        "title": "Se",
+                        "genreIds": [18]
+                    },
+                    "rating": 3,
+                    "comment": "rating",
+                    "id": "58adaf60-f55e-4b76-b23c-deef66055853"
                 },
                 "acd5d9ec-777b-4709-992d-c7c9484edd3d": {
                     "createdAt": "2025-11-30T14:10:46.552624600",
@@ -252,9 +252,9 @@
             },
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T23:17:45.011108",
+                "dateCreated": "2025-12-01T00:17:24.038741700",
                 "name": "asdf's Watch List",
-                "id": "cc4cb2a4-9882-4122-a194-908951f04ab4"
+                "id": "4113f39e-cd58-42a6-b647-25faafa46aab"
             }],
             "username": "asdf"
         },
@@ -275,9 +275,9 @@
                         2
                     ]
                 }],
-                "dateCreated": "2025-11-30T23:17:45.013813",
+                "dateCreated": "2025-12-01T00:17:24.043737700",
                 "name": "dummy-user's Watch List",
-                "id": "45766b43-4a75-4ecd-8ab8-adfe71108949"
+                "id": "baa0df0a-ae29-4ea2-b0c1-dd9a8897ee81"
             }],
             "username": "dummy-user"
         },
@@ -286,21 +286,95 @@
             "reviews": {},
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T23:17:45.013875",
+                "dateCreated": "2025-12-01T00:17:24.044739400",
                 "name": "oliver's Watch List",
-                "id": "c4b4463e-4a55-4df9-903b-7a55c5f727ec"
+                "id": "5745a01d-6c72-499c-b182-26e90c990604"
             }],
             "username": "oliver"
         },
         "romy": {
             "password": "111",
-            "reviews": {},
+            "reviews": {
+                "15a34260-27a9-4ea8-aefc-6e5a7d61ec34": {
+                    "createdAt": "2025-12-01T00:18:21.922441800",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/31SwN5tZuJNsWTLx6DNNyQSAXdx.jpg",
+                        "plot": "Having witnessed his parents' brutal murder as a child, millionaire philanthropist Bruce Wayne fights crime in Gotham City disguised as Batman, a costumed hero who strikes fear into the hearts of villains. But when a deformed madman known as 'The Joker' seizes control of Gotham's criminal underworld, Batman must face his most ruthless nemesis ever while protecting both his identity and his love interest, reporter Vicki Vale.",
+                        "releaseDate": "1989-06-21",
+                        "popularity": 0,
+                        "rating": 7.236,
+                        "id": "268",
+                        "title": "Batman",
+                        "genreIds": [
+                            14,
+                            28,
+                            80
+                        ]
+                    },
+                    "rating": 4,
+                    "comment": "",
+                    "id": "15a34260-27a9-4ea8-aefc-6e5a7d61ec34"
+                },
+                "6fcc44b3-dc28-4036-a452-1b95d73f2c0c": {
+                    "createdAt": "2025-12-01T00:18:28.643274900",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/6zDYFigohwncqFL00MKbFV01dWb.jpg",
+                        "plot": "When Juli meets Bryce in the second grade, she knows it's true love. After spending six years trying to convince Bryce the same, she's ready to give up - until he starts to reconsider.",
+                        "releaseDate": "2010-08-06",
+                        "popularity": 0,
+                        "rating": 8.009,
+                        "id": "43949",
+                        "title": "Flipped",
+                        "genreIds": [
+                            10749,
+                            18
+                        ]
+                    },
+                    "rating": 4,
+                    "comment": "",
+                    "id": "6fcc44b3-dc28-4036-a452-1b95d73f2c0c"
+                }
+            },
             "watchlists": [{
                 "movies": [],
-                "dateCreated": "2025-11-30T23:17:45.013909",
+                "dateCreated": "2025-12-01T00:17:24.045739700",
                 "name": "romy's Watch List",
-                "id": "2c4243a7-a4c4-407f-898a-f5d654233bef"
+                "id": "507aa3e6-e39b-4a06-b48e-3cb79485ffde"
             }],
+            "watchHistory": {
+                "movies": [
+                    {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/31SwN5tZuJNsWTLx6DNNyQSAXdx.jpg",
+                        "plot": "Having witnessed his parents' brutal murder as a child, millionaire philanthropist Bruce Wayne fights crime in Gotham City disguised as Batman, a costumed hero who strikes fear into the hearts of villains. But when a deformed madman known as 'The Joker' seizes control of Gotham's criminal underworld, Batman must face his most ruthless nemesis ever while protecting both his identity and his love interest, reporter Vicki Vale.",
+                        "releaseDate": "1989-06-21",
+                        "popularity": 0,
+                        "rating": 7.236,
+                        "id": "268",
+                        "title": "Batman",
+                        "genreIds": [
+                            14,
+                            28,
+                            80
+                        ],
+                        "watchedAt": "2025-12-01T00:17"
+                    },
+                    {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/6zDYFigohwncqFL00MKbFV01dWb.jpg",
+                        "plot": "When Juli meets Bryce in the second grade, she knows it's true love. After spending six years trying to convince Bryce the same, she's ready to give up - until he starts to reconsider.",
+                        "releaseDate": "2010-08-06",
+                        "popularity": 0,
+                        "rating": 8.009,
+                        "id": "43949",
+                        "title": "Flipped",
+                        "genreIds": [
+                            10749,
+                            18
+                        ],
+                        "watchedAt": "2025-12-01T00:18"
+                    }
+                ],
+                "id": "9456c9fd-a32a-4060-969e-67b017e0854a"
+            },
             "username": "romy"
         }
     }

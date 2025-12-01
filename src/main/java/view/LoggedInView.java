@@ -23,6 +23,8 @@ import interface_adapter.review_movie.ReviewMovieController;
 import interface_adapter.review_movie.ReviewMovieViewModel;
 
 import javax.swing.*;
+import view.AddReviewPopup;
+import view.FilterMoviesPopup;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
