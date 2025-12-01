@@ -167,6 +167,17 @@
             },
             "username": "inba"
         },
+        "rananagash": {
+            "password": "123456",
+            "reviews": {},
+            "watchlists": [{
+                "movies": [],
+                "dateCreated": "2025-12-01T08:53:30.872652",
+                "name": "rananagash's Watch List",
+                "id": "9f6ef27f-6466-41c0-9d15-69ed82c28574"
+            }],
+            "username": "rananagash"
+        },
         "asdf": {
             "password": "asdf",
             "reviews": {

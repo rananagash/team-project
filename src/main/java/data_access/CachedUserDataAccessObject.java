@@ -137,7 +137,15 @@ public class CachedUserDataAccessObject implements UserDataAccessInterface,
 
     @Override
     public ProfileStats getUserStats(String username) {
-        return null;
-        //TODO Rana
+        User user = getUser(username);
+        if (user == null) {
+            return new ProfileStats(0, 0, 0);
+        }
+
+        int watchlistCount = user.getWatchlists().size();
+        int reviewCount = user.getReviews().size();
+        int watchedMoviesCount = user.getWatchedMovies().size();
+
+        return new ProfileStats(watchlistCount, reviewCount, watchedMoviesCount);
     }
 }
