@@ -1,11 +1,6 @@
 package entity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Represents an application user.
@@ -166,5 +161,34 @@ public class User {
      */
     public Map<String, Review> getReviewsByMovieId() {
         return Map.copyOf(reviewsByMovieId);
+    }
+    /**
+     * Returns all watchlists belonging to this user.
+     *
+     * @return a collection of watchlists
+     */
+    public Collection<Object> getWatchlists() {
+        return new ArrayList<>(watchLists);
+    }
+
+    /**
+     * Returns all reviews written by this user.
+     *
+     * @return a collection of reviews
+     */
+    public Collection<Object> getReviews() {
+        return new ArrayList<>(reviewsByMovieId.values());
+    }
+
+    /**
+     * Returns all watched movies from the user's watch history.
+     *
+     * @return a collection of watched movies, or empty collection if no watch history
+     */
+    public Collection<Object> getWatchedMovies() {
+        if (watchHistory == null) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(watchHistory.getMovies());
     }
 }

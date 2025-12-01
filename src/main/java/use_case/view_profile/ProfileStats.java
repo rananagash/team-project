@@ -1,7 +1,5 @@
 package use_case.view_profile;
 
-import java.time.LocalDateTime;
-
 /**
  * Contains statistics for a user's profile.
  */
