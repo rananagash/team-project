@@ -514,5 +514,26 @@ class SearchMovieInteractorTest {
 
         assertTrue(presenter.successCalled, "2-character query should be valid");
     }
+    void scoring_AgeCalculation_EdgeCases() {
 
+        List<Movie> movies = Arrays.asList(
+                new Movie("1", "Brand New", "2023 movie", List.of(1), "2023-12-31", 7.0, 50.0, "poster1"),
+                new Movie("2", "5 Years Old", "2019 movie", List.of(1), "2019-01-01", 7.0, 50.0, "poster2"),
+                new Movie("3", "6 Years Old", "2018 movie", List.of(1), "2018-01-01", 7.0, 50.0, "poster3")
+        );
+
+        TestMovieGateway gateway = new TestMovieGateway(movies);
+        TestPresenter presenter = new TestPresenter();
+        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
+
+        interactor.execute(new SearchMovieRequestModel("Movie", 1));
+
+        if (presenter.successCalled) {
+            List<Movie> results = presenter.successResponse.getMovies();
+            System.out.println("\nAge Calculation Test:");
+            for (Movie m : results) {
+                System.out.printf("- %s (Year: %d)%n", m.getTitle(), m.getReleaseYear());
+            }
+        }
+    }
 }
