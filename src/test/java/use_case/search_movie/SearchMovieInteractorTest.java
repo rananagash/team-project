@@ -477,6 +477,27 @@ class SearchMovieInteractorTest {
         for (int i = 0; i < results.size(); i++) {
             Movie m = results.get(i);
             System.out.println((i+1) + ". " + m.getTitle() + " (score: " + m.getRating() + ", year: " + m.getReleaseYear() + ")");
+
         }
+
+
     }
+    @Test
+    void execute_MixedAlphanumericWithSpecialChars_ShouldPass() {
+        List<Movie> movies = List.of(
+                new Movie("1", "Spider-Man 2", "With hyphen and number",
+                        List.of(1), "2023-01-01", 7.0, 50.0, "poster.jpg")
+        );
+
+        TestMovieGateway gateway = new TestMovieGateway(movies);
+        TestPresenter presenter = new TestPresenter();
+        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
+
+        SearchMovieRequestModel request = new SearchMovieRequestModel("Spider-Man 2", 1);
+        interactor.execute(request);
+
+        assertTrue(presenter.successCalled,
+                "Query with mixed alphanumeric and special chars should pass");
+    }
+
 }
