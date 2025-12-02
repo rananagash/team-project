@@ -39,6 +39,14 @@ class SearchMovieInteractorTest {
             this.failCalled = true;
             this.callCount++;
         }
+
+        void reset() {
+            successResponse = null;
+            errorMessage = null;
+            successCalled = false;
+            failCalled = false;
+            callCount = 0;
+        }
     }
 
     private static class TestMovieGateway implements use_case.common.MovieGateway {
