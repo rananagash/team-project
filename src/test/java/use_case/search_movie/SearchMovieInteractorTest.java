@@ -444,6 +444,28 @@ class SearchMovieInteractorTest {
     }
 
     @Test
+    void scoring_PopularityAffectsScore() {
+        // Test that popularity affects score (popularity * 0.1)
+        List<Movie> movies = Arrays.asList(
+                new Movie("1", "Popular Movie", "High popularity", List.of(1), "2020-01-01", 8.0, 100.0, "poster1"),
+                new Movie("2", "Less Popular", "Low popularity", List.of(1), "2020-01-01", 8.0, 10.0, "poster2")
+        );
+
+        TestMovieGateway gateway = new TestMovieGateway(movies);
+        TestPresenter presenter = new TestPresenter();
+        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
+
+        interactor.execute(new SearchMovieRequestModel("Movie", 1));
+
+        assertTrue(presenter.successCalled);
+        List<Movie> results = presenter.successResponse.getMovies();
+
+        // More popular movie should be first (adds 10 vs 1 point)
+        assertEquals("Popular Movie", results.get(0).getTitle(),
+                "More popular movie should rank higher with same rating/year");
+    }
+
+    @Test
     void testScoringAlgorithm() throws Exception {
         List<Movie> testMovies = Arrays.asList(
                 new Movie("1", "New Avengers", "Movie A", List.of(28), "2023-01-01", 7.0, 50.0, "poster1"),
