@@ -499,5 +499,20 @@ class SearchMovieInteractorTest {
         assertTrue(presenter.successCalled,
                 "Query with mixed alphanumeric and special chars should pass");
     }
+    @Test
+    void execute_QueryExactlyTwoCharacters_ShouldPass() {
+        List<Movie> movies = List.of(
+                new Movie("1", "It", "Short title", List.of(1), "2023-01-01", 7.0, 50.0, "poster.jpg")
+        );
+
+        TestMovieGateway gateway = new TestMovieGateway(movies);
+        TestPresenter presenter = new TestPresenter();
+        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
+
+        SearchMovieRequestModel request = new SearchMovieRequestModel("It", 1);
+        interactor.execute(request);
+
+        assertTrue(presenter.successCalled, "2-character query should be valid");
+    }
 
 }
