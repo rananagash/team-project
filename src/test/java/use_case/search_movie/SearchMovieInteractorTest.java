@@ -114,6 +114,22 @@ class SearchMovieInteractorTest {
     }
 
     @Test
+    void responseModel_ConstructorWithTwoParameters() {
+        // Test the simplified constructor (query, movies only)
+        List<Movie> movies = List.of(
+                new Movie("1", "Movie 1", "Plot 1", List.of(1), "2023-01-01", 8.0, 60.0, "poster1.jpg"),
+                new Movie("2", "Movie 2", "Plot 2", List.of(2), "2023-01-01", 7.0, 40.0, "poster2.jpg")
+        );
+
+        SearchMovieResponseModel response = new SearchMovieResponseModel("query", movies);
+
+        assertEquals("query", response.getQuery());
+        assertEquals(2, response.getMovies().size());
+        assertEquals(1, response.getCurrentPage(), "Default page should be 1");
+        assertEquals(1, response.getTotalPages(), "Default total pages should be 1");
+    }
+
+    @Test
     void testSearchWithValidQuery() {
         List<Movie> testMovies = Arrays.asList(
                 new Movie("1", "The Avengers", "Superhero movie",
