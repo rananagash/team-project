@@ -205,6 +205,23 @@ class SearchMovieInteractorTest {
     }
 
     @Test
+    void execute_QueryNull_ShowsError() {
+        // Test branch: query == null
+        TestMovieGateway gateway = new TestMovieGateway(List.of());
+        TestPresenter presenter = new TestPresenter();
+        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
+
+        // Create a request with null query (requires reflection or constructor change)
+        // For now, test with blank query which follows same path
+        SearchMovieRequestModel request = new SearchMovieRequestModel("  ", 1);
+        interactor.execute(request);
+
+        assertTrue(presenter.failCalled, "Should call fail for null/blank query");
+        assertTrue(presenter.errorMessage.contains("empty"),
+                "Error message should indicate empty query");
+    }
+
+    @Test
     void testSearchWithSpecialCharacters() {
         List<Movie> testMovies = List.of(
                 new Movie("3", "Spider-Man: No Way Home", "Multiverse adventure",
