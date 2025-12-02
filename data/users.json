@@ -1,148 +1,191 @@
-{"users": {
-    "dummy": {
-        "password": "user",
-        "reviews": {},
-        "watchlists": [],
-        "username": "dummy"
-    },
-    "altest": {
-        "password": "123",
-        "reviews": {},
-        "watchlists": [
-            {
-                "movies": [
-                    {
+{
+    "currentUser": "romy",
+    "users": {
+        "dummy": {
+            "password": "user",
+            "reviews": {},
+            "watchlists": [],
+            "username": "dummy"
+        },
+        "altest": {
+            "password": "123",
+            "reviews": {},
+            "watchlists": [
+                {
+                    "movies": [
+                        {
+                            "posterUrl": "https://image.tmdb.org/t/p/w500/yFSIUVTCvgYrpalUktulvk3Gi5Y.jpg",
+                            "plot": "After the devastating events of Avengers: Infinity War, the universe is in ruins due to the efforts of the Mad Titan, Thanos. With the help of remaining allies, the Avengers must assemble once more in order to undo Thanos' actions and restore order to the universe once and for all, no matter what consequences may be in store.",
+                            "releaseDate": "2019-04-24",
+                            "popularity": 0,
+                            "rating": 8.238,
+                            "id": "299534",
+                            "title": "Avengers: Endgame",
+                            "genreIds": [
+                                28,
+                                12,
+                                878
+                            ]
+                        },
+                        {
+                            "posterUrl": "https://image.tmdb.org/t/p/w500/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg",
+                            "plot": "Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible:",
+                            "releaseDate": "2010-07-15",
+                            "popularity": 0,
+                            "rating": 8.371,
+                            "id": "27205",
+                            "title": "Inception",
+                            "genreIds": [
+                                28,
+                                878,
+                                12
+                            ]
+                        },
+                        {
+                            "posterUrl": "https://image.tmdb.org/t/p/w500/qx5x7HRP0MrSBx6N3QJFXpMrbWB.jpg",
+                            "plot": "Young hobbit Frodo Baggins, after inheriting a mysterious ring from his uncle Bilbo, must leave his home in order to keep it from falling into the hands of its evil creator. Along the way, a fellowship is formed to protect the ringbearer and make sure that the ring arrives at its final destination: Mt. Doom, the only place where it can be destroyed.",
+                            "releaseDate": "2001-12-18",
+                            "popularity": 0,
+                            "rating": 8.426,
+                            "id": "120",
+                            "title": "The Lord of the Rings: The Fellowship of the Ring",
+                            "genreIds": [
+                                12,
+                                14,
+                                28
+                            ]
+                        },
+                        {
+                            "posterUrl": "https://image.tmdb.org/t/p/w500/6FfCtAuVAW8XJjZ7eWeLibRLWTw.jpg",
+                            "plot": "Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a Wookiee and two droids to save the galaxy from the Empire's world-destroying battle station.",
+                            "releaseDate": "1977-05-25",
+                            "popularity": 0,
+                            "rating": 8.2,
+                            "id": "11",
+                            "title": "Star Wars: A New Hope",
+                            "genreIds": [
+                                12,
+                                28,
+                                878
+                            ]
+                        },
+                        {
+                            "posterUrl": "https://image.tmdb.org/t/p/w500/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg",
+                            "plot": "Two imprisoned men bond over years, finding solace and eventual redemption through acts of common decency.",
+                            "releaseDate": "1994-09-23",
+                            "popularity": 0,
+                            "rating": 8.7,
+                            "id": "278",
+                            "title": "The Shawshank Redemption",
+                            "genreIds": [
+                                18,
+                                80
+                            ]
+                        },
+                        {
+                            "posterUrl": "https://image.tmdb.org/t/p/w500/hEDYGyk7soq1DiyeTGecR4xvQEb.jpg",
+                            "plot": "A young Peruvian bear travels to London in search of a home. Finding himself lost and alone at Paddington Station, he meets the kindly Brown family, who offer him a temporary haven.",
+                            "releaseDate": "2014-11-24",
+                            "popularity": 0,
+                            "rating": 7.114,
+                            "id": "116149",
+                            "title": "Paddington",
+                            "genreIds": [
+                                35,
+                                12,
+                                10751
+                            ]
+                        }
+                    ],
+                    "dateCreated": "2025-12-02T13:06:07.464242300",
+                    "name": "altest's Watch List",
+                    "id": "0f1a22ee-e0b8-4f77-9693-da604da49411"
+                },
+                {
+                    "movies": [{
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/kFWLxUwcSpiLzszZbxUIZT9g6WR.jpg",
+                        "plot": "When an attack on the Empress threatens the peace of the galaxy, the Guardians must step up to defend reality and face their most dangerous challenge yet.",
+                        "releaseDate": "2023-05-05",
+                        "popularity": 0,
+                        "rating": 8.1,
+                        "id": "447365",
+                        "title": "Guardians of the Galaxy Vol. 3",
+                        "genreIds": [
+                            28,
+                            12,
+                            878
+                        ]
+                    }],
+                    "dateCreated": "2025-12-02T13:06:07.465244",
+                    "name": "Second Watchlist",
+                    "id": "54838de3-ed9e-454c-b1e5-7d93c1f487da"
+                }
+            ],
+            "username": "altest"
+        },
+        "inba": {
+            "password": "inba",
+            "reviews": {
+                "5e74e9e7-1800-4a8e-814c-4a263406bdc4": {
+                    "createdAt": "2025-12-01T00:34:20.067713",
+                    "movie": {
+                        "posterUrl": "",
+                        "plot": "Jim Carson, a young farmer, loves the school teacher, Helen Dale, and they expect to be married. His father unexpectedly marries a widow who has a son, Arthur Vaughn, an actor. Arthur creates havoc with Helen's heart and the plans of Jim are disarranged.",
+                        "releaseDate": "1914-09-16",
+                        "popularity": 0,
+                        "rating": 8,
+                        "id": "1130528",
+                        "title": "Jim",
+                        "genreIds": [18]
+                    },
+                    "rating": 5,
+                    "comment": "",
+                    "id": "5e74e9e7-1800-4a8e-814c-4a263406bdc4"
+                },
+                "8f0bbf8c-367b-48d8-a367-56c2614b4767": {
+                    "createdAt": "2025-12-01T16:19:55.499549",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/rki5qLuwb0xnnE9seehxO9TlLhW.jpg",
+                        "plot": "Led by Woody, Andy's toys live happily in his room until Andy's birthday brings Buzz Lightyear onto the scene. Afraid of losing his place in Andy's heart, Woody plots against Buzz. But when circumstances separate Buzz and Woody from their owner, the duo eventually learns to put aside their differences.",
+                        "releaseDate": "1995-11-22",
+                        "popularity": 0,
+                        "rating": 7.971,
+                        "id": "862",
+                        "title": "Toy Story",
+                        "genreIds": [
+                            10751,
+                            35,
+                            16,
+                            12
+                        ]
+                    },
+                    "rating": 5,
+                    "comment": "fdgdgdf",
+                    "id": "8f0bbf8c-367b-48d8-a367-56c2614b4767"
+                },
+                "8f23c3c1-30fd-4dfb-b277-7f25733d56f6": {
+                    "createdAt": "2025-12-01T16:20:21.485975",
+                    "movie": {
                         "posterUrl": "https://image.tmdb.org/t/p/w500/yFSIUVTCvgYrpalUktulvk3Gi5Y.jpg",
                         "plot": "After the devastating events of Avengers: Infinity War, the universe is in ruins due to the efforts of the Mad Titan, Thanos. With the help of remaining allies, the Avengers must assemble once more in order to undo Thanos' actions and restore order to the universe once and for all, no matter what consequences may be in store.",
                         "releaseDate": "2019-04-24",
                         "popularity": 0,
-                        "rating": 8.238,
+                        "rating": 8.2,
                         "id": "299534",
                         "title": "Avengers: Endgame",
                         "genreIds": [
-                            28,
                             12,
-                            878
-                        ]
-                    },
-                    {
-                        "posterUrl": "https://image.tmdb.org/t/p/w500/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg",
-                        "plot": "Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible:",
-                        "releaseDate": "2010-07-15",
-                        "popularity": 0,
-                        "rating": 8.371,
-                        "id": "27205",
-                        "title": "Inception",
-                        "genreIds": [
-                            28,
                             878,
-                            12
-                        ]
-                    },
-                    {
-                        "posterUrl": "https://image.tmdb.org/t/p/w500/qx5x7HRP0MrSBx6N3QJFXpMrbWB.jpg",
-                        "plot": "Young hobbit Frodo Baggins, after inheriting a mysterious ring from his uncle Bilbo, must leave his home in order to keep it from falling into the hands of its evil creator. Along the way, a fellowship is formed to protect the ringbearer and make sure that the ring arrives at its final destination: Mt. Doom, the only place where it can be destroyed.",
-                        "releaseDate": "2001-12-18",
-                        "popularity": 0,
-                        "rating": 8.426,
-                        "id": "120",
-                        "title": "The Lord of the Rings: The Fellowship of the Ring",
-                        "genreIds": [
-                            12,
-                            14,
                             28
                         ]
                     },
-                    {
-                        "posterUrl": "https://image.tmdb.org/t/p/w500/6FfCtAuVAW8XJjZ7eWeLibRLWTw.jpg",
-                        "plot": "Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a Wookiee and two droids to save the galaxy from the Empire's world-destroying battle station.",
-                        "releaseDate": "1977-05-25",
-                        "popularity": 0,
-                        "rating": 8.2,
-                        "id": "11",
-                        "title": "Star Wars: A New Hope",
-                        "genreIds": [
-                            12,
-                            28,
-                            878
-                        ]
-                    },
-                    {
-                        "posterUrl": "https://image.tmdb.org/t/p/w500/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg",
-                        "plot": "Two imprisoned men bond over years, finding solace and eventual redemption through acts of common decency.",
-                        "releaseDate": "1994-09-23",
-                        "popularity": 0,
-                        "rating": 8.7,
-                        "id": "278",
-                        "title": "The Shawshank Redemption",
-                        "genreIds": [
-                            18,
-                            80
-                        ]
-                    },
-                    {
-                        "posterUrl": "https://image.tmdb.org/t/p/w500/hEDYGyk7soq1DiyeTGecR4xvQEb.jpg",
-                        "plot": "A young Peruvian bear travels to London in search of a home. Finding himself lost and alone at Paddington Station, he meets the kindly Brown family, who offer him a temporary haven.",
-                        "releaseDate": "2014-11-24",
-                        "popularity": 0,
-                        "rating": 7.114,
-                        "id": "116149",
-                        "title": "Paddington",
-                        "genreIds": [
-                            35,
-                            12,
-                            10751
-                        ]
-                    }
-                ],
-                "dateCreated": "2025-12-01T13:27:51.630566",
-                "name": "altest's Watch List",
-                "id": "085edadf-4888-4698-b0ad-5f4dcb082fe2"
+                    "rating": 3,
+                    "comment": "dfds",
+                    "id": "8f23c3c1-30fd-4dfb-b277-7f25733d56f6"
+                }
             },
-            {
+            "watchlists": [{
                 "movies": [{
-                    "posterUrl": "https://image.tmdb.org/t/p/w500/kFWLxUwcSpiLzszZbxUIZT9g6WR.jpg",
-                    "plot": "When an attack on the Empress threatens the peace of the galaxy, the Guardians must step up to defend reality and face their most dangerous challenge yet.",
-                    "releaseDate": "2023-05-05",
-                    "popularity": 0,
-                    "rating": 8.1,
-                    "id": "447365",
-                    "title": "Guardians of the Galaxy Vol. 3",
-                    "genreIds": [
-                        28,
-                        12,
-                        878
-                    ]
-                }],
-                "dateCreated": "2025-12-01T13:27:51.630799",
-                "name": "Second Watchlist",
-                "id": "d1e6b97b-54c3-48da-aec0-32f71176587c"
-            }
-        ],
-        "username": "altest"
-    },
-    "inba": {
-        "password": "inba",
-        "reviews": {
-            "5e74e9e7-1800-4a8e-814c-4a263406bdc4": {
-                "createdAt": "2025-12-01T00:34:20.067713",
-                "movie": {
-                    "posterUrl": "",
-                    "plot": "Jim Carson, a young farmer, loves the school teacher, Helen Dale, and they expect to be married. His father unexpectedly marries a widow who has a son, Arthur Vaughn, an actor. Arthur creates havoc with Helen's heart and the plans of Jim are disarranged.",
-                    "releaseDate": "1914-09-16",
-                    "popularity": 0,
-                    "rating": 8,
-                    "id": "1130528",
-                    "title": "Jim",
-                    "genreIds": [18]
-                },
-                "rating": 5,
-                "comment": "",
-                "id": "5e74e9e7-1800-4a8e-814c-4a263406bdc4"
-            },
-            "8f0bbf8c-367b-48d8-a367-56c2614b4767": {
-                "createdAt": "2025-12-01T16:19:55.499549",
-                "movie": {
                     "posterUrl": "https://image.tmdb.org/t/p/w500/rki5qLuwb0xnnE9seehxO9TlLhW.jpg",
                     "plot": "Led by Woody, Andy's toys live happily in his room until Andy's birthday brings Buzz Lightyear onto the scene. Afraid of losing his place in Andy's heart, Woody plots against Buzz. But when circumstances separate Buzz and Woody from their owner, the duo eventually learns to put aside their differences.",
                     "releaseDate": "1995-11-22",
@@ -156,14 +199,13 @@
                         16,
                         12
                     ]
-                },
-                "rating": 5,
-                "comment": "fdgdgdf",
-                "id": "8f0bbf8c-367b-48d8-a367-56c2614b4767"
-            },
-            "8f23c3c1-30fd-4dfb-b277-7f25733d56f6": {
-                "createdAt": "2025-12-01T16:20:21.485975",
-                "movie": {
+                }],
+                "dateCreated": "2025-12-02T13:06:07.465244",
+                "name": "inba's Watch List",
+                "id": "3da6016f-8cb5-4662-b4c8-10530abd633c"
+            }],
+            "watchHistory": {
+                "movies": [{
                     "posterUrl": "https://image.tmdb.org/t/p/w500/yFSIUVTCvgYrpalUktulvk3Gi5Y.jpg",
                     "plot": "After the devastating events of Avengers: Infinity War, the universe is in ruins due to the efforts of the Mad Titan, Thanos. With the help of remaining allies, the Avengers must assemble once more in order to undo Thanos' actions and restore order to the universe once and for all, no matter what consequences may be in store.",
                     "releaseDate": "2019-04-24",
@@ -175,162 +217,167 @@
                         12,
                         878,
                         28
-                    ]
-                },
-                "rating": 3,
-                "comment": "dfds",
-                "id": "8f23c3c1-30fd-4dfb-b277-7f25733d56f6"
-            }
+                    ],
+                    "watchedAt": "2025-12-01T00:33"
+                }],
+                "id": "b8de04a9-a5e1-4e59-9c99-64ab24a17092"
+            },
+            "username": "inba"
         },
-        "watchlists": [{
-            "movies": [{
-                "posterUrl": "https://image.tmdb.org/t/p/w500/rki5qLuwb0xnnE9seehxO9TlLhW.jpg",
-                "plot": "Led by Woody, Andy's toys live happily in his room until Andy's birthday brings Buzz Lightyear onto the scene. Afraid of losing his place in Andy's heart, Woody plots against Buzz. But when circumstances separate Buzz and Woody from their owner, the duo eventually learns to put aside their differences.",
-                "releaseDate": "1995-11-22",
-                "popularity": 0,
-                "rating": 7.971,
-                "id": "862",
-                "title": "Toy Story",
-                "genreIds": [
-                    10751,
-                    35,
-                    16,
-                    12
-                ]
+        "rananagash": {
+            "password": "123456",
+            "reviews": {},
+            "watchlists": [{
+                "movies": [],
+                "dateCreated": "2025-12-02T13:06:07.477247500",
+                "name": "rananagash's Watch List",
+                "id": "966d4d70-3875-4195-a1fd-13836eafce40"
             }],
-            "dateCreated": "2025-12-01T13:27:51.630862",
-            "name": "inba's Watch List",
-            "id": "1aac51b0-c54d-43b8-94dd-294edf3f90f1"
-        }],
-        "watchHistory": {
-            "movies": [{
-                "posterUrl": "https://image.tmdb.org/t/p/w500/yFSIUVTCvgYrpalUktulvk3Gi5Y.jpg",
-                "plot": "After the devastating events of Avengers: Infinity War, the universe is in ruins due to the efforts of the Mad Titan, Thanos. With the help of remaining allies, the Avengers must assemble once more in order to undo Thanos' actions and restore order to the universe once and for all, no matter what consequences may be in store.",
-                "releaseDate": "2019-04-24",
-                "popularity": 0,
-                "rating": 8.2,
-                "id": "299534",
-                "title": "Avengers: Endgame",
-                "genreIds": [
-                    12,
-                    878,
-                    28
-                ],
-                "watchedAt": "2025-12-01T00:33"
-            }],
-            "id": "b8de04a9-a5e1-4e59-9c99-64ab24a17092"
+            "username": "rananagash"
         },
-        "username": "inba"
-    },
-    "rananagash": {
-        "password": "123456",
-        "reviews": {},
-        "watchlists": [{
-            "movies": [],
-            "dateCreated": "2025-12-01T13:27:51.638805",
-            "name": "rananagash's Watch List",
-            "id": "1768d014-c683-4f58-a3f0-95b08ee4789a"
-        }],
-        "username": "rananagash"
-    },
-    "asdf": {
-        "password": "asdf",
-        "reviews": {
-            "64cbbd48-240f-4307-88c4-c9cb1f2aa4f5": {
-                "createdAt": "2025-11-30T15:37:53.715418200",
-                "movie": {
-                    "posterUrl": "https://image.tmdb.org/t/p/w500/yFSIUVTCvgYrpalUktulvk3Gi5Y.jpg",
-                    "plot": "After the devastating events of Avengers: Infinity War, the universe is in ruins due to the efforts of the Mad Titan, Thanos. With the help of remaining allies, the Avengers must assemble once more in order to undo Thanos' actions and restore order to the universe once and for all, no matter what consequences may be in store.",
-                    "releaseDate": "2019-04-24",
-                    "popularity": 0,
-                    "rating": 8.238,
-                    "id": "299534",
-                    "title": "Avengers: Endgame",
-                    "genreIds": [
-                        12,
-                        878,
-                        28
-                    ]
+        "asdf": {
+            "password": "asdf",
+            "reviews": {
+                "64cbbd48-240f-4307-88c4-c9cb1f2aa4f5": {
+                    "createdAt": "2025-11-30T15:37:53.715418200",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/yFSIUVTCvgYrpalUktulvk3Gi5Y.jpg",
+                        "plot": "After the devastating events of Avengers: Infinity War, the universe is in ruins due to the efforts of the Mad Titan, Thanos. With the help of remaining allies, the Avengers must assemble once more in order to undo Thanos' actions and restore order to the universe once and for all, no matter what consequences may be in store.",
+                        "releaseDate": "2019-04-24",
+                        "popularity": 0,
+                        "rating": 8.238,
+                        "id": "299534",
+                        "title": "Avengers: Endgame",
+                        "genreIds": [
+                            12,
+                            878,
+                            28
+                        ]
+                    },
+                    "rating": 3,
+                    "comment": "asdf",
+                    "id": "64cbbd48-240f-4307-88c4-c9cb1f2aa4f5"
                 },
-                "rating": 3,
-                "comment": "asdf",
-                "id": "64cbbd48-240f-4307-88c4-c9cb1f2aa4f5"
-            },
-            "72ccabdf-c68e-4f6e-b2f3-f0f614cd50b8": {
-                "createdAt": "2025-11-30T13:41:03.121909900",
-                "movie": {
-                    "posterUrl": "https://image.tmdb.org/t/p/w500/60bTx5z9zL1AqCjZ0gmWoRMJ6Bb.jpg",
-                    "plot": "Gene, a multi-expressional emoji, sets out on a journey to become a normal emoji.",
-                    "releaseDate": "2017-07-23",
-                    "popularity": 0,
-                    "rating": 5.417,
-                    "id": "378236",
-                    "title": "The Emoji Movie",
-                    "genreIds": [
-                        16,
-                        10751,
-                        35
-                    ]
+                "72ccabdf-c68e-4f6e-b2f3-f0f614cd50b8": {
+                    "createdAt": "2025-11-30T13:41:03.121909900",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/60bTx5z9zL1AqCjZ0gmWoRMJ6Bb.jpg",
+                        "plot": "Gene, a multi-expressional emoji, sets out on a journey to become a normal emoji.",
+                        "releaseDate": "2017-07-23",
+                        "popularity": 0,
+                        "rating": 5.417,
+                        "id": "378236",
+                        "title": "The Emoji Movie",
+                        "genreIds": [
+                            16,
+                            10751,
+                            35
+                        ]
+                    },
+                    "rating": 1,
+                    "comment": "",
+                    "id": "72ccabdf-c68e-4f6e-b2f3-f0f614cd50b8"
                 },
-                "rating": 1,
-                "comment": "",
-                "id": "72ccabdf-c68e-4f6e-b2f3-f0f614cd50b8"
-            },
-            "58adaf60-f55e-4b76-b23c-deef66055853": {
-                "createdAt": "2025-11-30T14:14:09.729862100",
-                "movie": {
-                    "posterUrl": "",
-                    "plot": "Three teenagers, with completely different lives, meet at a party.",
-                    "releaseDate": "2017-05-06",
-                    "popularity": 0,
-                    "rating": 6,
-                    "id": "496299",
-                    "title": "Se",
-                    "genreIds": [18]
+                "8ef7afa3-c710-430a-97bd-0236c84fe093": {
+                    "createdAt": "2025-11-30T14:00:19.276152900",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/r8RiuKTIYIJBjczBVsfeP5C00CJ.jpg",
+                        "plot": "In 16th century Japan, peasants Genjuro and Tobei sell their earthenware pots to a group of soldiers in a nearby village, in defiance of a local sage's warning against seeking to profit from warfare. Genjuro's pursuit of both riches and the mysterious Lady Wakasa, as well as Tobei's desire to become a samurai, run the risk of destroying both themselves and their wives, Miyagi and Ohama.",
+                        "releaseDate": "1953-03-26",
+                        "popularity": 0,
+                        "rating": 8,
+                        "id": "14696",
+                        "title": "Ugetsu",
+                        "genreIds": [
+                            14,
+                            18,
+                            9648
+                        ]
+                    },
+                    "rating": 2,
+                    "comment": "asdf",
+                    "id": "8ef7afa3-c710-430a-97bd-0236c84fe093"
                 },
-                "rating": 3,
-                "comment": "rating",
-                "id": "58adaf60-f55e-4b76-b23c-deef66055853"
-            },
-            "8ef7afa3-c710-430a-97bd-0236c84fe093": {
-                "createdAt": "2025-11-30T14:00:19.276152900",
-                "movie": {
-                    "posterUrl": "https://image.tmdb.org/t/p/w500/r8RiuKTIYIJBjczBVsfeP5C00CJ.jpg",
-                    "plot": "In 16th century Japan, peasants Genjuro and Tobei sell their earthenware pots to a group of soldiers in a nearby village, in defiance of a local sage's warning against seeking to profit from warfare. Genjuro's pursuit of both riches and the mysterious Lady Wakasa, as well as Tobei's desire to become a samurai, run the risk of destroying both themselves and their wives, Miyagi and Ohama.",
-                    "releaseDate": "1953-03-26",
-                    "popularity": 0,
-                    "rating": 8,
-                    "id": "14696",
-                    "title": "Ugetsu",
-                    "genreIds": [
-                        14,
-                        18,
-                        9648
-                    ]
+                "58adaf60-f55e-4b76-b23c-deef66055853": {
+                    "createdAt": "2025-11-30T14:14:09.729862100",
+                    "movie": {
+                        "posterUrl": "",
+                        "plot": "Three teenagers, with completely different lives, meet at a party.",
+                        "releaseDate": "2017-05-06",
+                        "popularity": 0,
+                        "rating": 6,
+                        "id": "496299",
+                        "title": "Se",
+                        "genreIds": [18]
+                    },
+                    "rating": 3,
+                    "comment": "rating",
+                    "id": "58adaf60-f55e-4b76-b23c-deef66055853"
                 },
-                "rating": 2,
-                "comment": "asdf",
-                "id": "8ef7afa3-c710-430a-97bd-0236c84fe093"
-            },
-            "acd5d9ec-777b-4709-992d-c7c9484edd3d": {
-                "createdAt": "2025-11-30T14:10:46.552624600",
-                "movie": {
-                    "posterUrl": "https://image.tmdb.org/t/p/w500/70xj3Gy7clXb0jtNpdCb8hvTcKX.jpg",
-                    "plot": "",
-                    "releaseDate": "",
-                    "popularity": 0,
-                    "rating": 8,
-                    "id": "1111724",
-                    "title": "Ja",
-                    "genreIds": []
+                "acd5d9ec-777b-4709-992d-c7c9484edd3d": {
+                    "createdAt": "2025-11-30T14:10:46.552624600",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/70xj3Gy7clXb0jtNpdCb8hvTcKX.jpg",
+                        "plot": "",
+                        "releaseDate": "",
+                        "popularity": 0,
+                        "rating": 8,
+                        "id": "1111724",
+                        "title": "Ja",
+                        "genreIds": []
+                    },
+                    "rating": 2,
+                    "comment": "asdf",
+                    "id": "acd5d9ec-777b-4709-992d-c7c9484edd3d"
                 },
-                "rating": 2,
-                "comment": "asdf",
-                "id": "acd5d9ec-777b-4709-992d-c7c9484edd3d"
+                "384ce0ee-77c9-4acb-ad74-75e931e9809d": {
+                    "createdAt": "2025-12-01T12:51:50.709517400",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/oYiXeIFJNCekixjRda4GC5Kcquc.jpg",
+                        "plot": "Based on a popular joke. This joke was popularized from a scene in \\",
+                        "releaseDate": "2011-01-01",
+                        "popularity": 0,
+                        "rating": 0,
+                        "id": "891924",
+                        "title": "Chester",
+                        "genreIds": [
+                            35,
+                            27
+                        ]
+                    },
+                    "rating": 2,
+                    "comment": "Hello chester",
+                    "id": "384ce0ee-77c9-4acb-ad74-75e931e9809d"
+                },
+                "316672f4-4390-4357-87ce-370acbff693d": {
+                    "createdAt": "2025-11-30T15:40:38.777646400",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/ra2UvHNvZ1oaneSa96I48G4sQ9N.jpg",
+                        "plot": "An emotionally unavailable flight attendant meets a potential love interest and later finds out that her \\",
+                        "releaseDate": "2022-09-22",
+                        "popularity": 0,
+                        "rating": 6.3,
+                        "id": "1027497",
+                        "title": "Hello",
+                        "genreIds": [
+                            18,
+                            53,
+                            10770
+                        ]
+                    },
+                    "rating": 3,
+                    "comment": "asdf",
+                    "id": "316672f4-4390-4357-87ce-370acbff693d"
+                }
             },
-            "384ce0ee-77c9-4acb-ad74-75e931e9809d": {
-                "createdAt": "2025-12-01T12:51:50.709517400",
-                "movie": {
+            "watchlists": [{
+                "movies": [],
+                "dateCreated": "2025-12-02T13:06:07.478244500",
+                "name": "asdf's Watch List",
+                "id": "0ba5ac7f-16e9-4791-ab59-adb2f2ecf943"
+            }],
+            "watchHistory": {
+                "movies": [{
                     "posterUrl": "https://image.tmdb.org/t/p/w500/oYiXeIFJNCekixjRda4GC5Kcquc.jpg",
                     "plot": "Based on a popular joke. This joke was popularized from a scene in \\",
                     "releaseDate": "2011-01-01",
@@ -341,175 +388,131 @@
                     "genreIds": [
                         35,
                         27
-                    ]
-                },
-                "rating": 2,
-                "comment": "Hello chester",
-                "id": "384ce0ee-77c9-4acb-ad74-75e931e9809d"
-            },
-            "316672f4-4390-4357-87ce-370acbff693d": {
-                "createdAt": "2025-11-30T15:40:38.777646400",
-                "movie": {
-                    "posterUrl": "https://image.tmdb.org/t/p/w500/ra2UvHNvZ1oaneSa96I48G4sQ9N.jpg",
-                    "plot": "An emotionally unavailable flight attendant meets a potential love interest and later finds out that her \\",
-                    "releaseDate": "2022-09-22",
-                    "popularity": 0,
-                    "rating": 6.3,
-                    "id": "1027497",
-                    "title": "Hello",
-                    "genreIds": [
-                        18,
-                        53,
-                        10770
-                    ]
-                },
-                "rating": 3,
-                "comment": "asdf",
-                "id": "316672f4-4390-4357-87ce-370acbff693d"
-            }
-        },
-        "watchlists": [{
-            "movies": [],
-            "dateCreated": "2025-12-01T13:27:51.638843",
-            "name": "asdf's Watch List",
-            "id": "348cc461-b4c3-42cb-9775-999adaeab0bb"
-        }],
-        "watchHistory": {
-            "movies": [{
-                "posterUrl": "https://image.tmdb.org/t/p/w500/oYiXeIFJNCekixjRda4GC5Kcquc.jpg",
-                "plot": "Based on a popular joke. This joke was popularized from a scene in \\",
-                "releaseDate": "2011-01-01",
-                "popularity": 0,
-                "rating": 0,
-                "id": "891924",
-                "title": "Chester",
-                "genreIds": [
-                    35,
-                    27
-                ],
-                "watchedAt": "2025-12-01T12:51:40.851097"
-            }],
-            "id": "f3798ff5-9986-48e0-bb83-b8a580d8d107"
-        },
-        "username": "asdf"
-    },
-    "dummy-user": {
-        "password": "password",
-        "reviews": {},
-        "watchlists": [{
-            "movies": [{
-                "posterUrl": "poster-url",
-                "plot": "A test movie plot happens",
-                "releaseDate": "2025-01-01",
-                "popularity": 0,
-                "rating": 7.5,
-                "id": "m1",
-                "title": "Test Movie",
-                "genreIds": [
-                    1,
-                    2
-                ]
-            }],
-            "dateCreated": "2025-12-01T13:27:51.639126",
-            "name": "dummy-user's Watch List",
-            "id": "94a99d5c-634a-451e-9f9d-b65135fb3d2a"
-        }],
-        "username": "dummy-user"
-    },
-    "oliver": {
-        "password": "123",
-        "reviews": {},
-        "watchlists": [{
-            "movies": [],
-            "dateCreated": "2025-12-01T13:27:51.639378",
-            "name": "oliver's Watch List",
-            "id": "650622fc-c437-4131-9040-ddbc866df3b8"
-        }],
-        "username": "oliver"
-    },
-    "romy": {
-        "password": "111",
-        "reviews": {
-            "15a34260-27a9-4ea8-aefc-6e5a7d61ec34": {
-                "createdAt": "2025-12-01T00:18:21.922441800",
-                "movie": {
-                    "posterUrl": "https://image.tmdb.org/t/p/w500/31SwN5tZuJNsWTLx6DNNyQSAXdx.jpg",
-                    "plot": "Having witnessed his parents' brutal murder as a child, millionaire philanthropist Bruce Wayne fights crime in Gotham City disguised as Batman, a costumed hero who strikes fear into the hearts of villains. But when a deformed madman known as 'The Joker' seizes control of Gotham's criminal underworld, Batman must face his most ruthless nemesis ever while protecting both his identity and his love interest, reporter Vicki Vale.",
-                    "releaseDate": "1989-06-21",
-                    "popularity": 0,
-                    "rating": 7.236,
-                    "id": "268",
-                    "title": "Batman",
-                    "genreIds": [
-                        14,
-                        28,
-                        80
-                    ]
-                },
-                "rating": 4,
-                "comment": "",
-                "id": "15a34260-27a9-4ea8-aefc-6e5a7d61ec34"
-            },
-            "6fcc44b3-dc28-4036-a452-1b95d73f2c0c": {
-                "createdAt": "2025-12-01T00:18:28.643274900",
-                "movie": {
-                    "posterUrl": "https://image.tmdb.org/t/p/w500/6zDYFigohwncqFL00MKbFV01dWb.jpg",
-                    "plot": "When Juli meets Bryce in the second grade, she knows it's true love. After spending six years trying to convince Bryce the same, she's ready to give up - until he starts to reconsider.",
-                    "releaseDate": "2010-08-06",
-                    "popularity": 0,
-                    "rating": 8.009,
-                    "id": "43949",
-                    "title": "Flipped",
-                    "genreIds": [
-                        10749,
-                        18
-                    ]
-                },
-                "rating": 4,
-                "comment": "",
-                "id": "6fcc44b3-dc28-4036-a452-1b95d73f2c0c"
-            }
-        },
-        "watchlists": [{
-            "movies": [],
-            "dateCreated": "2025-12-01T13:27:51.639426",
-            "name": "romy's Watch List",
-            "id": "edf86777-5a3a-4a9e-882b-c2b418e44c3b"
-        }],
-        "watchHistory": {
-            "movies": [
-                {
-                    "posterUrl": "https://image.tmdb.org/t/p/w500/31SwN5tZuJNsWTLx6DNNyQSAXdx.jpg",
-                    "plot": "Having witnessed his parents' brutal murder as a child, millionaire philanthropist Bruce Wayne fights crime in Gotham City disguised as Batman, a costumed hero who strikes fear into the hearts of villains. But when a deformed madman known as 'The Joker' seizes control of Gotham's criminal underworld, Batman must face his most ruthless nemesis ever while protecting both his identity and his love interest, reporter Vicki Vale.",
-                    "releaseDate": "1989-06-21",
-                    "popularity": 0,
-                    "rating": 7.236,
-                    "id": "268",
-                    "title": "Batman",
-                    "genreIds": [
-                        14,
-                        28,
-                        80
                     ],
-                    "watchedAt": "2025-12-01T00:17"
-                },
-                {
-                    "posterUrl": "https://image.tmdb.org/t/p/w500/6zDYFigohwncqFL00MKbFV01dWb.jpg",
-                    "plot": "When Juli meets Bryce in the second grade, she knows it's true love. After spending six years trying to convince Bryce the same, she's ready to give up - until he starts to reconsider.",
-                    "releaseDate": "2010-08-06",
+                    "watchedAt": "2025-12-01T12:51:40.851097"
+                }],
+                "id": "f3798ff5-9986-48e0-bb83-b8a580d8d107"
+            },
+            "username": "asdf"
+        },
+        "dummy-user": {
+            "password": "password",
+            "reviews": {},
+            "watchlists": [{
+                "movies": [{
+                    "posterUrl": "poster-url",
+                    "plot": "A test movie plot happens",
+                    "releaseDate": "2025-01-01",
                     "popularity": 0,
-                    "rating": 8.009,
-                    "id": "43949",
-                    "title": "Flipped",
+                    "rating": 7.5,
+                    "id": "m1",
+                    "title": "Test Movie",
                     "genreIds": [
-                        10749,
-                        18
-                    ],
-                    "watchedAt": "2025-12-01T00:18"
+                        1,
+                        2
+                    ]
+                }],
+                "dateCreated": "2025-12-02T13:06:07.479241200",
+                "name": "dummy-user's Watch List",
+                "id": "196c6956-c792-4bb8-a28b-6adc68054798"
+            }],
+            "username": "dummy-user"
+        },
+        "oliver": {
+            "password": "123",
+            "reviews": {},
+            "watchlists": [{
+                "movies": [],
+                "dateCreated": "2025-12-02T13:06:07.480243800",
+                "name": "oliver's Watch List",
+                "id": "9237de38-6e89-431f-98fd-301c3919461d"
+            }],
+            "username": "oliver"
+        },
+        "romy": {
+            "password": "111",
+            "reviews": {
+                "15a34260-27a9-4ea8-aefc-6e5a7d61ec34": {
+                    "createdAt": "2025-12-01T00:18:21.922441800",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/31SwN5tZuJNsWTLx6DNNyQSAXdx.jpg",
+                        "plot": "Having witnessed his parents' brutal murder as a child, millionaire philanthropist Bruce Wayne fights crime in Gotham City disguised as Batman, a costumed hero who strikes fear into the hearts of villains. But when a deformed madman known as 'The Joker' seizes control of Gotham's criminal underworld, Batman must face his most ruthless nemesis ever while protecting both his identity and his love interest, reporter Vicki Vale.",
+                        "releaseDate": "1989-06-21",
+                        "popularity": 0,
+                        "rating": 7.236,
+                        "id": "268",
+                        "title": "Batman",
+                        "genreIds": [
+                            14,
+                            28,
+                            80
+                        ]
+                    },
+                    "rating": 4,
+                    "comment": "",
+                    "id": "15a34260-27a9-4ea8-aefc-6e5a7d61ec34"
+                },
+                "6fcc44b3-dc28-4036-a452-1b95d73f2c0c": {
+                    "createdAt": "2025-12-01T00:18:28.643274900",
+                    "movie": {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/6zDYFigohwncqFL00MKbFV01dWb.jpg",
+                        "plot": "When Juli meets Bryce in the second grade, she knows it's true love. After spending six years trying to convince Bryce the same, she's ready to give up - until he starts to reconsider.",
+                        "releaseDate": "2010-08-06",
+                        "popularity": 0,
+                        "rating": 8.009,
+                        "id": "43949",
+                        "title": "Flipped",
+                        "genreIds": [
+                            10749,
+                            18
+                        ]
+                    },
+                    "rating": 4,
+                    "comment": "",
+                    "id": "6fcc44b3-dc28-4036-a452-1b95d73f2c0c"
                 }
-            ],
-            "id": "9456c9fd-a32a-4060-969e-67b017e0854a"
-        },
-        "username": "romy"
+            },
+            "watchlists": [{
+                "movies": [],
+                "dateCreated": "2025-12-02T13:06:07.480243800",
+                "name": "romy's Watch List",
+                "id": "aa744098-058a-441c-acf6-0d50833d1635"
+            }],
+            "watchHistory": {
+                "movies": [
+                    {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/31SwN5tZuJNsWTLx6DNNyQSAXdx.jpg",
+                        "plot": "Having witnessed his parents' brutal murder as a child, millionaire philanthropist Bruce Wayne fights crime in Gotham City disguised as Batman, a costumed hero who strikes fear into the hearts of villains. But when a deformed madman known as 'The Joker' seizes control of Gotham's criminal underworld, Batman must face his most ruthless nemesis ever while protecting both his identity and his love interest, reporter Vicki Vale.",
+                        "releaseDate": "1989-06-21",
+                        "popularity": 0,
+                        "rating": 7.236,
+                        "id": "268",
+                        "title": "Batman",
+                        "genreIds": [
+                            14,
+                            28,
+                            80
+                        ],
+                        "watchedAt": "2025-12-01T00:17"
+                    },
+                    {
+                        "posterUrl": "https://image.tmdb.org/t/p/w500/6zDYFigohwncqFL00MKbFV01dWb.jpg",
+                        "plot": "When Juli meets Bryce in the second grade, she knows it's true love. After spending six years trying to convince Bryce the same, she's ready to give up - until he starts to reconsider.",
+                        "releaseDate": "2010-08-06",
+                        "popularity": 0,
+                        "rating": 8.009,
+                        "id": "43949",
+                        "title": "Flipped",
+                        "genreIds": [
+                            10749,
+                            18
+                        ],
+                        "watchedAt": "2025-12-01T00:18"
+                    }
+                ],
+                "id": "9456c9fd-a32a-4060-969e-67b017e0854a"
+            },
+            "username": "romy"
+        }
     }
-}}
+}
