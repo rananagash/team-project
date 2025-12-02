@@ -74,8 +74,8 @@ class SearchMovieInteractorTest {
         }
 
         @Override
-        public java.util.Optional<Movie> findById(String movieId) {
-            return java.util.Optional.empty();
+        public Optional<Movie> findById(String movieId) {
+            return Optional.empty();
         }
 
         @Override
@@ -92,6 +92,25 @@ class SearchMovieInteractorTest {
         public PagedMovieResult getPopularMovies(int page) throws MovieDataAccessException {
             return null;
         }
+    }
+
+    @Test
+    void responseModel_ConstructorAndGetters() {
+        // Test the constructor with all parameters
+        List<Movie> movies = List.of(
+                new Movie("1", "Test Movie", "Plot", List.of(1), "2023-01-01", 7.5, 50.0, "poster.jpg")
+        );
+
+        SearchMovieResponseModel response = new SearchMovieResponseModel(
+                "test query", movies, 2, 5
+        );
+
+        // Verify all getters
+        assertEquals("test query", response.getQuery(), "Query should match constructor argument");
+        assertEquals(1, response.getMovies().size(), "Movies list size should match");
+        assertEquals(2, response.getCurrentPage(), "Current page should match");
+        assertEquals(5, response.getTotalPages(), "Total pages should match");
+        assertEquals(movies.get(0), response.getMovies().get(0), "Movie object should be the same instance");
     }
 
     @Test
@@ -126,7 +145,6 @@ class SearchMovieInteractorTest {
         SearchMovieRequestModel request = new SearchMovieRequestModel("", 1);
         interactor.execute(request);
 
-        // 3. 验证
         assertTrue(presenter.failCalled, "failed on empty response");
         assertFalse(presenter.successCalled, "empty response");
         assertNotNull(presenter.errorMessage, "error message should not be null");
