@@ -536,4 +536,30 @@ class SearchMovieInteractorTest {
             }
         }
     }
+
+    @Test
+    void execute_UnknownExceptionType_ShouldUseDefaultErrorMessage() {
+
+
+        TestMovieGateway gateway = new TestMovieGateway(List.of()) {
+            @Override
+            public PagedMovieResult searchByTitle(String query, int page) throws MovieDataAccessException {
+                throw new MovieDataAccessException(
+                        MovieDataAccessException.Type.UNKNOWN,
+                        "Unknown error type"
+                );
+            }
+        };
+
+        TestPresenter presenter = new TestPresenter();
+        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
+
+        SearchMovieRequestModel request = new SearchMovieRequestModel("test", 1);
+        interactor.execute(request);
+
+        assertTrue(presenter.failCalled, "Should fail on any exception");
+        assertTrue(presenter.errorMessage.contains("unexpected error") ||
+                        presenter.errorMessage.contains("Search failed"),
+                "Should use default error message for unknown exception types");
+    }
 }
