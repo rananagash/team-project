@@ -412,6 +412,37 @@ class SearchMovieInteractorTest {
                 "Exact match should be highest priority regardless of rating");
     }
 
+
+    void scoring_NewMovieWithAgeBonus() {
+        // Test age-based scoring: newer movies get bonus points
+        List<Movie> movies = Arrays.asList(
+                new Movie("1", "Movie 2023", "New", List.of(1), "2023-01-01", 7.0, 50.0, "poster1"),
+                new Movie("2", "Movie 2020", "Medium", List.of(1), "2020-01-01", 7.5, 60.0, "poster2"),
+                new Movie("3", "Movie 2015", "Old", List.of(1), "2015-01-01", 8.0, 70.0, "poster3")
+        );
+
+        TestMovieGateway gateway = new TestMovieGateway(movies);
+        TestPresenter presenter = new TestPresenter();
+        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
+
+        interactor.execute(new SearchMovieRequestModel("Movie", 1));
+
+        assertTrue(presenter.successCalled);
+        List<Movie> results = presenter.successResponse.getMovies();
+
+        // Print for debugging
+        System.out.println("\nScoring Test - Age Bonus:");
+        for (int i = 0; i < results.size(); i++) {
+            Movie m = results.get(i);
+            System.out.printf("%d. %s (Rating: %.1f, Year: %d)%n",
+                    i+1, m.getTitle(), m.getRating(), m.getReleaseYear());
+        }
+
+        // Newest movie should be first due to age bonus
+        assertEquals(2023, results.get(0).getReleaseYear(),
+                "Newest movie (2023) should be first due to age bonus");
+    }
+
     @Test
     void testScoringAlgorithm() throws Exception {
         List<Movie> testMovies = Arrays.asList(
