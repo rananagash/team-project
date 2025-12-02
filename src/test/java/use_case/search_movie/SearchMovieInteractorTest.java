@@ -273,6 +273,36 @@ class SearchMovieInteractorTest {
     }
 
     @Test
+    void execute_PageZeroOrNegative_DefaultsToOne() {
+        // Test branch: requestModel.getPage() <= 0 ? 1 : requestModel.getPage()
+        List<Movie> movies = List.of(
+                new Movie("1", "Test", "Plot", List.of(1), "2023-01-01", 8.0, 50.0, "poster.jpg")
+        );
+
+        TestMovieGateway gateway = new TestMovieGateway(movies);
+        TestPresenter presenter = new TestPresenter();
+        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
+
+        // Test with page 0
+        SearchMovieRequestModel request1 = new SearchMovieRequestModel("test", 0);
+        interactor.execute(request1);
+
+        assertTrue(presenter.successCalled, "Should succeed with page 0 (defaults to 1)");
+        assertEquals(1, presenter.successResponse.getCurrentPage(),
+                "Page 0 should default to page 1");
+
+        presenter.reset();
+
+        // Test with negative page
+        SearchMovieRequestModel request2 = new SearchMovieRequestModel("test", -5);
+        interactor.execute(request2);
+
+        assertTrue(presenter.successCalled, "Should succeed with negative page (defaults to 1)");
+        assertEquals(1, presenter.successResponse.getCurrentPage(),
+                "Negative page should default to page 1");
+    }
+
+    @Test
     void testScoringAlgorithm() throws Exception {
         List<Movie> testMovies = Arrays.asList(
                 new Movie("1", "New Avengers", "Movie A", List.of(28), "2023-01-01", 7.0, 50.0, "poster1"),
