@@ -358,7 +358,7 @@ class SearchMovieInteractorTest {
         // Test branch: default case in switch statement
         // Need to test with an exception type that's not NETWORK or TMDB_ERROR
         TestMovieGateway gateway = new TestMovieGateway(List.of())
-                .withException(MovieDataAccessException.Type.OTHER); // Assuming OTHER exists
+                .withException(MovieDataAccessException.Type.UNKNOWN); // Assuming OTHER exists
         TestPresenter presenter = new TestPresenter();
         SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
 
@@ -387,6 +387,29 @@ class SearchMovieInteractorTest {
 
         SearchMovieRequestModel pageLarge = new SearchMovieRequestModel("query", 100);
         assertEquals(100, pageLarge.getPage());
+    }
+
+    @Test
+    void scoring_TitleExactMatch_HighestPriority() {
+        // Test that exact title match gets highest score
+        List<Movie> movies = Arrays.asList(
+                new Movie("1", "Batman", "Exact match", List.of(1), "2020-01-01", 7.0, 50.0, "poster1"),
+                new Movie("2", "The Batman", "Starts with", List.of(1), "2020-01-01", 9.0, 90.0, "poster2"),
+                new Movie("3", "Batman Returns", "Contains", List.of(1), "2020-01-01", 8.0, 80.0, "poster3")
+        );
+
+        TestMovieGateway gateway = new TestMovieGateway(movies);
+        TestPresenter presenter = new TestPresenter();
+        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
+
+        interactor.execute(new SearchMovieRequestModel("Batman", 1));
+
+        assertTrue(presenter.successCalled);
+        List<Movie> results = presenter.successResponse.getMovies();
+
+        // "Batman" (exact match) should be first despite lower rating
+        assertEquals("Batman", results.get(0).getTitle(),
+                "Exact match should be highest priority regardless of rating");
     }
 
     @Test
