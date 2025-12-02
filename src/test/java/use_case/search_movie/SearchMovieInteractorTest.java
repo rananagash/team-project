@@ -319,6 +319,23 @@ class SearchMovieInteractorTest {
     }
 
     @Test
+    void execute_NetworkException_ShowsNetworkError() {
+        // Test branch: MovieDataAccessException.Type.NETWORK
+        TestMovieGateway gateway = new TestMovieGateway(List.of())
+                .withException(MovieDataAccessException.Type.NETWORK);
+        TestPresenter presenter = new TestPresenter();
+        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
+
+        SearchMovieRequestModel request = new SearchMovieRequestModel("test", 1);
+        interactor.execute(request);
+
+        assertTrue(presenter.failCalled, "Should call fail for network exception");
+        assertTrue(presenter.errorMessage.contains("Network") ||
+                        presenter.errorMessage.contains("internet"),
+                "Error message should mention network/internet");
+    }
+
+    @Test
     void testScoringAlgorithm() throws Exception {
         List<Movie> testMovies = Arrays.asList(
                 new Movie("1", "New Avengers", "Movie A", List.of(28), "2023-01-01", 7.0, 50.0, "poster1"),
