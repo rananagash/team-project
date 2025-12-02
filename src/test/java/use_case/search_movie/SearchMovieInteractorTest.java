@@ -51,6 +51,8 @@ class SearchMovieInteractorTest {
 
     private static class TestMovieGateway implements use_case.common.MovieGateway {
         private final List<Movie> moviesToReturn;
+        private boolean throwException = false;
+        private MovieDataAccessException.Type exceptionType = MovieDataAccessException.Type.NETWORK;
 
         TestMovieGateway(List<Movie> movies) {
             this.moviesToReturn = movies;
