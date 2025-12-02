@@ -24,6 +24,7 @@ class SearchMovieInteractorTest {
         String errorMessage;
         boolean successCalled = false;
         boolean failCalled = false;
+        int callCount = 0;
 
         @Override
         public void prepareSuccessView(SearchMovieResponseModel response) {
