@@ -562,4 +562,35 @@ class SearchMovieInteractorTest {
                         presenter.errorMessage.contains("Search failed"),
                 "Should use default error message for unknown exception types");
     }
+
+    @Test
+    void scoring_MovieWithNullTitle_ShouldNotCrash() {
+
+        List<Movie> movies = List.of(
+                createMovieWithNullFields("1")
+        );
+
+        TestMovieGateway gateway = new TestMovieGateway(movies);
+        TestPresenter presenter = new TestPresenter();
+        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
+
+        interactor.execute(new SearchMovieRequestModel("xyz", 1));
+
+        assertTrue(presenter.successCalled || presenter.failCalled);
+    }
+
+    private Movie createMovieWithNullFields(String id) {
+        try {
+            Movie movie = new Movie(id, "dummy", "plot", List.of(1), "2023-01-01", 5.0, 50.0, "poster.jpg");
+
+            java.lang.reflect.Field titleField = Movie.class.getDeclaredField("title");
+            titleField.setAccessible(true);
+            titleField.set(movie, null);
+
+            return movie;
+        } catch (Exception e) {
+
+            return new Movie(id, null, "plot", List.of(1), "2023-01-01", 5.0, 50.0, "poster.jpg");
+        }
+    }
 }
