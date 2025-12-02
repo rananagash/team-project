@@ -57,9 +57,21 @@ Data Access Layer
 ---
 
 ## Screenshots
+-**Search for Movies by Title**
 
-TO ADD ONCE PROJECT IS FINISHED (MVP)
+Before
+![img.png](img.png)
+After
+![img_1.png](img_1.png)
+-**Filter Movies by Genre**
 
+-**Create a WatchList**
+
+-**Store Watch History**
+
+-**Rate and Review Movies**
+
+-**Compare Watchlists**
 
 ## Future Enhancements
 # A list of Use Cases that we did not implement, but would have liked to given more time. By adhering to CA and SOLID principles, these could be implemented with minimal work. 
