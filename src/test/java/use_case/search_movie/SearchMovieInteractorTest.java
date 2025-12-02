@@ -611,4 +611,18 @@ class SearchMovieInteractorTest {
 
         assertTrue(presenter.successCalled || presenter.failCalled);
     }
+
+    @Test
+    void execute_QueryNull_ShouldFail() {
+
+        TestMovieGateway gateway = new TestMovieGateway(List.of());
+        TestPresenter presenter = new TestPresenter();
+        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
+        SearchMovieRequestModel request = new SearchMovieRequestModel("   ", 1);
+        interactor.execute(request);
+
+        assertTrue(presenter.failCalled, "Should fail on blank query");
+        assertTrue(presenter.errorMessage.contains("empty"),
+                "Error message should mention 'empty'");
+    }
 }
