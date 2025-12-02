@@ -380,6 +380,16 @@ class SearchMovieInteractorTest {
     }
 
     @Test
+    void requestModel_WithValidPageNumbers() {
+        // Test various valid page numbers
+        SearchMovieRequestModel page1 = new SearchMovieRequestModel("query", 1);
+        assertEquals(1, page1.getPage());
+
+        SearchMovieRequestModel pageLarge = new SearchMovieRequestModel("query", 100);
+        assertEquals(100, pageLarge.getPage());
+    }
+
+    @Test
     void testScoringAlgorithm() throws Exception {
         List<Movie> testMovies = Arrays.asList(
                 new Movie("1", "New Avengers", "Movie A", List.of(28), "2023-01-01", 7.0, 50.0, "poster1"),
