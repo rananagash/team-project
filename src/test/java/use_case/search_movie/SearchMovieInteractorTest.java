@@ -336,6 +336,24 @@ class SearchMovieInteractorTest {
     }
 
     @Test
+    void execute_TmdbException_ShowsServiceError() {
+        // Test branch: MovieDataAccessException.Type.TMDB_ERROR
+        TestMovieGateway gateway = new TestMovieGateway(List.of())
+                .withException(MovieDataAccessException.Type.TMDB_ERROR);
+        TestPresenter presenter = new TestPresenter();
+        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
+
+        SearchMovieRequestModel request = new SearchMovieRequestModel("test", 1);
+        interactor.execute(request);
+
+        assertTrue(presenter.failCalled, "Should call fail for TMDB exception");
+        assertTrue(presenter.errorMessage.contains("service") ||
+                        presenter.errorMessage.contains("unavailable") ||
+                        presenter.errorMessage.contains("TMDb"),
+                "Error message should mention service unavailability");
+    }
+
+    @Test
     void testScoringAlgorithm() throws Exception {
         List<Movie> testMovies = Arrays.asList(
                 new Movie("1", "New Avengers", "Movie A", List.of(28), "2023-01-01", 7.0, 50.0, "poster1"),
