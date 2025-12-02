@@ -58,6 +58,12 @@ class SearchMovieInteractorTest {
             this.moviesToReturn = movies;
         }
 
+        TestMovieGateway withException(MovieDataAccessException.Type type) {
+            this.throwException = true;
+            this.exceptionType = type;
+            return this;
+        }
+
         @Override
         public use_case.common.PagedMovieResult searchByTitle(String query, int page) {
             return new use_case.common.PagedMovieResult(moviesToReturn, page, 3);
