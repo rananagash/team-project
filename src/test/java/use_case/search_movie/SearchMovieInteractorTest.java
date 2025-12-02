@@ -167,4 +167,19 @@ class SearchMovieInteractorTest {
             System.out.println((i+1) + ". " + m.getTitle() + " (score: " + m.getRating() + ", year: " + m.getReleaseYear() + ")");
         }
     }
+    @Test
+    void testSearchWithOneCharacter() {
+        TestMovieGateway gateway = new TestMovieGateway(List.of());
+        TestPresenter presenter = new TestPresenter();
+        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
+
+        SearchMovieRequestModel request = new SearchMovieRequestModel("a", 1);
+        interactor.execute(request);
+
+        assertTrue(presenter.failCalled, "single string");
+        assertFalse(presenter.successCalled);
+        assertNotNull(presenter.errorMessage);
+        assertTrue(presenter.errorMessage.contains("2 characters"),
+                "error message should contain 2 characters");
+    }
 }
