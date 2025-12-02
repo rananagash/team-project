@@ -162,6 +162,22 @@ class SearchMovieInteractorTest {
     }
 
     @Test
+    void responseModel_Immutability() {
+        // Test that the movies list is immutable (cannot be modified)
+        List<Movie> originalMovies = Arrays.asList(
+                new Movie("1", "Movie 1", "Plot", List.of(1), "2023-01-01", 8.0, 50.0, "poster.jpg")
+        );
+
+        SearchMovieResponseModel response = new SearchMovieResponseModel("query", originalMovies);
+
+        // Attempting to modify the returned list should throw an exception
+        List<Movie> returnedMovies = response.getMovies();
+        assertThrows(Exception.class, () -> returnedMovies.add(
+                new Movie("2", "Movie 2", "Plot", List.of(1), "2023-01-01", 8.0, 50.0, "poster.jpg")
+        ), "Returned movies list should be immutable");
+    }
+
+    @Test
     void testSearchWithEmptyQuery() {
         TestMovieGateway gateway = new TestMovieGateway(List.of());
         TestPresenter presenter = new TestPresenter();
