@@ -303,6 +303,22 @@ class SearchMovieInteractorTest {
     }
 
     @Test
+    void execute_GatewayReturnsEmptyList_ShowsError() {
+        // Test branch: pagedResult.getMovies().isEmpty()
+        TestMovieGateway gateway = new TestMovieGateway(List.of()); // Empty list
+        TestPresenter presenter = new TestPresenter();
+        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
+
+        SearchMovieRequestModel request = new SearchMovieRequestModel("nonexistent", 1);
+        interactor.execute(request);
+
+        assertTrue(presenter.failCalled, "Should call fail for empty results");
+        assertTrue(presenter.errorMessage.contains("No movies found") ||
+                        presenter.errorMessage.contains("different search term"),
+                "Error message should indicate no results");
+    }
+
+    @Test
     void testScoringAlgorithm() throws Exception {
         List<Movie> testMovies = Arrays.asList(
                 new Movie("1", "New Avengers", "Movie A", List.of(28), "2023-01-01", 7.0, 50.0, "poster1"),
