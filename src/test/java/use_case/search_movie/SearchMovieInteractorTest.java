@@ -238,6 +238,23 @@ class SearchMovieInteractorTest {
         assertTrue(presenter.successCalled || presenter.failCalled, "need at least one call");
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"a", " "})
+    void execute_QueryTooShort_ShowsError(String shortQuery) {
+        // Test branch: query.length() < 2
+        TestMovieGateway gateway = new TestMovieGateway(List.of());
+        TestPresenter presenter = new TestPresenter();
+        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
+
+        SearchMovieRequestModel request = new SearchMovieRequestModel(shortQuery, 1);
+        interactor.execute(request);
+
+        assertTrue(presenter.failCalled, "Should call fail for query shorter than 2 chars");
+        assertTrue(presenter.errorMessage.contains("2 characters") ||
+                        presenter.errorMessage.contains("empty"),
+                "Error message should mention minimum length");
+    }
+
     @Test
     void testScoringAlgorithm() throws Exception {
         List<Movie> testMovies = Arrays.asList(
