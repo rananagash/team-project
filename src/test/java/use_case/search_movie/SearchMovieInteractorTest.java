@@ -10,6 +10,7 @@ import use_case.common.PagedMovieResult;
 import java.util.Arrays;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.Optional;
 
 /**
  * tests of SearchMovieInteractor
