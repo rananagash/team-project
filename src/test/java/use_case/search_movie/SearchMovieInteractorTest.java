@@ -255,6 +255,23 @@ class SearchMovieInteractorTest {
                 "Error message should mention minimum length");
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"@@@", "!!!", "???"})
+    void execute_QueryOnlySpecialCharacters_ShowsError(String specialQuery) {
+        // Test branch: query.matches("[^a-zA-Z0-9]+")
+        TestMovieGateway gateway = new TestMovieGateway(List.of());
+        TestPresenter presenter = new TestPresenter();
+        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
+
+        SearchMovieRequestModel request = new SearchMovieRequestModel(specialQuery, 1);
+        interactor.execute(request);
+
+        assertTrue(presenter.failCalled, "Should call fail for non-alphanumeric query");
+        assertTrue(presenter.errorMessage.contains("meaningful") ||
+                        presenter.errorMessage.contains("title"),
+                "Error message should ask for meaningful title");
+    }
+
     @Test
     void testScoringAlgorithm() throws Exception {
         List<Movie> testMovies = Arrays.asList(
