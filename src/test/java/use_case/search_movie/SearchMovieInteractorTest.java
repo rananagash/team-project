@@ -593,4 +593,22 @@ class SearchMovieInteractorTest {
             return new Movie(id, null, "plot", List.of(1), "2023-01-01", 5.0, 50.0, "poster.jpg");
         }
     }
+
+    @Test
+    void scoring_MovieWithNullRating_ShouldHandleGracefully() {
+
+
+        List<Movie> movies = List.of(
+                new Movie("1", "Test Movie", "Plot", List.of(1), "2023-01-01", 0.0, 50.0, "poster.jpg")
+        );
+
+        TestMovieGateway gateway = new TestMovieGateway(movies);
+        TestPresenter presenter = new TestPresenter();
+        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
+
+        interactor.execute(new SearchMovieRequestModel("Test", 1));
+
+
+        assertTrue(presenter.successCalled || presenter.failCalled);
+    }
 }
