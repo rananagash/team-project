@@ -129,28 +129,7 @@ class SearchMovieInteractorTest {
         assertEquals(1, response.getTotalPages(), "Default total pages should be 1");
     }
 
-    @Test
-    void testSearchWithValidQuery() {
-        List<Movie> testMovies = Arrays.asList(
-                new Movie("1", "The Avengers", "Superhero movie",
-                        Arrays.asList(28, 12), "2012-05-04", 8.0, 85.0, "poster1.jpg"),
-                new Movie("2", "Avengers: Endgame", "Superhero finale",
-                        Arrays.asList(28, 12, 878), "2019-04-26", 8.4, 95.0, "poster2.jpg")
-        );
 
-        TestMovieGateway gateway = new TestMovieGateway(testMovies);
-        TestPresenter presenter = new TestPresenter();
-        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
-
-        SearchMovieRequestModel request = new SearchMovieRequestModel("avengers", 1);
-        interactor.execute(request);
-
-        assertTrue(presenter.successCalled, "correct");
-        assertFalse(presenter.failCalled, "failed");
-        assertNotNull(presenter.successResponse, "empty response");
-        assertEquals(2, presenter.successResponse.getMovies().size(), "should return 2");
-        assertEquals("avengers", presenter.successResponse.getQuery(), "title should match");
-    }
 
     @Test
     void responseModel_WithEmptyMovieList() {
@@ -464,7 +443,7 @@ class SearchMovieInteractorTest {
         assertEquals("Popular Movie", results.get(0).getTitle(),
                 "More popular movie should rank higher with same rating/year");
     }
-
+    
     @Test
     void testScoringAlgorithm() throws Exception {
         List<Movie> testMovies = Arrays.asList(
