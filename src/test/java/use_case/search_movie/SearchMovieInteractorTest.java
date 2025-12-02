@@ -2,6 +2,8 @@ package use_case.search_movie;
 
 import entity.Movie;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.ParameterizedTest;
 import use_case.common.MovieDataAccessException;
 import use_case.common.PagedMovieResult;
 
