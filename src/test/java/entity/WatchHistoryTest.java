@@ -209,5 +209,76 @@ class WatchHistoryTest {
         assertTrue(recordedMovie.getWatchedDate().isAfter(beforeRecord.minusSeconds(1)));
         assertTrue(recordedMovie.getWatchedDate().isBefore(afterRecord.plusSeconds(1)));
     }
+
+    @Test
+    void removeMovieByMovieIdReturnsFalseWhenIdNull() {
+        User user = new User("test", "1234");
+        WatchHistory history = new WatchHistory("h1", user);
+
+        assertFalse(history.removeMovieByMovieId(null));
+    }
+
+    @Test
+    void removeMovieByMovieIdReturnsFalseWhenNotFound() {
+        User user = new User("test", "1234");
+        WatchHistory history = new WatchHistory("h1", user);
+
+        assertFalse(history.removeMovieByMovieId("missing"));
+    }
+
+    @Test
+    void removeMovieByMovieIdRemovesMovie() {
+        User user = new User("test", "1234");
+        WatchHistory history = new WatchHistory("h1", user);
+
+        Movie movie = new Movie(
+                "m1", "Test", "Plot", List.of(1),
+                "2025", 7.0, 0.0, "poster"
+        );
+
+        history.recordMovie(movie, LocalDateTime.now());
+
+        assertTrue(history.removeMovieByMovieId("m1"));
+        assertTrue(history.getMovies().isEmpty());
+    }
+
+    @Test
+    void removeMovieReturnsFalseWhenNull() {
+        User user = new User("test", "1234");
+        WatchHistory history = new WatchHistory("h1", user);
+
+        assertFalse(history.removeMovie(null));
+    }
+
+    @Test
+    void removeMovieReturnsFalseWhenNotPresent() {
+        User user = new User("test", "1234");
+        WatchHistory history = new WatchHistory("h1", user);
+
+        Movie movie = new Movie(
+                "m1", "Test", "Plot", List.of(1),
+                "2025", 7.0, 0.0, "poster"
+        );
+        WatchedMovie wm = new WatchedMovie(movie, LocalDateTime.now());
+
+        assertFalse(history.removeMovie(wm));
+    }
+
+    @Test
+    void removeMovieRemovesExistingMovie() {
+        User user = new User("test", "1234");
+        WatchHistory history = new WatchHistory("h1", user);
+
+        Movie movie = new Movie(
+                "m1", "Test", "Plot", List.of(1),
+                "2025", 7.0, 0.0, "poster"
+        );
+        WatchedMovie wm = new WatchedMovie(movie, LocalDateTime.now());
+
+        history.addWatchedMovie(wm);
+
+        assertTrue(history.removeMovie(wm));
+        assertTrue(history.getMovies().isEmpty());
+    }
 }
 
