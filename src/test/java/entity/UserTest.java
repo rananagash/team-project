@@ -3,6 +3,7 @@ package entity;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -256,6 +257,66 @@ class UserTest {
         assertThrows(UnsupportedOperationException.class, () -> {
             reviews.put("m2", review);
         });
+    }
+
+    @Test
+    void getWatchlistsReturnsCopy() {
+        User user = new User("test", "1234");
+
+        Collection<Object> watchlists = user.getWatchlists();
+        assertEquals(1, watchlists.size());
+    }
+
+    @Test
+    void getReviewsReturnsCollectionOfReviews() {
+        User user = new User("test", "1234");
+        Movie movie = new Movie(
+                "m1", "Test", "Plot", List.of(1),
+                "2025", 7.0, 0.0, "poster"
+        );
+        Review review = new Review("r1", user, movie, 4, "Good", LocalDateTime.now());
+
+        user.addReview(review);
+
+        Collection<Object> reviews = user.getReviews();
+
+        assertEquals(1, reviews.size());
+        assertTrue(reviews.contains(review));
+    }
+
+    @Test
+    void getWatchedMoviesReturnsEmptyWhenHistoryIsNull() {
+        User user = new User("test", "1234");
+
+        Collection<Object> watched = user.getWatchedMovies();
+
+        assertNotNull(watched);
+        assertTrue(watched.isEmpty());
+    }
+
+    @Test
+    void getWatchedMoviesReturnsMoviesWhenHistoryIsPresent() {
+        User user = new User("test", "1234");
+        WatchHistory history = new WatchHistory("h1", user);
+
+        Movie movie = new Movie(
+                "m1",
+                "Test Movie",
+                "Plot",
+                List.of(1),
+                "2025",
+                7.0,
+                0.0,
+                "poster"
+        );
+
+        // Record a watched movie
+        history.recordMovie(movie, LocalDateTime.now());
+        user.setWatchHistory(history);
+
+        Collection<Object> watched = user.getWatchedMovies();
+
+        assertEquals(1, watched.size());
     }
 }
 
