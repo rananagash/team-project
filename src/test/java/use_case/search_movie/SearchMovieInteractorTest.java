@@ -153,6 +153,15 @@ class SearchMovieInteractorTest {
     }
 
     @Test
+    void responseModel_WithEmptyMovieList() {
+        // Should handle empty lists gracefully
+        SearchMovieResponseModel response = new SearchMovieResponseModel("query", List.of(), 1, 1);
+
+        assertTrue(response.getMovies().isEmpty(), "Movies list should be empty");
+        assertEquals(0, response.getMovies().size(), "Size should be 0");
+    }
+
+    @Test
     void testSearchWithEmptyQuery() {
         TestMovieGateway gateway = new TestMovieGateway(List.of());
         TestPresenter presenter = new TestPresenter();
@@ -166,6 +175,8 @@ class SearchMovieInteractorTest {
         assertNotNull(presenter.errorMessage, "error message should not be null");
         assertTrue(presenter.errorMessage.contains("empty"), "error message should match");
     }
+
+
 
     @Test
     void testSearchWithNoResults() {
