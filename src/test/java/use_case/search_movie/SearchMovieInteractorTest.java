@@ -30,12 +30,14 @@ class SearchMovieInteractorTest {
         public void prepareSuccessView(SearchMovieResponseModel response) {
             this.successResponse = response;
             this.successCalled = true;
+            this.callCount++;
         }
 
         @Override
         public void prepareFailView(String error) {
             this.errorMessage = error;
             this.failCalled = true;
+            this.callCount++;
         }
     }
 
