@@ -182,4 +182,23 @@ class SearchMovieInteractorTest {
         assertTrue(presenter.errorMessage.contains("2 characters"),
                 "error message should contain 2 characters");
     }
+    @Test
+    void testSearchWithOnlySpecialCharacters() {
+        TestMovieGateway gateway = new TestMovieGateway(List.of());
+        TestPresenter presenter = new TestPresenter();
+        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
+
+        String[] specialQueries = {"!!!", "@#$", "   ", "---"};
+
+        for (String query : specialQueries) {
+            TestPresenter localPresenter = new TestPresenter();
+            SearchMovieInteractor localInteractor = new SearchMovieInteractor(gateway, localPresenter);
+            localInteractor.execute(new SearchMovieRequestModel(query, 1));
+
+            assertTrue(localPresenter.failCalled,
+                    "special case '" + query + "' fails");
+            assertTrue(localPresenter.errorMessage.contains("meaningful"),
+                    "error message should contain meaningful message");
+        }
+    }
 }
