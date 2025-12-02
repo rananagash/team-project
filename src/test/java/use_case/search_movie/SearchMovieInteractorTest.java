@@ -64,9 +64,13 @@ class SearchMovieInteractorTest {
             return this;
         }
 
+
         @Override
-        public use_case.common.PagedMovieResult searchByTitle(String query, int page) {
-            return new use_case.common.PagedMovieResult(moviesToReturn, page, 3);
+        public PagedMovieResult searchByTitle(String query, int page) throws MovieDataAccessException {
+            if (throwException) {
+                throw new MovieDataAccessException(exceptionType, "Test exception for: " + query);
+            }
+            return new PagedMovieResult(moviesToReturn, page, 3);
         }
 
         @Override
