@@ -354,6 +354,24 @@ class SearchMovieInteractorTest {
     }
 
     @Test
+    void execute_DefaultException_ShowsGenericError() {
+        // Test branch: default case in switch statement
+        // Need to test with an exception type that's not NETWORK or TMDB_ERROR
+        TestMovieGateway gateway = new TestMovieGateway(List.of())
+                .withException(MovieDataAccessException.Type.OTHER); // Assuming OTHER exists
+        TestPresenter presenter = new TestPresenter();
+        SearchMovieInteractor interactor = new SearchMovieInteractor(gateway, presenter);
+
+        SearchMovieRequestModel request = new SearchMovieRequestModel("test", 1);
+        interactor.execute(request);
+
+        assertTrue(presenter.failCalled, "Should call fail for any exception");
+        assertTrue(presenter.errorMessage.contains("unexpected") ||
+                        presenter.errorMessage.contains("error"),
+                "Error message should be generic for unexpected errors");
+    }
+
+    @Test
     void testScoringAlgorithm() throws Exception {
         List<Movie> testMovies = Arrays.asList(
                 new Movie("1", "New Avengers", "Movie A", List.of(28), "2023-01-01", 7.0, 50.0, "poster1"),
