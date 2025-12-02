@@ -12,6 +12,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
  * tests of SearchMovieInteractor
  */
